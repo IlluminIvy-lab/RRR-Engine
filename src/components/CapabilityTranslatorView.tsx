@@ -13,29 +13,38 @@ import {
   Download,
   Award,
   FileDown,
+  FileText,
+  Printer,
+  Trash2,
   User,
   X
 } from 'lucide-react';
 import { TranslationResult } from '../types';
 import { SAMPLE_INSTITUTIONAL_EXPERIENCES } from '../data/georgiaResources';
 import { generateResumePdf } from '../utils/generateResumePdf';
+import { generateResumeDocx } from '../utils/generateResumeDocx';
+import { printCapabilityTranslator } from '../utils/printCapabilityTranslator';
 
 interface CapabilityTranslatorViewProps {
   onTranslate: (text: string) => Promise<TranslationResult | null>;
   currentResult: TranslationResult | null;
   isLoading: boolean;
   onSendToDecisionTree?: () => void;
+  onClearTranslation?: () => void;
 }
 
 export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> = ({
   onTranslate,
   currentResult,
   isLoading,
-  onSendToDecisionTree
+  onSendToDecisionTree,
+  onClearTranslation
 }) => {
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(currentResult?.rawExperience || '');
+  const [selectedPreset, setSelectedPreset] = useState('');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
-  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState<'pdf' | 'docx' | 'print'>('print');
   const [candidateName, setCandidateName] = useState('');
   const [candidatePhone, setCandidatePhone] = useState('');
   const [candidateEmail, setCandidateEmail] = useState('');
@@ -55,6 +64,17 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
     navigator.clipboard.writeText(text);
     setCopiedSection(sectionKey);
     setTimeout(() => setCopiedSection(null), 2200);
+  };
+
+  const handlePrintToPdf = (res?: TranslationResult | null) => {
+    const target = res || currentResult;
+    if (!target) return;
+    printCapabilityTranslator(target, {
+      candidateName: candidateName.trim() || undefined,
+      phone: candidatePhone.trim() || undefined,
+      email: candidateEmail.trim() || undefined,
+      location: candidateLocation.trim() || undefined,
+    });
   };
 
   const generateFullMarkdown = (res: TranslationResult) => {
@@ -94,11 +114,26 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
       email: candidateEmail.trim() || undefined,
       location: candidateLocation.trim() || undefined,
     });
-    setIsPdfModalOpen(false);
+    setIsExportModalOpen(false);
+  };
+
+  const handleDownloadDocx = async (res: TranslationResult) => {
+    await generateResumeDocx(res, {
+      candidateName: candidateName.trim() || 'Professional Candidate',
+      phone: candidatePhone.trim() || undefined,
+      email: candidateEmail.trim() || undefined,
+      location: candidateLocation.trim() || undefined,
+    });
+    setIsExportModalOpen(false);
+  };
+
+  const openExportModal = (format: 'pdf' | 'docx') => {
+    setExportFormat(format);
+    setIsExportModalOpen(true);
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6 w-full overflow-hidden">
       {/* Mode Banner */}
       <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -123,32 +158,36 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
         </div>
       </div>
 
-      {/* Preset Experience Selector */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-mono text-stone-400 uppercase tracking-wider">
-            Quick-Select Institutional Trade Profiles
+      {/* Preset Experience Dropdown Menu (Zero Horizontal Scroll) */}
+      <div className="bg-stone-900/70 border border-stone-800/90 rounded-xl p-4 space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+          <label htmlFor="translator-preset-select" className="text-xs font-mono text-amber-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>Select Sample Institutional Profile:</span>
+          </label>
+          <span className="text-[11px] text-stone-400">
+            Choose from the dropdown menu to auto-populate the form below
           </span>
-          <span className="text-[11px] text-stone-500">Click to populate input</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+        <select
+          id="translator-preset-select"
+          value={selectedPreset}
+          onChange={(e) => {
+            const val = e.target.value;
+            setSelectedPreset(val);
+            if (val) {
+              handleSelectPreset(val);
+            }
+          }}
+          className="w-full bg-stone-950 border border-stone-700/80 rounded-lg p-2.5 text-xs sm:text-sm text-stone-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 font-sans cursor-pointer transition-colors"
+        >
+          <option value="">-- Choose a standard institutional trade profile (Kitchen, Facilities, Heavy Equipment, Logistics...) --</option>
           {SAMPLE_INSTITUTIONAL_EXPERIENCES.map((preset, idx) => (
-            <button
-              key={idx}
-              id={`preset-btn-${idx}`}
-              type="button"
-              onClick={() => handleSelectPreset(preset.text)}
-              className="text-left p-2.5 rounded-lg bg-stone-900 hover:bg-stone-850 border border-stone-800 hover:border-amber-500/50 transition-all text-xs group"
-            >
-              <div className="font-semibold text-stone-200 group-hover:text-amber-300 truncate">
-                {preset.title}
-              </div>
-              <div className="text-[10px] text-stone-500 font-mono mt-0.5">
-                {preset.badge}
-              </div>
-            </button>
+            <option key={idx} value={preset.text}>
+              {preset.title} — [{preset.badge}]
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
       {/* Input Form */}
@@ -166,17 +205,17 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-xs font-mono text-stone-500">
-            {inputText.trim() ? `${inputText.trim().split(/\s+/).length} words entered` : 'Enter institutional duties above or select a preset'}
+            {inputText.trim() ? `${inputText.trim().split(/\s+/).length} words entered` : 'Enter institutional duties above or select from the dropdown'}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {inputText && (
               <button
                 type="button"
                 onClick={() => setInputText('')}
                 className="px-3 py-2 text-xs text-stone-400 hover:text-stone-200 bg-stone-900 border border-stone-800 rounded-lg hover:bg-stone-800 transition-colors"
               >
-                Clear
+                Clear Input
               </button>
             )}
             <button
@@ -211,15 +250,39 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-stone-300">
                 Commercial Translation Ready
               </span>
+              <span className="hidden sm:inline-flex px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800/60">
+                Saved in Local Storage
+              </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                id="print-to-pdf-btn"
+                onClick={() => handlePrintToPdf(currentResult)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-500 hover:bg-amber-400 text-xs font-bold text-stone-950 shadow-sm transition-colors"
+                title="Print clean black-and-white dossier or Save as PDF via native browser dialog"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Print to PDF</span>
+              </button>
+
               <button
                 id="download-resume-pdf-btn"
-                onClick={() => setIsPdfModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-500 hover:bg-amber-400 text-xs font-bold text-stone-950 shadow-sm transition-colors"
+                onClick={() => openExportModal('pdf')}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-stone-200 border border-stone-700 transition-colors"
+                title="Download formatted PDF resume file"
               >
-                <FileDown className="w-3.5 h-3.5" />
-                <span>Download Resume (PDF)</span>
+                <FileDown className="w-3.5 h-3.5 text-amber-400" />
+                <span>PDF File</span>
+              </button>
+
+              <button
+                id="download-resume-docx-btn"
+                onClick={() => openExportModal('docx')}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-stone-200 border border-stone-700 transition-colors"
+                title="Download editable Microsoft Word .docx resume"
+              >
+                <FileText className="w-3.5 h-3.5 text-sky-400" />
+                <span>Word (.docx)</span>
               </button>
 
               <button
@@ -228,17 +291,20 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-stone-200 border border-stone-700 transition-colors"
               >
                 {copiedSection === 'full' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedSection === 'full' ? 'Dossier Copied' : 'Copy (MD)'}</span>
+                <span>{copiedSection === 'full' ? 'Copied' : 'Copy (MD)'}</span>
               </button>
 
-              <button
-                id="download-dossier-file-btn"
-                onClick={() => downloadTextFile(currentResult)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-stone-200 border border-stone-700 transition-colors"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Download .MD</span>
-              </button>
+              {onClearTranslation && (
+                <button
+                  id="clear-saved-translation-btn"
+                  onClick={onClearTranslation}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 border border-rose-900/40 transition-colors"
+                  title="Clear saved translation from localStorage"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Clear Saved</span>
+                </button>
+              )}
 
               {onSendToDecisionTree && (
                 <button
@@ -246,7 +312,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   onClick={onSendToDecisionTree}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-500/20 hover:bg-amber-500/30 text-xs font-semibold text-amber-300 border border-amber-500/40 transition-colors"
                 >
-                  <span>Launch Day 1-3 Decision Tree</span>
+                  <span>Launch Day 1-3 Tree</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -425,31 +491,42 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 ))}
               </div>
 
-              {/* Bottom Quick PDF Export Action */}
+              {/* Bottom Quick Resume Export Action */}
               <div className="pt-3 border-t border-stone-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-xs text-stone-400 font-sans">
-                  Ready to apply? Export these accomplishments and trade competencies into an employer-ready PDF format.
+                  Ready to apply? Export these accomplishments and trade competencies into an employer-ready resume.
                 </p>
-                <button
-                  id="download-resume-pdf-card-btn"
-                  onClick={() => setIsPdfModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-colors shrink-0"
-                >
-                  <FileDown className="w-4 h-4" />
-                  <span>Download Resume (PDF)</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    id="download-resume-pdf-card-btn"
+                    onClick={() => openExportModal('pdf')}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-colors shrink-0"
+                  >
+                    <FileDown className="w-4 h-4" />
+                    <span>Download PDF</span>
+                  </button>
+
+                  <button
+                    id="download-resume-docx-card-btn"
+                    onClick={() => openExportModal('docx')}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-stone-950 font-bold text-xs shadow-md transition-colors shrink-0"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>Download Word (.docx)</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* PDF Customization & Download Modal */}
-      {isPdfModalOpen && currentResult && (
+      {/* Resume Customization & Download Modal */}
+      {isExportModalOpen && currentResult && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-stone-900 border border-stone-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 relative">
             <button
-              onClick={() => setIsPdfModalOpen(false)}
+              onClick={() => setIsExportModalOpen(false)}
               className="absolute top-4 right-4 p-1.5 rounded-lg text-stone-400 hover:text-stone-200 hover:bg-stone-800 transition-colors"
             >
               <X className="w-5 h-5" />
@@ -461,12 +538,52 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   EXPORT CONFIGURATION
                 </span>
                 <h3 className="text-lg font-bold text-stone-100">
-                  Generate Commercial Resume PDF
+                  Generate Commercial Resume
                 </h3>
               </div>
               <p className="text-xs text-stone-400">
-                Customize contact headers before generating your high-impact PDF resume formatted for Georgia corridor employers.
+                Customize contact headers and choose your format (clean PDF or fully editable Microsoft Word .docx) optimized for Georgia corridor employers and Applicant Tracking Systems (ATS).
               </p>
+            </div>
+
+            {/* Format Selector Pills */}
+            <div className="grid grid-cols-3 gap-2 bg-stone-950 p-1 rounded-lg border border-stone-800">
+              <button
+                type="button"
+                onClick={() => setExportFormat('print')}
+                className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-semibold transition-all ${
+                  exportFormat === 'print'
+                    ? 'bg-amber-500 text-stone-950 font-bold shadow-sm'
+                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900'
+                }`}
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Print to PDF</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setExportFormat('pdf')}
+                className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-semibold transition-all ${
+                  exportFormat === 'pdf'
+                    ? 'bg-amber-500 text-stone-950 font-bold shadow-sm'
+                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900'
+                }`}
+              >
+                <FileDown className="w-3.5 h-3.5" />
+                <span>PDF File</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setExportFormat('docx')}
+                className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-md text-xs font-semibold transition-all ${
+                  exportFormat === 'docx'
+                    ? 'bg-sky-500 text-stone-950 font-bold shadow-sm'
+                    : 'text-stone-400 hover:text-stone-200 hover:bg-stone-900'
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Word (.docx)</span>
+              </button>
             </div>
 
             <div className="space-y-3.5 text-xs">
@@ -475,7 +592,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   Candidate Full Name
                 </label>
                 <input
-                  id="pdf-candidate-name-input"
+                  id="export-candidate-name-input"
                   type="text"
                   value={candidateName}
                   onChange={(e) => setCandidateName(e.target.value)}
@@ -490,7 +607,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                     Phone Number (Optional)
                   </label>
                   <input
-                    id="pdf-candidate-phone-input"
+                    id="export-candidate-phone-input"
                     type="text"
                     value={candidatePhone}
                     onChange={(e) => setCandidatePhone(e.target.value)}
@@ -504,7 +621,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                     Email Address (Optional)
                   </label>
                   <input
-                    id="pdf-candidate-email-input"
+                    id="export-candidate-email-input"
                     type="email"
                     value={candidateEmail}
                     onChange={(e) => setCandidateEmail(e.target.value)}
@@ -519,7 +636,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   Target Location / Corridor
                 </label>
                 <input
-                  id="pdf-candidate-location-input"
+                  id="export-candidate-location-input"
                   type="text"
                   value={candidateLocation}
                   onChange={(e) => setCandidateLocation(e.target.value)}
@@ -529,7 +646,9 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
               </div>
 
               <div className="p-3 rounded-lg bg-stone-950 border border-stone-800 text-[11px] text-stone-400 space-y-1">
-                <div className="font-semibold text-stone-300">Included in PDF:</div>
+                <div className="font-semibold text-stone-300">
+                  Included in {exportFormat === 'docx' ? 'Word (.docx)' : exportFormat === 'print' ? 'Print to PDF' : 'PDF'}:
+                </div>
                 <div className="flex items-center gap-1.5 text-stone-400">
                   <Check className="w-3.5 h-3.5 text-amber-400" />
                   <span>Target Title: {currentResult.commercialTitle}</span>
@@ -546,27 +665,162 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   <Check className="w-3.5 h-3.5 text-amber-400" />
                   <span>Georgia Corridor Placement & HOPE Career Grant Track</span>
                 </div>
+                {exportFormat === 'print' && (
+                  <div className="flex items-center gap-1.5 text-amber-400 font-medium pt-1 border-t border-stone-900">
+                    <Check className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Instant clean black-and-white print preview via native browser print dialog</span>
+                  </div>
+                )}
+                {exportFormat === 'docx' && (
+                  <div className="flex items-center gap-1.5 text-sky-400 font-medium pt-1 border-t border-stone-900">
+                    <Check className="w-3.5 h-3.5 text-sky-400" />
+                    <span>Editable in Microsoft Word, Google Docs, LibreOffice & ATS systems</span>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-stone-800">
+            <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-stone-800">
               <button
                 type="button"
-                onClick={() => setIsPdfModalOpen(false)}
+                onClick={() => setIsExportModalOpen(false)}
                 className="px-4 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-xs font-semibold transition-colors"
               >
                 Cancel
               </button>
-              <button
-                id="confirm-generate-pdf-btn"
-                type="button"
-                onClick={() => handleDownloadPdf(currentResult)}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-colors"
-              >
-                <FileDown className="w-4 h-4" />
-                <span>Download Resume (PDF)</span>
-              </button>
+              
+              {exportFormat === 'print' ? (
+                <button
+                  id="confirm-print-to-pdf-btn"
+                  type="button"
+                  onClick={() => {
+                    setIsExportModalOpen(false);
+                    handlePrintToPdf(currentResult);
+                  }}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-colors"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>Trigger Print to PDF</span>
+                </button>
+              ) : exportFormat === 'pdf' ? (
+                <button
+                  id="confirm-generate-pdf-btn"
+                  type="button"
+                  onClick={() => handleDownloadPdf(currentResult)}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-colors"
+                >
+                  <FileDown className="w-4 h-4" />
+                  <span>Download Resume (PDF)</span>
+                </button>
+              ) : (
+                <button
+                  id="confirm-generate-docx-btn"
+                  type="button"
+                  onClick={() => handleDownloadDocx(currentResult)}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-stone-950 font-bold text-xs shadow-md transition-colors"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Download Resume (.DOCX)</span>
+                </button>
+              )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clean Black & White Professional Layout for Native Browser Print / Print to PDF */}
+      {currentResult && (
+        <div id="printable-capability-dossier" className="hidden print:block print-dossier-root">
+          {/* Document Header */}
+          <div className="print-dossier-header">
+            <div className="print-dossier-title">
+              {candidateName.trim() ? candidateName.trim().toUpperCase() : 'PROFESSIONAL CANDIDATE'}
+            </div>
+            <div className="print-dossier-subtitle">
+              {currentResult.commercialTitle.toUpperCase()}
+            </div>
+            <div className="print-dossier-meta">
+              {[
+                candidateLocation.trim() || 'Georgia Logistics & Trade Corridor (Atlanta / Macon)',
+                candidatePhone.trim() || 'Direct Phone: Available upon interview',
+                candidateEmail.trim() || 'Email: Available upon direct contact'
+              ].join('  |  ')}
+            </div>
+          </div>
+
+          {/* Section: Commercial Capability Summary */}
+          <div className="print-section">
+            <div className="print-section-heading">
+              1. Commercial Capability Summary
+            </div>
+            <p className="text-xs leading-relaxed text-black mb-3">
+              High-discipline, outcome-driven operational specialist aligning rigorous institutional experience and facilities execution into commercial standards. Demonstrates proven capability in high-accountability environments with strict adherence to safety protocols, equipment reliability, team coordination, and rapid problem resolution across the Georgia logistics and infrastructure corridor.
+            </p>
+          </div>
+
+          {/* Section: Core Competencies (4 Hard & 4 Soft Skills) */}
+          <div className="print-section">
+            <div className="print-section-heading">
+              2. Core Competencies & Transferable Assets
+            </div>
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <div className="print-competency-box">
+                <div className="font-bold text-xs uppercase mb-1 border-b border-black pb-1">
+                  Technical & Hard Skills
+                </div>
+                <ul className="list-disc pl-4 text-xs space-y-1">
+                  {currentResult.competencies.hardSkills.map((skill, i) => (
+                    <li key={i}>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="print-competency-box">
+                <div className="font-bold text-xs uppercase mb-1 border-b border-black pb-1">
+                  High-Agency Execution Skills
+                </div>
+                <ul className="list-disc pl-4 text-xs space-y-1">
+                  {currentResult.competencies.softSkills.map((skill, i) => (
+                    <li key={i}>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: High-Impact Outcome Resume Bullets */}
+          <div className="print-section">
+            <div className="print-section-heading">
+              3. Outcome-Driven Professional Achievements
+            </div>
+            <div className="space-y-2 mb-3">
+              {currentResult.resumeBullets.map((bullet, i) => (
+                <div key={i} className="print-bullet-item">
+                  <strong>•</strong> {bullet}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section: Georgia Corridor Pathway & Training Alignment */}
+          <div className="print-section">
+            <div className="print-section-heading">
+              4. Georgia Corridor Career Pathway & Training Alignment
+            </div>
+            <div className="print-competency-box">
+              <p className="text-xs leading-relaxed font-semibold mb-1">
+                {currentResult.gaPathway}
+              </p>
+              <p className="text-[10px] text-stone-700">
+                Placement & Training Tracks: Technical College System of Georgia (TCSG) HOPE Career Grant (100% Tuition-Free) | Georgia Registered Apprenticeships | Verified Fair-Chance Employers.
+              </p>
+            </div>
+          </div>
+
+          {/* Print Footer */}
+          <div className="mt-4 pt-2 border-t border-black text-[9px] text-stone-600 flex justify-between">
+            <span>RRR Capability Engine & Career Architect — Reentry Career Dossier</span>
+            <span>Generated: {new Date().toLocaleDateString()} | ATS-Compliant Format</span>
           </div>
         </div>
       )}
