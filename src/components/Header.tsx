@@ -32,8 +32,16 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         {/* Brand & System Identity */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
-            <ShieldCheck className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-950/40 border border-amber-500/40 flex items-center justify-center shrink-0 shadow-md overflow-hidden p-1">
+            <img 
+              src="/icon.svg" 
+              alt="RRR Engine Logo" 
+              className="w-full h-full object-contain drop-shadow"
+              onError={(e) => {
+                // Fallback to vector icon if image fails to load
+                (e.currentTarget as HTMLElement).style.display = 'none';
+              }}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
