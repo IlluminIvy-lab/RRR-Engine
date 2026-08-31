@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="50%" stop-color="#0c0a09" />
+      <stop offset="100%" stop-color="#18181b" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  <rect width="504" height="504" x="4" y="4" rx="108" fill="none" stroke="#292524" stroke-width="4"/>
+
+  <!-- Subtle Radial Glow -->
+  <circle cx="256" cy="220" r="160" fill="#f59e0b" opacity="0.08" />
+
+  <!-- Main Shield Container -->
+  <g filter="url(#shadow)">
+    <!-- Outer Shield Outline -->
+    <path d="M 256 90 L 375 145 C 375 270 256 375 256 375 C 256 375 137 270 137 145 Z" 
+          fill="#1c1917" 
+          stroke="url(#goldGrad)" 
+          stroke-width="12" 
+          stroke-linejoin="round"/>
+
+    <!-- Inner Shield Infill -->
+    <path d="M 256 112 L 355 158 C 355 260 256 348 256 348 C 256 348 157 260 157 158 Z" 
+          fill="#292524" 
+          stroke="#44403c" 
+          stroke-width="3"/>
+
+    <!-- Dynamic Forward / Upward Chevrons (Progress & Capability) -->
+    <!-- Lower Chevron -->
+    <path d="M 200 270 L 256 315 L 312 270" 
+          fill="none" 
+          stroke="url(#accentGrad)" 
+          stroke-width="14" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- Middle Chevron -->
+    <path d="M 195 220 L 256 265 L 317 220" 
+          fill="none" 
+          stroke="url(#goldGrad)" 
+          stroke-width="16" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- Top Core Star / Compass Diamond -->
+    <path d="M 256 150 L 272 180 L 302 185 L 278 204 L 285 234 L 256 218 L 227 234 L 234 204 L 210 185 L 240 180 Z" 
+          fill="url(#goldGrad)"/>
+  </g>
+
+  <!-- Bottom Brand Ribbon Label -->
+  <g>
+    <rect x="136" y="405" width="240" height="42" rx="21" fill="#1c1917" stroke="#44403c" stroke-width="2"/>
+    <text x="256" y="432" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="900" letter-spacing="4" fill="#fbbf24" text-anchor="middle">RRR ENGINE</text>
+  </g>
+</svg>

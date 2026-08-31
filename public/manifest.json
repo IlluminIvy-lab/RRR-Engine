@@ -1,0 +1,54 @@
+{
+  "name": "RRR Capability Engine & Reentry Decision System",
+  "short_name": "RRR Engine",
+  "description": "Translates institutional experience into commercial standards and guides structured 30-day reentry across Georgia corridors.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0a09",
+  "theme_color": "#d97706",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities", "business", "education"],
+  "shortcuts": [
+    {
+      "name": "Capability Translator",
+      "short_name": "Translator",
+      "description": "Convert institutional duties into commercial resume credentials",
+      "url": "/?mode=translator",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Decision Tree",
+      "short_name": "Decision Tree",
+      "description": "Interactive Day 1-30 Georgia Reentry Decision Protocol",
+      "url": "/?mode=decision_tree",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Georgia Resource Vault",
+      "short_name": "Resource Vault",
+      "description": "Directory of verified agencies and intake channels",
+      "url": "/?mode=georgia_vault",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    }
+  ]
+}

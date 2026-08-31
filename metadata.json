@@ -1,0 +1,7 @@
+{
+  "name": "RRR Capability Engine & Reentry Decision System",
+  "description": "Translates institutional experience into industry-standard job titles, competencies, outcome-driven resume bullets, and Georgia career pathways, paired with an interactive reentry decision tree.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
