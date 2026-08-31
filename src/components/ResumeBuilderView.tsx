@@ -185,11 +185,13 @@ ${candidate.fullName}
             </button>
 
             <button
+              id="resume-print-save-pdf-btn"
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-stone-200 border border-stone-700 transition-colors"
+              title="Print / Save PDF via native browser dialog"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print</span>
+              <span>Print / Save PDF</span>
             </button>
           </div>
         )}

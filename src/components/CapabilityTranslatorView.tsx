@@ -262,7 +262,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 title="Print clean black-and-white dossier or Save as PDF via native browser dialog"
               >
                 <Printer className="w-3.5 h-3.5" />
-                <span>Print to PDF</span>
+                <span>Print / Save PDF</span>
               </button>
 
               <button

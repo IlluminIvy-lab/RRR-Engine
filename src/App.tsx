@@ -273,6 +273,21 @@ export default function App() {
     showToast('Saved capability translation cleared');
   };
 
+  const handleWipeSession = () => {
+    try {
+      localStorage.removeItem('rrr_last_translation');
+      localStorage.removeItem('rrr_application_packages');
+      localStorage.removeItem('rrr_tracker_items');
+      localStorage.removeItem('rrr_decision_history');
+    } catch {}
+    setCurrentTranslation(null);
+    setApplicationPackages([]);
+    setTrackerItems([]);
+    setDecisionHistory([]);
+    setCurrentMode('unified');
+    showToast('Privacy Quick-Wipe Complete: All local session data purged');
+  };
+
   const handleImportData = (data: AppExportData) => {
     if (data.lastTranslation) setCurrentTranslation(data.lastTranslation);
     if (data.applicationPackages && Array.isArray(data.applicationPackages)) {
@@ -290,7 +305,7 @@ export default function App() {
   const activePackage = applicationPackages[0] || null;
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-100 flex flex-col font-sans selection:bg-amber-500 selection:text-stone-950">
+    <div className="min-h-screen bg-[#0B0F0E] text-[#F4EDE1] flex flex-col font-sans selection:bg-[#C99A44] selection:text-[#0B0F0E]">
       {/* Header Bar */}
       <Header
         currentMode={currentMode}
@@ -300,6 +315,7 @@ export default function App() {
           showToast('Launched Mode 4: Reentry Decision Tree (Day 1-3)');
         }}
         onOpenShareModal={() => setIsShareModalOpen(true)}
+        onWipeSession={handleWipeSession}
         isOffline={isOffline}
       />
 
@@ -386,17 +402,17 @@ export default function App() {
 
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-stone-900 border border-amber-500/50 text-stone-100 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-mono animate-in fade-in duration-200">
-          <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+        <div className="fixed bottom-5 right-5 z-50 bg-[#2F4A3E] border border-[#C99A44]/60 text-[#F4EDE1] px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-mono animate-in fade-in duration-200">
+          <span className="w-2 h-2 rounded-full bg-[#C99A44]"></span>
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Print Stylesheet Clean Header for Direct Printing */}
-      <footer className="border-t border-stone-800 bg-stone-950 py-4 text-center text-xs font-mono text-stone-500 print:hidden">
+      <footer className="border-t border-[#F4EDE1]/15 bg-[#0B0F0E] py-4 text-center text-xs font-mono text-[#F4EDE1]/60 print:hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>RRR Capability Engine & Reentry Navigation System • Georgia / Atlanta / Macon Corridor</span>
-          <span className="text-stone-600">High-Agency Operational Protocols • Zero Jargon • ATS-Compliant</span>
+          <span>RealReentryRegister™ Capability Engine & Reentry Navigation System • Georgia / Atlanta / Macon Corridor</span>
+          <span className="text-[#C99A44]">Make the system visible. Make the path clearer.</span>
         </div>
       </footer>
     </div>

@@ -8,16 +8,12 @@ import {
   Copy, 
   Check, 
   ArrowRight, 
-  Briefcase, 
   MapPin, 
-  FileCheck, 
-  Award, 
   FileDown, 
   FileText,
   ListTodo,
-  CheckSquare,
-  Building,
-  Layers
+  Layers,
+  Printer
 } from 'lucide-react';
 import { 
   TranslationResult, 
@@ -29,16 +25,16 @@ import {
   AppMode 
 } from '../types';
 import { DECISION_TREE_NODES } from '../data/decisionTreeData';
-import { SAMPLE_INSTITUTIONAL_EXPERIENCES } from '../data/georgiaResources';
 import { generateResumePdf } from '../utils/generateResumePdf';
 import { generateResumeDocx } from '../utils/generateResumeDocx';
 import { generateFullPackageDocx } from '../utils/generateFullPackageDocx';
 import { generateFullPackagePdf } from '../utils/generateFullPackagePdf';
+import { printCapabilityTranslator } from '../utils/printCapabilityTranslator';
 
 interface ConsoleMessage {
   id: string;
   sender: 'system' | 'user';
-  type: 'text' | 'translation' | 'full_package' | 'tracker' | 'decision_prompt' | 'decision_resolution';
+  type: 'text' | 'initial_modes' | 'translation' | 'full_package' | 'tracker' | 'decision_prompt' | 'decision_resolution';
   content?: string;
   translationData?: TranslationResult;
   packageData?: FullApplicationPackage;
@@ -65,10 +61,32 @@ interface UnifiedConsoleProps {
   onNavigateMode: (mode: AppMode) => void;
 }
 
+const ROLE_PRESETS = [
+  {
+    label: "Dietary & Food Service Operations",
+    prompt: "Managed high-volume kitchen prep, commercial equipment operation, and dietary meal staging for 1,200 individuals daily under strict ServSafe/HACCP sanitation and inventory guidelines."
+  },
+  {
+    label: "Heavy Equipment & Forklift Logistics",
+    prompt: "Operated sit-down and reach forklifts in high-capacity warehouse distribution staging, managing palletized manifests, OSHA safety compliance, and zero-defect loading workflows."
+  },
+  {
+    label: "Facilities, Electrical & HVAC Maintenance",
+    prompt: "Performed preventative maintenance, electrical circuit diagnostics, commercial boiler checks, and HVAC filter replacements across a 250,000 sq. ft. multi-building facility."
+  },
+  {
+    label: "Administrative Roster & Compliance Clerk",
+    prompt: "Audited daily departmental rosters, tracked logistical intake manifests, maintained strict confidential records, and authored operational variance reports for facility leadership."
+  },
+  {
+    label: "Industrial Laundry & Sanitation Logistics",
+    prompt: "Supervised high-capacity commercial laundering machinery, chemical sanitation dilution ratios, linen inventory staging, and strict biohazard pathogen prevention protocols."
+  }
+];
+
 export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
   onTranslate,
   onGeneratePackage,
-  onAddItemToTracker,
   isLoading,
   onNavigateMode,
 }) => {
@@ -76,27 +94,13 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
     {
       id: 'welcome-1',
       sender: 'system',
-      type: 'text',
-      content: `RRR Capability Engine & Reentry Navigation System Initialized.
-
-You are operating with 4 distinct, fully integrated career modes:
-
-• MODE 1: CAPABILITY TRANSLATOR & BENCHMARKING
-  Convert non-traditional duties into commercial titles, 4 hard & soft competencies, 3 achievement bullets, and verified GA Fair-Chance pathways.
-
-• MODE 2: AUTOMATED RESUME & COVER LETTER BUILDER
-  Type "Generate Full Package" or enter a target title to architect an ATS-ready resume and 3-paragraph commercial cover letter.
-
-• MODE 3: RESEARCH & APPLICATION PROGRESS TRACKER
-  Type "Show Tracker" or share company outreach steps to maintain an active 4-stage lifecycle ledger with next immediate actions.
-
-• MODE 4: INTERACTIVE REENTRY DECISION TREE
-  Type "Start Decision Tree" to execute step-by-step navigation across Day 1-3, Day 3-10, and Day 10-30.`,
+      type: 'initial_modes',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
 
   const [inputVal, setInputVal] = useState('');
+  const [activeChip, setActiveChip] = useState<string | null>(null);
   const [activeDecisionNodeId, setActiveDecisionNodeId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const chatBottomRef = useRef<HTMLDivElement>(null);
@@ -120,6 +124,7 @@ You are operating with 4 distinct, fully integrated career modes:
 
     setMessages((prev) => [...prev, userMsg]);
     setInputVal('');
+    setActiveChip(null);
 
     const lower = textToSend.toLowerCase();
 
@@ -251,6 +256,31 @@ You are operating with 4 distinct, fully integrated career modes:
     }
   };
 
+  const handleTriggerModeCard = (modeNum: 1 | 2 | 3 | 4) => {
+    if (modeNum === 1) {
+      setInputVal("Managed institutional food service staging, dietary inventory, and sanitation for 1,200 individuals daily under strict HACCP compliance.");
+      const inputEl = document.getElementById('console-prompt-input');
+      if (inputEl) {
+        inputEl.focus();
+      }
+    } else if (modeNum === 2) {
+      handleSendMessage('Generate Full Package for Logistics Supervisor');
+    } else if (modeNum === 3) {
+      onNavigateMode('tracker');
+    } else if (modeNum === 4) {
+      startDecisionTreeFlow();
+    }
+  };
+
+  const handleChipClick = (preset: { label: string; prompt: string }) => {
+    setInputVal(preset.prompt);
+    setActiveChip(preset.label);
+    const inputEl = document.getElementById('console-prompt-input');
+    if (inputEl) {
+      inputEl.focus();
+    }
+  };
+
   const cleanLetter = (str: string): string => {
     const s = str.trim().toUpperCase();
     if (s.startsWith('A') && s.length <= 2) return 'A';
@@ -263,7 +293,7 @@ You are operating with 4 distinct, fully integrated career modes:
     const firstNode = DECISION_TREE_NODES['node-1-id'];
     setActiveDecisionNodeId(firstNode.id);
 
-    const promptMsg: ConsoleMessage = {
+    const questionMsg: ConsoleMessage = {
       id: `sys-dec-${Date.now()}`,
       sender: 'system',
       type: 'decision_prompt',
@@ -271,22 +301,12 @@ You are operating with 4 distinct, fully integrated career modes:
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `sys-tree-init-${Date.now()}`,
-        sender: 'system',
-        type: 'text',
-        content: `Initiating MODE 4: Reentry Decision Tree (Phase: Day 1-3). Select option A, B, or C.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      },
-      promptMsg,
-    ]);
+    setMessages((prev) => [...prev, questionMsg]);
   };
 
   const handleSelectDecisionOption = (option: DecisionOption, currentNode: DecisionNode) => {
-    const resolutionMsg: ConsoleMessage = {
-      id: `sys-res-${Date.now()}`,
+    const resMsg: ConsoleMessage = {
+      id: `res-${Date.now()}`,
       sender: 'system',
       type: 'decision_resolution',
       decisionResolution: {
@@ -299,30 +319,24 @@ You are operating with 4 distinct, fully integrated career modes:
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    const nextNodeId = option.nextNodeId;
-    if (nextNodeId && DECISION_TREE_NODES[nextNodeId]) {
-      const nextNode = DECISION_TREE_NODES[nextNodeId];
+    setMessages((prev) => [...prev, resMsg]);
+
+    if (option.nextNodeId && DECISION_TREE_NODES[option.nextNodeId]) {
+      const nextNode = DECISION_TREE_NODES[option.nextNodeId];
       setActiveDecisionNodeId(nextNode.id);
 
-      const nextPrompt: ConsoleMessage = {
-        id: `sys-dec-${Date.now() + 1}`,
-        sender: 'system',
-        type: 'decision_prompt',
-        decisionNode: nextNode,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-
-      setMessages((prev) => [...prev, resolutionMsg, nextPrompt]);
+      setTimeout(() => {
+        const nextQMsg: ConsoleMessage = {
+          id: `dec-${Date.now()}`,
+          sender: 'system',
+          type: 'decision_prompt',
+          decisionNode: nextNode,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        };
+        setMessages((prev) => [...prev, nextQMsg]);
+      }, 500);
     } else {
       setActiveDecisionNodeId(null);
-      const finishMsg: ConsoleMessage = {
-        id: `sys-finish-${Date.now()}`,
-        sender: 'system',
-        type: 'text',
-        content: `Decision Tree Pathway Complete. You can run Mode 1 to translate experience, Mode 2 to build full application packages, or view the Georgia Resource Vault.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setMessages((prev) => [...prev, resolutionMsg, finishMsg]);
     }
   };
 
@@ -335,141 +349,246 @@ You are operating with 4 distinct, fully integrated career modes:
   const handleResetConsole = () => {
     setMessages([
       {
-        id: `reset-${Date.now()}`,
+        id: `welcome-${Date.now()}`,
         sender: 'system',
-        type: 'text',
-        content: `Console cleared. Enter institutional duties for Mode 1 Translation, type "Generate Full Package" for Mode 2, "Show Tracker" for Mode 3, or "Start Decision Tree" for Mode 4.`,
+        type: 'initial_modes',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       },
     ]);
+    setInputVal('');
+    setActiveChip(null);
     setActiveDecisionNodeId(null);
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4">
-      {/* Console Header Bar */}
-      <div className="bg-stone-900/90 border border-stone-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <Terminal className="w-5 h-5 text-amber-400" />
-          <div>
-            <div className="text-sm font-bold text-stone-100 font-sans flex items-center gap-2">
-              <span>RRR 4-Mode Interactive Terminal</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                v2.5 Full Integration
-              </span>
-            </div>
-            <div className="text-xs text-stone-400 font-mono">
-              Mode 1 (Translator) • Mode 2 (Resume & Letter) • Mode 3 (Tracker) • Mode 4 (Decision Tree)
-            </div>
-          </div>
+    <div className="space-y-4 max-w-5xl mx-auto">
+      {/* Console Subheader Bar */}
+      <div className="flex items-center justify-between px-2 text-xs font-mono text-[#F4EDE1]/70">
+        <div className="flex items-center gap-2">
+          <Terminal className="w-4 h-4 text-[#C99A44]" />
+          <span className="font-semibold text-[#F4EDE1]">RRR Unified Operational Console</span>
+          <span className="text-[#F4EDE1]/40">•</span>
+          <span className="text-[#C99A44]">4 Active Modes</span>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            onClick={() => handleSendMessage('Start Decision Tree')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-xs font-mono text-amber-400 border border-amber-500/30 transition-colors"
-          >
-            <Compass className="w-3.5 h-3.5" />
-            <span>"Start Decision Tree"</span>
-          </button>
-
-          <button
-            onClick={() => handleSendMessage('Generate Full Package for Logistics Supervisor')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-xs font-mono text-sky-400 border border-sky-500/30 transition-colors"
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>"Generate Full Package"</span>
-          </button>
-
-          <button
-            onClick={handleResetConsole}
-            className="p-1.5 text-stone-400 hover:text-stone-200 hover:bg-stone-800 rounded transition-colors"
-            title="Reset Terminal"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Quick Sample Selector Dropdown (Zero Horizontal Scroll Mandated) */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-xs bg-stone-900/60 p-2.5 rounded-lg border border-stone-800">
-        <label htmlFor="console-sample-select" className="text-[11px] font-mono text-amber-400 font-semibold flex items-center gap-1.5 shrink-0">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Quick Sample Profiles:</span>
-        </label>
-        <select
-          id="console-sample-select"
-          onChange={(e) => {
-            if (e.target.value) {
-              handleSendMessage(e.target.value);
-              e.target.value = '';
-            }
-          }}
-          defaultValue=""
-          className="flex-1 bg-stone-950 border border-stone-700/80 rounded-md px-3 py-1.5 text-xs text-stone-200 focus:outline-none focus:ring-1 focus:ring-amber-500 font-sans cursor-pointer"
+        <button
+          onClick={handleResetConsole}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#2F4A3E] hover:bg-[#2F4A3E]/80 text-[#F4EDE1] text-xs transition-colors border border-[#F4EDE1]/15"
+          title="Reset console messages"
         >
-          <option value="" disabled>-- Select an institutional trade profile to auto-translate --</option>
-          {SAMPLE_INSTITUTIONAL_EXPERIENCES.map((sample, idx) => (
-            <option key={idx} value={sample.text}>
-              {sample.title} — [{sample.badge}]
-            </option>
-          ))}
-        </select>
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>Reset Terminal</span>
+        </button>
       </div>
 
-      {/* Message Stream */}
-      <div className="bg-stone-950 border border-stone-800/80 rounded-xl p-4 sm:p-6 min-h-[480px] max-h-[640px] overflow-y-auto space-y-4 font-sans text-sm">
+      {/* Message Output Container */}
+      <div className="min-h-[440px] max-h-[600px] overflow-y-auto bg-[#0B0F0E] border border-[#F4EDE1]/15 rounded-2xl p-4 sm:p-6 space-y-6 font-mono text-xs shadow-2xl no-scrollbar">
         {messages.map((msg) => (
           <div
             key={msg.id}
             className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'} space-y-1`}
           >
-            <div className="flex items-center gap-2 px-1 text-[11px] font-mono text-stone-500">
-              <span>{msg.sender === 'user' ? 'OPERATOR' : 'RRR ENGINE'}</span>
-              <span>•</span>
-              <span>{msg.timestamp}</span>
+            <div className="text-[10px] text-[#F4EDE1]/50 px-1 font-mono">
+              {msg.sender === 'user' ? 'Candidate Query' : 'RRR System Engine'} • {msg.timestamp}
             </div>
+
+            {/* INITIAL 4 MODES CARDS GRID */}
+            {msg.type === 'initial_modes' && (
+              <div className="w-full space-y-4 pt-1 pb-2">
+                <div className="p-4 rounded-xl bg-[#2F4A3E]/40 border border-[#F4EDE1]/15 text-[#F4EDE1] space-y-1">
+                  <div className="font-serif font-bold text-sm text-[#C99A44]">
+                    RealReentryRegister™ Operational Command Center
+                  </div>
+                  <p className="text-xs text-[#F4EDE1]/80 font-sans">
+                    Select an operational capability mode below or enter duties, institutional background, or role targets into the prompt console.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* MODE 1 CARD */}
+                  <div
+                    id="mode-card-1"
+                    onClick={() => handleTriggerModeCard(1)}
+                    className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
+                          Mode 1
+                        </span>
+                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                          <Sparkles className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
+                          Capability Translator & Benchmarking
+                        </h3>
+                        <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
+                          Converts raw institutional tasks, maintenance, kitchen, or trade skills into industry-standard commercial titles, 4 hard/soft competencies, and 3 metric-driven resume bullets. Connects directly to verified Georgia Fair-Chance pathways.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
+                      <span>Tap to load sample institutional duties</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* MODE 2 CARD */}
+                  <div
+                    id="mode-card-2"
+                    onClick={() => handleTriggerModeCard(2)}
+                    className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
+                          Mode 2
+                        </span>
+                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                          <Layers className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
+                          Complete Resume & Cover Letter Builder
+                        </h3>
+                        <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
+                          Builds full ATS-ready resumes with 4 specialized templates (Functional, Trade/Logistics, Healthcare/Dietary, Reverse-Chronological) and high-agency 3-paragraph commercial cover letters. Export to PDF and editable Word.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
+                      <span>Tap to auto-generate full package</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* MODE 3 CARD */}
+                  <div
+                    id="mode-card-3"
+                    onClick={() => handleTriggerModeCard(3)}
+                    className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
+                          Mode 3
+                        </span>
+                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                          <ListTodo className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
+                          Research & Application Progress Tracker
+                        </h3>
+                        <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
+                          Structured 4-stage pipeline ledger (Research & Targeting, Application & Outreach, Interview & Advocacy, Onboarding & Milestones). Enforces strict single next immediate actions for relentless progress.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
+                      <span>Tap to open application tracker</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* MODE 4 CARD */}
+                  <div
+                    id="mode-card-4"
+                    onClick={() => handleTriggerModeCard(4)}
+                    className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
+                          Mode 4
+                        </span>
+                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                          <Compass className="w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
+                          Interactive Reentry Decision Tree
+                        </h3>
+                        <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
+                          Navigates critical reentry timeline phases (Day 1-3, Day 3-10, Day 10-30) step-by-step with focused multiple-choice questions. Connects immediately to Georgia DDS IDs, vital records, housing, and transit pipelines.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
+                      <span>Tap to launch Day 1-3 navigation</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Plain Text Message */}
             {msg.type === 'text' && (
               <div
                 className={`p-3.5 rounded-xl max-w-2xl leading-relaxed whitespace-pre-wrap ${
                   msg.sender === 'user'
-                    ? 'bg-amber-500 text-stone-950 font-medium'
-                    : 'bg-stone-900 text-stone-200 border border-stone-800 font-mono text-xs'
+                    ? 'bg-[#C99A44] text-[#0B0F0E] font-semibold'
+                    : 'bg-[#2F4A3E] text-[#F4EDE1] border border-[#F4EDE1]/15 font-mono text-xs'
                 }`}
               >
                 {msg.content}
               </div>
             )}
 
-            {/* MODE 1: TRANSLATION RESULT CARD */}
+            {/* MODE 1: TRANSLATION RESULT CARD (Parchment Document Output Card) */}
             {msg.type === 'translation' && msg.translationData && (
-              <div className="w-full max-w-3xl bg-stone-900 border border-amber-500/40 rounded-xl p-5 space-y-5 shadow-lg">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+              <div className="w-full max-w-3xl bg-[#F4EDE1] text-[#2B2B2B] border-2 border-[#C99A44] rounded-2xl p-6 space-y-5 shadow-2xl">
+                <div className="flex items-center justify-between border-b border-[#2B2B2B]/20 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500 text-stone-950">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#2F4A3E] text-[#F4EDE1]">
                       MODE 1
                     </span>
-                    <span className="text-xs font-mono font-semibold text-stone-300 uppercase tracking-wider">
+                    <span className="text-xs font-serif font-bold text-[#2B2B2B] uppercase tracking-wider">
                       Commercial Capability Dossier
                     </span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <button
+                      onClick={() => printCapabilityTranslator(msg.translationData!)}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#0B0F0E] hover:bg-[#2B2B2B] text-[11px] font-bold text-[#F4EDE1] transition-colors shadow-sm"
+                      title="Print or Save as PDF via native dialog"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print / PDF</span>
+                    </button>
+
+                    <button
                       onClick={() => generateResumePdf(msg.translationData!)}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-[11px] font-bold text-stone-950 transition-colors shadow-sm"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#2F4A3E] hover:bg-[#2F4A3E]/90 text-[11px] font-bold text-[#F4EDE1] transition-colors shadow-sm"
                     >
                       <FileDown className="w-3.5 h-3.5" />
-                      <span>PDF</span>
+                      <span>PDF File</span>
                     </button>
 
                     <button
                       onClick={() => generateResumeDocx(msg.translationData!)}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded bg-sky-500 hover:bg-sky-400 text-[11px] font-bold text-stone-950 transition-colors shadow-sm"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#C99A44] hover:bg-[#C99A44]/90 text-[11px] font-bold text-[#0B0F0E] transition-colors shadow-sm"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Word</span>
+                      <span>Word (.docx)</span>
                     </button>
 
                     <button
@@ -477,15 +596,15 @@ You are operating with 4 distinct, fully integrated career modes:
                         `${msg.translationData?.commercialTitle}\n\nPathway: ${msg.translationData?.gaPathway}\n\nBullets:\n${msg.translationData?.resumeBullets.map(b => `• ${b}`).join('\n')}`,
                         msg.id
                       )}
-                      className="inline-flex items-center gap-1 text-xs text-stone-400 hover:text-stone-200 px-2 py-1 rounded bg-stone-800 border border-stone-700 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-[#2B2B2B] hover:text-[#0B0F0E] px-2 py-1 rounded bg-[#F4EDE1] border border-[#2B2B2B]/30 transition-colors"
                     >
-                      {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
                       <span>{copiedId === msg.id ? 'Copied' : 'Copy'}</span>
                     </button>
 
                     <button
                       onClick={() => onNavigateMode('resume_builder')}
-                      className="inline-flex items-center gap-1 text-xs text-amber-300 hover:text-amber-200 px-2.5 py-1 rounded bg-amber-950/40 border border-amber-700/50 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs text-[#0B0F0E] font-bold px-2.5 py-1 rounded bg-[#C99A44]/30 border border-[#C99A44] transition-colors"
                     >
                       <span>Build Full Package (Mode 2)</span>
                       <ArrowRight className="w-3 h-3" />
@@ -494,110 +613,108 @@ You are operating with 4 distinct, fully integrated career modes:
                 </div>
 
                 {/* 1. Commercial Alignment */}
-                <div className="space-y-1 bg-stone-950/80 p-3.5 rounded-lg border border-stone-800">
-                  <div className="text-[11px] font-mono uppercase text-amber-400 font-bold">
-                    1. COMMERCIAL TITLE
+                <div className="space-y-1">
+                  <div className="text-[11px] font-mono font-bold text-[#2F4A3E] uppercase tracking-wider">
+                    1. Commercial Alignment
                   </div>
-                  <div className="text-lg font-bold text-stone-100">
+                  <div className="text-xl font-bold font-serif text-[#0B0F0E]">
                     {msg.translationData.commercialTitle}
                   </div>
                 </div>
 
-                {/* 2. Competencies (4 Hard & 4 Soft Skills) */}
-                <div className="space-y-3">
-                  <div className="text-[11px] font-mono uppercase text-amber-400 font-bold">
-                    2. COMPETENCIES (4 HARD & 4 SOFT SKILLS)
+                {/* 2. Core Competencies Grid */}
+                <div className="space-y-2">
+                  <div className="text-[11px] font-mono font-bold text-[#2F4A3E] uppercase tracking-wider">
+                    2. Core Competencies (4 Hard & 4 Soft Skills)
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div className="space-y-1.5 p-3 rounded-lg bg-stone-950 border border-stone-800">
-                      <span className="text-[10px] font-mono uppercase text-amber-400/80 font-bold">
-                        Technical / Hard Skills
-                      </span>
-                      <ul className="space-y-1 text-stone-300">
-                        {msg.translationData.competencies.hardSkills.map((s, idx) => (
-                          <li key={idx} className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                            <span>{s}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="space-y-1.5 p-3 rounded-xl bg-white/80 border border-[#2B2B2B]/10">
+                      <span className="font-bold text-[#2F4A3E] text-[10px] uppercase font-mono block">Technical Hard Skills</span>
+                      {msg.translationData.competencies.hardSkills.map((h, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-[#2B2B2B]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
+                          <span>{h}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="space-y-1.5 p-3 rounded-lg bg-stone-950 border border-stone-800">
-                      <span className="text-[10px] font-mono uppercase text-sky-400 font-bold">
-                        High-Agency Execution Skills
-                      </span>
-                      <ul className="space-y-1 text-stone-300">
-                        {msg.translationData.competencies.softSkills.map((s, idx) => (
-                          <li key={idx} className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                            <span>{s}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="space-y-1.5 p-3 rounded-xl bg-white/80 border border-[#2B2B2B]/10">
+                      <span className="font-bold text-[#2F4A3E] text-[10px] uppercase font-mono block">Execution & Soft Skills</span>
+                      {msg.translationData.competencies.softSkills.map((s, i) => (
+                        <div key={i} className="flex items-center gap-1.5 text-[#2B2B2B]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2F4A3E]"></span>
+                          <span>{s}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
 
                 {/* 3. Resume Bullets */}
                 <div className="space-y-2">
-                  <div className="text-[11px] font-mono uppercase text-amber-400 font-bold">
-                    3. RESUME BULLETS (3 ACTION-DRIVEN ACHIEVEMENTS)
+                  <div className="text-[11px] font-mono font-bold text-[#2F4A3E] uppercase tracking-wider">
+                    3. High-Impact Quantified Resume Bullets
                   </div>
-                  <div className="space-y-2">
-                    {msg.translationData.resumeBullets.map((bullet, idx) => (
-                      <div
-                        key={idx}
-                        className="p-3 rounded-lg bg-stone-950 border border-stone-800 text-xs text-stone-200 leading-relaxed"
-                      >
-                        • {bullet}
+                  <div className="space-y-2 bg-white/90 p-4 rounded-xl border border-[#2B2B2B]/15">
+                    {msg.translationData.resumeBullets.map((b, i) => (
+                      <div key={i} className="flex items-start gap-2.5 text-xs text-[#2B2B2B] leading-relaxed">
+                        <span className="font-mono text-[#C99A44] font-bold shrink-0">{i + 1}.</span>
+                        <span className="font-sans">{b}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* 4. GA Fair-Chance Pathways */}
-                <div className="p-3.5 rounded-lg bg-emerald-950/30 border border-emerald-800/50 space-y-1 text-xs">
-                  <div className="text-[11px] font-mono uppercase text-emerald-400 font-bold flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>4. GEORGIA FAIR-CHANCE PATHWAYS</span>
+                <div className="space-y-1.5 p-3.5 rounded-xl bg-[#2F4A3E]/10 border border-[#2F4A3E]/30 text-xs">
+                  <div className="text-[11px] font-mono font-bold text-[#2F4A3E] flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#C99A44]" />
+                    <span>4. GA Fair-Chance Corridor Pathways</span>
                   </div>
-                  <p className="text-stone-200 font-sans leading-relaxed">
+                  <p className="text-[#2B2B2B] font-sans font-medium leading-relaxed">
                     {msg.translationData.gaPathway}
                   </p>
                 </div>
               </div>
             )}
 
-            {/* MODE 2: FULL APPLICATION PACKAGE CARD */}
+            {/* MODE 2: FULL PACKAGE RESULT CARD (Parchment Document Output Card) */}
             {msg.type === 'full_package' && msg.packageData && (
-              <div className="w-full max-w-3xl bg-stone-900 border border-sky-500/40 rounded-xl p-5 space-y-4 shadow-lg">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-3">
+              <div className="w-full max-w-3xl bg-[#F4EDE1] text-[#2B2B2B] border-2 border-[#C99A44] rounded-2xl p-6 space-y-4 shadow-2xl">
+                <div className="flex items-center justify-between border-b border-[#2B2B2B]/20 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-500 text-stone-950">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#C99A44] text-[#0B0F0E]">
                       MODE 2
                     </span>
-                    <span className="text-xs font-mono font-semibold text-stone-300 uppercase tracking-wider">
-                      Application Package Generated
+                    <span className="text-xs font-serif font-bold text-[#2B2B2B] uppercase tracking-wider">
+                      Complete Career Package Generated
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
+                      onClick={() => window.print()}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#0B0F0E] hover:bg-[#2B2B2B] text-[11px] font-bold text-[#F4EDE1] transition-colors shadow-sm"
+                      title="Print or Save as PDF"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print</span>
+                    </button>
+                    <button
                       onClick={() => generateFullPackagePdf(msg.packageData!)}
-                      className="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs flex items-center gap-1 shadow-sm"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#2F4A3E] hover:bg-[#2F4A3E]/90 text-[11px] font-bold text-[#F4EDE1] transition-colors shadow-sm"
                     >
                       <FileDown className="w-3.5 h-3.5" />
-                      <span>PDF Package</span>
+                      <span>PDF</span>
                     </button>
                     <button
                       onClick={() => generateFullPackageDocx(msg.packageData!)}
-                      className="px-2.5 py-1 rounded bg-sky-500 hover:bg-sky-400 text-stone-950 font-bold text-xs flex items-center gap-1 shadow-sm"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#C99A44] hover:bg-[#C99A44]/90 text-[11px] font-bold text-[#0B0F0E] transition-colors shadow-sm"
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>Word (.docx)</span>
+                      <span>Word</span>
                     </button>
                     <button
                       onClick={() => onNavigateMode('resume_builder')}
-                      className="px-2.5 py-1 rounded bg-stone-800 hover:bg-stone-700 text-stone-200 font-medium text-xs flex items-center gap-1 border border-stone-700"
+                      className="inline-flex items-center gap-1 text-xs text-[#0B0F0E] font-bold px-2.5 py-1 rounded bg-[#C99A44]/40 border border-[#C99A44] transition-colors"
                     >
                       <span>Open Builder</span>
                       <ArrowRight className="w-3 h-3" />
@@ -605,24 +722,24 @@ You are operating with 4 distinct, fully integrated career modes:
                   </div>
                 </div>
 
-                <div className="space-y-1 bg-stone-950/80 p-3.5 rounded-lg border border-stone-800">
-                  <div className="text-[11px] font-mono uppercase text-sky-400 font-bold">
+                <div className="space-y-1 bg-white/70 p-4 rounded-xl border border-[#2B2B2B]/10">
+                  <div className="text-[11px] font-mono uppercase text-[#2F4A3E] font-bold">
                     Target Commercial Role: {msg.packageData.targetJobTitle}
                   </div>
-                  <div className="text-xs text-stone-300 font-sans">
+                  <div className="text-xs text-[#2B2B2B] font-sans">
                     Candidate: <strong>{msg.packageData.candidate.fullName}</strong> ({msg.packageData.candidate.cityStateZip})
                   </div>
-                  <p className="text-xs text-stone-400 mt-1 italic">
+                  <p className="text-xs text-[#2B2B2B]/80 mt-1 italic">
                     "{msg.packageData.resume.summary.slice(0, 140)}..."
                   </p>
                 </div>
 
                 {/* Cover letter snippet */}
-                <div className="p-3.5 rounded-lg bg-stone-950 border border-stone-800 text-xs space-y-1.5">
-                  <div className="font-bold text-stone-200">
+                <div className="p-4 rounded-xl bg-white/80 border border-[#2B2B2B]/15 text-xs space-y-1.5">
+                  <div className="font-bold text-[#0B0F0E] font-serif">
                     Targeted Cover Letter: To {msg.packageData.coverLetter.hiringManagerOrDepartment} ({msg.packageData.coverLetter.targetCompanyOrHospital})
                   </div>
-                  <p className="text-stone-400 line-clamp-2">
+                  <p className="text-[#2B2B2B] line-clamp-2">
                     {msg.packageData.coverLetter.openingParagraph}
                   </p>
                 </div>
@@ -631,37 +748,37 @@ You are operating with 4 distinct, fully integrated career modes:
 
             {/* MODE 4: DECISION TREE QUESTION PROMPT */}
             {msg.type === 'decision_prompt' && msg.decisionNode && (
-              <div className="w-full max-w-2xl bg-stone-900 border border-amber-500/40 rounded-xl p-5 space-y-4 shadow-lg">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-2.5">
+              <div className="w-full max-w-2xl bg-[#2F4A3E] border border-[#C99A44]/60 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl">
+                <div className="flex items-center justify-between border-b border-[#F4EDE1]/15 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-amber-500 text-stone-950 font-mono font-bold text-xs">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#C99A44] text-[#0B0F0E] font-mono font-bold text-xs">
                       MODE 4 • {msg.decisionNode.phase}
                     </span>
-                    <span className="text-xs font-mono text-stone-300">
+                    <span className="text-xs font-mono text-[#F4EDE1]">
                       Domain: {msg.decisionNode.domain}
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-amber-400">
+                  <span className="text-[11px] font-mono text-[#C99A44]">
                     Respond A, B, or C
                   </span>
                 </div>
 
-                <div className="text-sm font-bold text-stone-100 font-sans leading-snug">
+                <div className="text-base font-bold text-[#F4EDE1] font-serif leading-snug">
                   {msg.decisionNode.question}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {msg.decisionNode.options.map((opt) => (
                     <button
                       key={opt.key}
                       id={`console-opt-${opt.key}`}
                       onClick={() => handleSelectDecisionOption(opt, msg.decisionNode!)}
-                      className="w-full text-left p-3 rounded-lg bg-stone-950 hover:bg-stone-800 border border-stone-800 hover:border-amber-500/50 transition-all flex items-start gap-3 group"
+                      className="w-full text-left p-3.5 rounded-xl bg-[#0B0F0E]/70 hover:bg-[#0B0F0E] border border-[#F4EDE1]/15 hover:border-[#C99A44] transition-all flex items-start gap-3.5 group"
                     >
-                      <span className="w-6 h-6 rounded bg-stone-800 group-hover:bg-amber-500 group-hover:text-stone-950 text-amber-400 font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                      <span className="w-6 h-6 rounded-lg bg-[#2B2B2B] group-hover:bg-[#C99A44] group-hover:text-[#0B0F0E] text-[#C99A44] font-mono font-bold text-xs flex items-center justify-center shrink-0">
                         {opt.key}
                       </span>
-                      <span className="text-xs text-stone-200 group-hover:text-stone-100 leading-relaxed font-sans">
+                      <span className="text-xs text-[#F4EDE1] group-hover:text-white leading-relaxed font-sans">
                         {opt.label}
                       </span>
                     </button>
@@ -672,21 +789,21 @@ You are operating with 4 distinct, fully integrated career modes:
 
             {/* MODE 4: DECISION TREE RESOLUTION */}
             {msg.type === 'decision_resolution' && msg.decisionResolution && (
-              <div className="w-full max-w-2xl bg-stone-900/90 border border-emerald-800/60 rounded-xl p-4 space-y-2 text-xs">
-                <div className="flex items-center gap-2 text-emerald-400 font-mono font-bold text-[11px]">
+              <div className="w-full max-w-2xl bg-[#2F4A3E]/90 border border-[#C99A44]/40 rounded-2xl p-4 sm:p-5 space-y-2 text-xs shadow-lg">
+                <div className="flex items-center gap-2 text-[#C99A44] font-mono font-bold text-[11px]">
                   <Check className="w-3.5 h-3.5" />
                   <span>Selection Logged: Option [{msg.decisionResolution.choiceKey}]</span>
                 </div>
-                <div className="text-stone-200 font-semibold">
+                <div className="text-[#F4EDE1] font-semibold font-serif text-sm">
                   {msg.decisionResolution.choiceLabel}
                 </div>
-                <div className="p-2.5 rounded bg-stone-950 border border-stone-800 space-y-1">
-                  <div className="text-stone-300">
-                    <strong className="text-amber-400">Action Plan: </strong>
+                <div className="p-3 rounded-xl bg-[#0B0F0E]/60 border border-[#F4EDE1]/15 space-y-1.5">
+                  <div className="text-[#F4EDE1]">
+                    <strong className="text-[#C99A44]">Action Plan: </strong>
                     {msg.decisionResolution.actionGuidance}
                   </div>
-                  <div className="text-stone-400 font-mono text-[11px] flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <div className="text-[#F4EDE1]/80 font-mono text-[11px] flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#C99A44] shrink-0" />
                     <span>{msg.decisionResolution.gaResource}</span>
                   </div>
                 </div>
@@ -696,13 +813,48 @@ You are operating with 4 distinct, fully integrated career modes:
         ))}
 
         {isLoading && (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-stone-900 text-stone-400 text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-            <span>Processing capability alignment and Georgia corridor intelligence...</span>
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-[#2F4A3E] text-[#F4EDE1] text-xs font-mono border border-[#C99A44]/40 animate-pulse shadow-md">
+            <div className="flex space-x-1">
+              <span className="w-2 h-2 rounded-full bg-[#C99A44] animate-bounce"></span>
+              <span className="w-2 h-2 rounded-full bg-[#C99A44] animate-bounce [animation-delay:0.2s]"></span>
+              <span className="w-2 h-2 rounded-full bg-[#C99A44] animate-bounce [animation-delay:0.4s]"></span>
+            </div>
+            <span>Translating capabilities via Georgia Corridor Intelligence Engine...</span>
           </div>
         )}
 
         <div ref={chatBottomRef} />
+      </div>
+
+      {/* ONE-TAP CAPABILITY & ROLE PRESETS (Quick-Fill Chips) */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C99A44] flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-[#C99A44]" />
+            <span>Quick-Fill Role Presets</span>
+          </span>
+          <span className="text-[10px] font-mono text-[#F4EDE1]/50">
+            Tap to load verified operational duties
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          {ROLE_PRESETS.map((preset, idx) => (
+            <button
+              key={idx}
+              id={`preset-chip-${idx}`}
+              type="button"
+              onClick={() => handleChipClick(preset)}
+              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium font-sans transition-all cursor-pointer whitespace-nowrap ${
+                activeChip === preset.label
+                  ? 'bg-[#2F4A3E] text-[#C99A44] border-2 border-[#C99A44] shadow-md font-semibold'
+                  : 'bg-[#2F4A3E]/60 hover:bg-[#2F4A3E] text-[#F4EDE1]/90 hover:text-[#F4EDE1] border border-[#F4EDE1]/15 hover:border-[#C99A44]/60'
+              }`}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Input Field */}
@@ -720,14 +872,14 @@ You are operating with 4 distinct, fully integrated career modes:
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             placeholder="Type institutional experience, 'Generate Full Package', 'Show Tracker', or 'Start Decision Tree'..."
-            className="w-full bg-stone-900 border border-stone-700/80 rounded-xl px-4 py-3 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 font-sans"
+            className="w-full bg-[#2B2B2B] border border-[#F4EDE1]/20 rounded-xl px-4 py-3.5 text-[#F4EDE1] placeholder-[#F4EDE1]/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A44] focus:border-[#C99A44] font-sans transition-all"
           />
         </div>
         <button
           id="console-send-btn"
           type="submit"
           disabled={!inputVal.trim() || isLoading}
-          className="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shadow-md"
+          className="px-6 py-3.5 rounded-xl bg-[#C99A44] hover:bg-[#C99A44]/90 text-[#0B0F0E] font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shrink-0"
         >
           <span>Run</span>
           <Send className="w-4 h-4" />
