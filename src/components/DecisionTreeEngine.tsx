@@ -19,14 +19,19 @@ import { DecisionNode, DecisionHistoryEntry, ReentryPhase, DecisionOption } from
 import { DECISION_TREE_NODES } from '../data/decisionTreeData';
 
 interface DecisionTreeEngineProps {
+  history: DecisionHistoryEntry[];
+  onLogEntry: (entry: DecisionHistoryEntry) => void;
+  onResetTree: () => void;
   onSwitchToTranslator?: () => void;
 }
 
 export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
+  history,
+  onLogEntry,
+  onResetTree,
   onSwitchToTranslator
 }) => {
   const [currentNodeId, setCurrentNodeId] = useState<string>('node-1-id');
-  const [history, setHistory] = useState<DecisionHistoryEntry[]>([]);
   const [selectedOption, setSelectedOption] = useState<DecisionOption | null>(null);
   const [manualInput, setManualInput] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -76,7 +81,7 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
     };
 
     const nextNodeId = selectedOption.nextNodeId;
-    setHistory([...history, entry]);
+    onLogEntry(entry);
     setSelectedOption(null);
     setManualInput('');
 
@@ -98,7 +103,7 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
 
   const handleReset = () => {
     setCurrentNodeId('node-1-id');
-    setHistory([]);
+    onResetTree();
     setSelectedOption(null);
     setManualInput('');
   };

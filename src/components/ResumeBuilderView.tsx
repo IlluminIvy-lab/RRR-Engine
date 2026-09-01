@@ -23,7 +23,7 @@ import { generateFullPackagePdf } from '../utils/generateFullPackagePdf';
 interface ResumeBuilderViewProps {
   currentPackage: FullApplicationPackage | null;
   currentTranslation: TranslationResult | null;
-  onGeneratePackage: (targetTitle: string, candidateName: string, location: string, industry: string) => Promise<void>;
+  onGeneratePackage: (targetTitle: string, candidateName?: string, location?: string, industry?: string) => Promise<FullApplicationPackage | null>;
   onSavePackage: (pkg: FullApplicationPackage) => void;
   onSendToTracker: (company: string, role: string) => void;
   isLoading: boolean;

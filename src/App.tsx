@@ -380,6 +380,12 @@ export default function App() {
 
         {currentMode === 'decision_tree' && (
           <DecisionTreeEngine
+            history={decisionHistory}
+            onLogEntry={(entry) => setDecisionHistory((prev) => [...prev, entry])}
+            onResetTree={() => {
+              setDecisionHistory([]);
+              showToast('Decision Tree reset');
+            }}
             onSwitchToTranslator={() => setCurrentMode('translator')}
           />
         )}
