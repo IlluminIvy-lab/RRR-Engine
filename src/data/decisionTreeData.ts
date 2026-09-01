@@ -27,8 +27,8 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
       {
         key: 'C',
         label: 'I have zero identification documents (missing both Birth Certificate and SSN Card).',
-        actionGuidance: 'Execute emergency Vital Records protocol: Submit expedited GA Form 3918 for birth certificate, followed by in-person Social Security Administration replacement request.',
-        gaSpecificResource: 'State Office of Vital Records: 1680 Phoenix Blvd, Suite 100, Atlanta GA 30349 (or Bibb County Health Dept, 171 Emery Hwy, Macon). SSA Office: 61 Forsyth St SW, Atlanta.',
+        actionGuidance: 'Execute emergency Vital Records protocol: Submit expedited GA Form 3918 for birth certificate (online via ROVER/VitalChek, or in-person at County Health Departments as State Office walk-in is suspended), followed by in-person SSA replacement request.',
+        gaSpecificResource: 'Order online (dph.georgia.gov) or walk-in at Fulton County Board of Health (10 Park Pl S) / Bibb County Health Dept (171 Emery Hwy, Macon). SSA Office: 61 Forsyth St SW, Atlanta.',
         nextNodeId: 'node-2-transit',
         targetPhase: 'Day 1-3'
       }
@@ -119,7 +119,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         key: 'B',
         label: 'I have past ChexSystems / negative banking history preventing standard account opening.',
         actionGuidance: 'Open a verified Georgia Second-Chance checking account with $0 overdraft fees, standard routing/account numbers, and no ChexSystems disqualification.',
-        gaSpecificResource: 'Delta Community Credit Union (Fresh Start Checking) | Wells Fargo (Clear Access Banking) | Credit Union of Georgia (Opportunity Checking).',
+        gaSpecificResource: 'Peach State Federal Credit Union (Fresh Start Checking) | Wells Fargo (Clear Access Banking) | Credit Union of Georgia (Opportunity Checking).',
         nextNodeId: 'node-5-comms',
         targetPhase: 'Day 3-10'
       },

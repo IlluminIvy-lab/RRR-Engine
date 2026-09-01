@@ -48,9 +48,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     name: 'Georgia DDS Customer Service Center (Macon)',
     category: 'Vital Records & DDS',
     corridor: 'Macon / Central GA',
-    address: '200 Cherry St / 1056 Center St, Macon, GA 31201',
+    address: '200 Cherry St, Macon, GA 31201 (Terminal Station)',
     contact: '(678) 413-8400',
-    notes: 'Central Georgia DDS service center. Accepts GDC release paperwork for rapid ID issuance.',
+    notes: 'Central Georgia DDS service center located in historic Terminal Station. Accepts GDC release paperwork and fee vouchers for rapid ID issuance.',
     badge: 'Official State ID'
   },
   {
@@ -59,26 +59,26 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '1680 Phoenix Blvd, Suite 100, Atlanta, GA 30349',
     contact: '(404) 679-4702',
-    notes: 'Walk-in certified birth certificates and birth record amendments with expedited same-day turnaround.',
-    badge: 'Vital Records'
+    notes: 'Walk-in lobby service at this state facility is currently suspended until further notice. Order online via ROVER/VitalChek, apply by mail, or visit local county health department vital records offices (e.g. Fulton, DeKalb, Clayton, Bibb) for in-person same-day birth certificates.',
+    badge: 'Vital Records (Online/County)'
   },
   // Transit
   {
-    name: 'MARTA Reentry Mobility Program / Breeze Office',
+    name: 'MARTA Mobility & Customer Service Center',
     category: 'Transit & Mobility',
     corridor: 'Atlanta Metro',
-    address: '2424 Piedmont Rd NE, Atlanta, GA 30324 (Five Points Hub)',
+    address: '2424 Piedmont Rd NE, Atlanta, GA 30324 (HQ / Reduced Fare Office)',
     contact: '(404) 848-5000',
-    notes: 'Comprehensive rail and bus rapid transit spanning Fulton, DeKalb, and Clayton counties.',
-    badge: 'Transit Voucher'
+    notes: 'Comprehensive rail and bus transit spanning Fulton, DeKalb, and Clayton. Reduced Fare Breeze card office and transit pass distribution; note that Five Points station offices are modified during the Five Points Transformation project.',
+    badge: 'Transit Mobility'
   },
   {
-    name: 'Macon-Bibb Transit Authority (MTA Terminal)',
+    name: 'Macon-Bibb Transit Authority (MTA Terminal Station)',
     category: 'Transit & Mobility',
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201',
     contact: '(478) 803-2500',
-    notes: 'Central Georgia hub connecting Macon industrial zones, Ocmulgee corridors, and Mercer employment hubs.',
+    notes: 'Central Georgia transfer terminal connecting Macon industrial parks, Ocmulgee corridors, Robins logistics hubs, and Mercer employment centers.',
     badge: 'Macon Transit'
   },
   // Housing & Support
@@ -96,8 +96,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     category: 'Housing & Support',
     corridor: 'Atlanta Metro',
     address: '1300 Joseph E Boone Blvd NW, Atlanta, GA 30314',
-    contact: '(404) 564-7752',
-    notes: 'Comprehensive campus with transitional housing, tech academy, culinary school, and auto repair training.',
+    contact: '(404) 874-2241',
+    notes: 'Comprehensive campus with transitional housing, workforce innovation academy, culinary school, and auto repair trade training.',
     badge: 'Workforce Campus'
   },
   {
@@ -111,40 +111,40 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
   },
   // Banking
   {
-    name: 'Delta Community Credit Union (Fresh Start)',
+    name: 'Peach State Federal Credit Union (Fresh Start Checking)',
     category: 'Second Chance Banking',
     corridor: 'Atlanta Metro',
-    address: 'Multiple metro branches (Peachtree St, Downtown, Airport Hub)',
-    contact: '(800) 544-3328',
-    notes: 'Second chance checking with full Visa debit card, online banking, and $0 maintenance with direct deposit.',
-    badge: 'Second Chance FDIC'
+    address: 'Metro Atlanta Branches (2357 Benjamin E Mays Dr SW, Atlanta | 1342 Glenwood Ave SE, Atlanta)',
+    contact: '(855) 889-4328',
+    notes: 'Verified Fresh Start second-chance checking account with Visa debit card, online/mobile banking, and opportunity to graduate to standard checking after 12 months in good standing.',
+    badge: 'Fresh Start Checking'
   },
   {
     name: 'Robins Financial Credit Union (Central Georgia)',
     category: 'Second Chance Banking',
     corridor: 'Macon / Central GA',
-    address: '1700 Bowman Rd, Macon, GA 31210 / Multiple Macon Branches',
+    address: '5999 Zebulon Rd, Macon, GA 31210 / 515 Mulberry St, Macon, GA 31201',
     contact: '(478) 923-3773',
-    notes: 'Community-first credit union offering low-barrier checking, direct deposit, and credit building loans.',
+    notes: 'Community-first credit union offering low-barrier checking, direct deposit, and credit building loans across Macon-Bibb and Warner Robins.',
     badge: 'Central GA Credit Union'
   },
   // Trades & Apprenticeships
   {
-    name: 'IBEW Local 613 Electrical Training Center',
+    name: 'IBEW Local 613 (Union Hall / Apprenticeship Intake)',
     category: 'Apprenticeships & Trades',
     corridor: 'Atlanta Metro',
-    address: '501 Pulliam St SW #250, Atlanta, GA 30312',
+    address: '501 Pulliam St SW #250, Atlanta, GA 30312 (Intake Office)',
     contact: '(404) 523-8107',
-    notes: 'Premier 5-year paid commercial electrical apprenticeship ($18-$36/hr progression, 100% employer-funded healthcare).',
+    notes: 'Union headquarters & intake office routing candidates to the Atlanta Electrical Training Center (AEJATC) in Norcross (6601 Bay Circle). 4-5 year paid commercial electrical apprenticeship with $18–$55+/hr wage progression and 100% employer-funded healthcare.',
     badge: 'Union Apprenticeship'
   },
   {
     name: 'Technical College System of Georgia (TCSG) - HOPE Career Grant',
     category: 'Apprenticeships & Trades',
     corridor: 'Statewide GA',
-    address: 'Atlanta Tech, Central GA Tech (Macon), Chattahoochee Tech',
+    address: 'System Office: 1800 Century Place NE, Atlanta, GA 30345 (Campuses: Atlanta Tech, Central GA Tech, Chattahoochee Tech)',
     contact: '(404) 679-1600',
-    notes: '100% tuition-free programs for Welding, Commercial Truck Driving (CDL), Diesel Tech, Electrical, and HVAC.',
+    notes: '100% tuition-free programs for Welding, Commercial Truck Driving (CDL), Diesel Tech, Electrical, Precision Machining, and HVAC.',
     badge: '100% Free Tuition'
   },
   {
@@ -160,9 +160,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     name: 'WorkSource Georgia / WorkSource Atlanta',
     category: 'Apprenticeships & Trades',
     corridor: 'Statewide GA',
-    address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Macon: 3090 Mercer Univ Dr',
+    address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
-    notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and medical tech training.',
+    notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training.',
     badge: 'WIOA Grants'
   }
 ];
