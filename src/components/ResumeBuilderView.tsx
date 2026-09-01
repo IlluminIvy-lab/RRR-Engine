@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
   Download, 
@@ -55,7 +55,7 @@ export const ResumeBuilderView: React.FC<ResumeBuilderViewProps> = ({
   const [editedPackage, setEditedPackage] = useState<FullApplicationPackage | null>(currentPackage);
 
   // Sync edited package when currentPackage changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentPackage) {
       setEditedPackage(currentPackage);
     }
