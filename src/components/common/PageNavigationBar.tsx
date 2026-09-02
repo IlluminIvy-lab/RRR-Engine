@@ -17,11 +17,12 @@ import { AppMode, TranslationResult, FullApplicationPackage, TrackerItem, Decisi
 interface PageNavigationBarProps {
   currentMode: AppMode;
   onSelectMode: (mode: AppMode) => void;
-  currentTranslation: TranslationResult | null;
-  applicationPackages: FullApplicationPackage[];
-  trackerItems: TrackerItem[];
-  decisionHistory: DecisionHistoryEntry[];
+  currentTranslation?: TranslationResult | null;
+  applicationPackages?: FullApplicationPackage[];
+  trackerItems?: TrackerItem[];
+  decisionHistory?: DecisionHistoryEntry[];
   onOpenSavedSessions: () => void;
+  isOffline?: boolean;
 }
 
 const CORE_PAGE_SEQUENCE: { mode: AppMode; pageNumber: number; label: string; shortTitle: string }[] = [
@@ -34,10 +35,10 @@ const CORE_PAGE_SEQUENCE: { mode: AppMode; pageNumber: number; label: string; sh
 export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
   currentMode,
   onSelectMode,
-  currentTranslation,
-  applicationPackages,
-  trackerItems,
-  decisionHistory,
+  currentTranslation = null,
+  applicationPackages = [],
+  trackerItems = [],
+  decisionHistory = [],
   onOpenSavedSessions,
 }) => {
   const currentIndex = CORE_PAGE_SEQUENCE.findIndex((p) => p.mode === currentMode);

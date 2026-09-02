@@ -432,6 +432,10 @@ export default function App() {
         <PageNavigationBar
           currentMode={currentMode}
           onSelectMode={(mode) => setCurrentMode(mode)}
+          currentTranslation={currentTranslation}
+          applicationPackages={applicationPackages}
+          trackerItems={trackerItems}
+          decisionHistory={decisionHistory}
           isOffline={isOffline}
           onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
         />
