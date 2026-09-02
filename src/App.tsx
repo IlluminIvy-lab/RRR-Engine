@@ -7,6 +7,9 @@ import { DecisionTreeEngine } from './components/DecisionTreeEngine';
 import { UnifiedConsole } from './components/UnifiedConsole';
 import { GeorgiaResourceVault } from './components/GeorgiaResourceVault';
 import { ShareModal } from './components/ShareModal';
+import { PageNavigationBar } from './components/common/PageNavigationBar';
+import { SavedSessionsModal } from './components/SavedSessionsModal';
+import { AIAdvisorChat } from './components/AIAdvisorChat';
 import { 
   AppMode, 
   TranslationResult, 
@@ -14,13 +17,15 @@ import {
   TrackerItem, 
   TrackerStage, 
   DecisionHistoryEntry,
-  AppExportData 
+  AppExportData,
+  SavedSession
 } from './types';
 import { translateCapabilityOffline, generateFullPackageOffline } from './utils/offlineEngine';
 
 export default function App() {
   const [currentMode, setCurrentMode] = useState<AppMode>('unified');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isSavedSessionsOpen, setIsSavedSessionsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isOffline, setIsOffline] = useState<boolean>(() => typeof navigator !== 'undefined' && !navigator.onLine);
@@ -116,6 +121,17 @@ export default function App() {
     }
   });
 
+  // 5. Saved Sessions Management (Change 6)
+  const [savedSessions, setSavedSessions] = useState<SavedSession[]>(() => {
+    try {
+      const saved = localStorage.getItem('rrr_saved_sessions');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+
   // Save changes to localStorage
   useEffect(() => {
     try {
@@ -144,6 +160,12 @@ export default function App() {
       localStorage.setItem('rrr_decision_history', JSON.stringify(decisionHistory));
     } catch {}
   }, [decisionHistory]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('rrr_saved_sessions', JSON.stringify(savedSessions));
+    } catch {}
+  }, [savedSessions]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -302,6 +324,91 @@ export default function App() {
     showToast('Session restored successfully from JSON backup');
   };
 
+  // Session Management Handlers (Change 6)
+  const handleSaveCurrentSession = (sessionName: string) => {
+    const timestamp = new Date().toISOString();
+    if (activeSessionId) {
+      // Update existing session
+      setSavedSessions((prev) =>
+        prev.map((s) =>
+          s.id === activeSessionId
+            ? {
+                ...s,
+                name: sessionName || s.name,
+                updatedAt: timestamp,
+                currentTranslation,
+                applicationPackages,
+                trackerItems,
+                decisionHistory,
+              }
+            : s
+        )
+      );
+      showToast(`Session "${sessionName}" updated successfully`);
+    } else {
+      // Create new session
+      const newId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+      const newSession: SavedSession = {
+        id: newId,
+        name: sessionName || `Career Session ${new Date().toLocaleDateString()}`,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        currentTranslation,
+        applicationPackages,
+        trackerItems,
+        decisionHistory,
+      };
+      setSavedSessions((prev) => [newSession, ...prev]);
+      setActiveSessionId(newId);
+      showToast(`Session "${newSession.name}" saved to local storage`);
+    }
+  };
+
+  const handleLoadSession = (session: SavedSession) => {
+    setCurrentTranslation(session.currentTranslation);
+    setApplicationPackages(session.applicationPackages || []);
+    setTrackerItems(session.trackerItems || []);
+    setDecisionHistory(session.decisionHistory || []);
+    setActiveSessionId(session.id);
+    setIsSavedSessionsOpen(false);
+    showToast(`Loaded session: "${session.name}"`);
+  };
+
+  const handleNewBlankSession = () => {
+    handleWipeSession();
+    setActiveSessionId(null);
+    setIsSavedSessionsOpen(false);
+    showToast('Started new blank career session');
+  };
+
+  const handleDeleteSession = (sessionId: string) => {
+    setSavedSessions((prev) => prev.filter((s) => s.id !== sessionId));
+    if (activeSessionId === sessionId) {
+      setActiveSessionId(null);
+    }
+    showToast('Session snapshot deleted');
+  };
+
+  const handleRenameSession = (sessionId: string, newName: string) => {
+    setSavedSessions((prev) =>
+      prev.map((s) => (s.id === sessionId ? { ...s, name: newName, updatedAt: new Date().toISOString() } : s))
+    );
+    showToast('Session renamed');
+  };
+
+  const handleDuplicateSession = (session: SavedSession) => {
+    const timestamp = new Date().toISOString();
+    const cloned: SavedSession = {
+      ...session,
+      id: `session-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      name: `${session.name} (Copy)`,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+    setSavedSessions((prev) => [cloned, ...prev]);
+    showToast(`Created copy: "${cloned.name}"`);
+  };
+
   const activePackage = applicationPackages[0] || null;
 
   return (
@@ -315,12 +422,23 @@ export default function App() {
           showToast('Launched Mode 4: Reentry Decision Tree (Day 1-3)');
         }}
         onOpenShareModal={() => setIsShareModalOpen(true)}
+        onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
         onWipeSession={handleWipeSession}
         isOffline={isOffline}
       />
 
+      {/* Mode Navigation Bar (Change 2: Tabbed/Paginated Navigation) */}
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <PageNavigationBar
+          currentMode={currentMode}
+          onSelectMode={(mode) => setCurrentMode(mode)}
+          isOffline={isOffline}
+          onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
+        />
+      </div>
+
       {/* Main Workspace Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {currentMode === 'unified' && (
           <UnifiedConsole
             onTranslate={handleTranslate}
@@ -390,10 +508,38 @@ export default function App() {
           />
         )}
 
+        {currentMode === 'advisor' && (
+          <AIAdvisorChat
+            currentTranslation={currentTranslation}
+            applicationPackages={applicationPackages}
+            trackerItems={trackerItems}
+            decisionHistory={decisionHistory}
+            onNavigateMode={(mode) => setCurrentMode(mode)}
+          />
+        )}
+
         {currentMode === 'georgia_vault' && (
           <GeorgiaResourceVault />
         )}
       </main>
+
+      {/* Saved Sessions Snapshots Modal (Change 6) */}
+      <SavedSessionsModal
+        isOpen={isSavedSessionsOpen}
+        onClose={() => setIsSavedSessionsOpen(false)}
+        savedSessions={savedSessions}
+        activeSessionId={activeSessionId}
+        onSaveCurrentSession={handleSaveCurrentSession}
+        onLoadSession={handleLoadSession}
+        onNewBlankSession={handleNewBlankSession}
+        onDeleteSession={handleDeleteSession}
+        onRenameSession={handleRenameSession}
+        onDuplicateSession={handleDuplicateSession}
+        currentTranslation={currentTranslation}
+        applicationPackages={applicationPackages}
+        trackerItems={trackerItems}
+        decisionHistory={decisionHistory}
+      />
 
       {/* Share & Cloud Sync Modal */}
       <ShareModal

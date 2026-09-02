@@ -19,6 +19,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { TrackerItem, TrackerStage } from '../types';
+import { ModeDescriptionBanner } from './common/ModeDescriptionBanner';
 
 interface ApplicationTrackerViewProps {
   items: TrackerItem[];
@@ -214,6 +215,9 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Mode Description Banner (Change 3) */}
+      <ModeDescriptionBanner mode="tracker" />
+
       {/* View Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-800 pb-4">
         <div>

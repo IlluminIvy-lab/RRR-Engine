@@ -4,9 +4,31 @@ export type AppMode =
   | 'resume_builder'   // Mode 2: Complete Resume & Cover Letter Builder
   | 'tracker'          // Mode 3: Research & Application Progress Tracker
   | 'decision_tree'    // Mode 4: Interactive Reentry Decision Tree
+  | 'advisor'          // Standalone Reentry AI Advisor
   | 'georgia_vault';   // Georgia Resource Vault
 
 export type ReentryPhase = 'Day 1-3' | 'Day 3-10' | 'Day 10-30';
+
+// Multi-Session Management (Change 6)
+export interface SavedSession {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  currentTranslation: TranslationResult | null;
+  applicationPackages: FullApplicationPackage[];
+  trackerItems: TrackerItem[];
+  decisionHistory: DecisionHistoryEntry[];
+}
+
+// Standalone General AI Advisor (Change 7)
+export interface AdvisorChatMessage {
+  id: string;
+  sender: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: string;
+  suggestedQuestions?: string[];
+}
 
 // MODE 1: Capability Translator
 export interface TranslationCompetencies {
@@ -149,3 +171,4 @@ export interface AppExportData {
   trackerItems: TrackerItem[];
   decisionHistory: DecisionHistoryEntry[];
 }
+

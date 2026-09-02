@@ -9,7 +9,9 @@ import {
   Layers,
   ShieldAlert,
   Trash2,
-  X
+  X,
+  Bot,
+  FolderArchive
 } from 'lucide-react';
 import { AppMode } from '../types';
 
@@ -18,6 +20,7 @@ interface HeaderProps {
   onSelectMode: (mode: AppMode) => void;
   onQuickStartDecisionTree: () => void;
   onOpenShareModal: () => void;
+  onOpenSavedSessions?: () => void;
   onWipeSession?: () => void;
   isOffline?: boolean;
 }
@@ -27,6 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectMode,
   onQuickStartDecisionTree,
   onOpenShareModal,
+  onOpenSavedSessions,
   onWipeSession,
   isOffline = false,
 }) => {
@@ -159,6 +163,32 @@ export const Header: React.FC<HeaderProps> = ({
             <Landmark className="w-3.5 h-3.5" />
             <span>GA Vault</span>
           </button>
+
+          <button
+            id="nav-advisor-btn"
+            onClick={() => onSelectMode('advisor')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+              currentMode === 'advisor'
+                ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
+                : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
+            }`}
+          >
+            <Bot className="w-3.5 h-3.5" />
+            <span>AI Advisor</span>
+          </button>
+
+          {/* Saved Sessions Modal Trigger */}
+          {onOpenSavedSessions && (
+            <button
+              id="open-saved-sessions-btn"
+              onClick={onOpenSavedSessions}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#F4EDE1]/90 bg-[#2F4A3E]/40 hover:bg-[#2F4A3E] border border-[#2B2B2B] hover:border-[#C99A44]/40 transition-colors shadow-sm"
+              title="Saved Sessions & History Snapshots"
+            >
+              <FolderArchive className="w-3.5 h-3.5 text-[#C99A44]" />
+              <span>Sessions</span>
+            </button>
+          )}
 
           {/* Share & Cloud Sync Trigger */}
           <button

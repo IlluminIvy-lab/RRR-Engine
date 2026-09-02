@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { DecisionNode, DecisionHistoryEntry, ReentryPhase, DecisionOption } from '../types';
 import { DECISION_TREE_NODES } from '../data/decisionTreeData';
+import { ModeDescriptionBanner } from './common/ModeDescriptionBanner';
 
 interface DecisionTreeEngineProps {
   history: DecisionHistoryEntry[];
@@ -148,6 +149,9 @@ ${history.map((h) => `
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
+      {/* Mode Description Banner (Change 3) */}
+      <ModeDescriptionBanner mode="tree" />
+
       {/* Mode 2 Header */}
       <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

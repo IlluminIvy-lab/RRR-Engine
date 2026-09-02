@@ -23,13 +23,19 @@ import {
   HelpCircle,
   Hash,
   ShieldCheck,
-  Wrench
+  Wrench,
+  Bot,
+  Mic,
+  MicOff
 } from 'lucide-react';
 import { TranslationResult } from '../types';
 import { SAMPLE_INSTITUTIONAL_EXPERIENCES } from '../data/georgiaResources';
 import { generateResumePdf } from '../utils/generateResumePdf';
 import { generateResumeDocx } from '../utils/generateResumeDocx';
 import { printCapabilityTranslator } from '../utils/printCapabilityTranslator';
+import { ModeDescriptionBanner } from './common/ModeDescriptionBanner';
+import { PromptTextarea } from './common/PromptTextarea';
+import { ConversationalIntakeCoach } from './ConversationalIntakeCoach';
 
 interface CapabilityTranslatorViewProps {
   onTranslate: (text: string) => Promise<TranslationResult | null>;
@@ -46,8 +52,8 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
   onSendToDecisionTree,
   onClearTranslation
 }) => {
-  // Mode selection: Free-form paragraph vs Guided 4-question mode
-  const [entryMode, setEntryMode] = useState<'freeform' | 'guided'>('freeform');
+  // Mode selection: Free-form paragraph vs Guided 4-question mode vs Multi-turn Conversational Coach
+  const [entryMode, setEntryMode] = useState<'freeform' | 'guided' | 'coach'>('freeform');
 
   // Free-form state
   const [inputText, setInputText] = useState(currentResult?.rawExperience || '');
@@ -183,69 +189,62 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 w-full overflow-hidden">
-      {/* Mode Banner */}
-      <div className="bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-5 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-[#C99A44]/15 text-[#C99A44] border border-[#C99A44]/30">
-                MODE 1
-              </span>
-              <h2 className="text-lg font-bold text-[#F4EDE1] font-serif tracking-wide">
-                Institutional Capability Translator
-              </h2>
-            </div>
-            <p className="text-xs sm:text-sm text-[#F4EDE1]/70 max-w-3xl leading-relaxed">
-              Convert institutional details, kitchen production, facilities maintenance, mechanical overhauls, or clerk duties into industry-standard job titles, 4 hard and soft competencies, 3 high-impact quantified resume bullets, and fast-hiring Georgia corridor pathways.
-            </p>
-          </div>
-          <div className="shrink-0 flex items-center gap-2">
-            <span className="text-[11px] font-mono text-[#F4EDE1]/60 bg-[#0B0F0E] px-2.5 py-1 rounded border border-[#2B2B2B]">
-              Zero Generic Jargon
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Expanded Mode 1 Banner with Deep Scope Details (Change 3) */}
+      <ModeDescriptionBanner mode="translator" />
 
       {/* Entry Mode Switcher & Preset Selector */}
       <div className="bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#2B2B2B]">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono uppercase font-bold text-[#C99A44] tracking-wider">
-              Input Method:
+              Intake Method:
             </span>
           </div>
 
-          {/* Toggle between Free-Form and Guided Mode */}
-          <div className="inline-flex p-1 rounded-lg bg-black/40 border border-[#2B2B2B]">
+          {/* 3-Way Toggle between Free-Form, Guided 4-Questions, and Conversational Coach (Change 5) */}
+          <div className="inline-flex flex-wrap p-1 rounded-lg bg-black/40 border border-[#2B2B2B] gap-1">
             <button
               type="button"
               id="translator-mode-freeform-btn"
               onClick={() => setEntryMode('freeform')}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                 entryMode === 'freeform'
                   ? 'bg-[#2F4A3E] text-[#F4EDE1] shadow-sm font-semibold border border-[#C99A44]/40'
                   : 'text-[#F4EDE1]/60 hover:text-[#F4EDE1] hover:bg-white/5'
               }`}
             >
               <Edit3 className="w-3.5 h-3.5 text-[#C99A44]" />
-              <span>Free-Form Description</span>
+              <span>Free-Form</span>
             </button>
 
             <button
               type="button"
               id="translator-mode-guided-btn"
               onClick={() => setEntryMode('guided')}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                 entryMode === 'guided'
                   ? 'bg-[#2F4A3E] text-[#F4EDE1] shadow-sm font-semibold border border-[#C99A44]/40'
                   : 'text-[#F4EDE1]/60 hover:text-[#F4EDE1] hover:bg-white/5'
               }`}
             >
               <ListChecks className="w-3.5 h-3.5 text-[#C99A44]" />
-              <span>Guided Mode (4 Questions)</span>
+              <span>Guided (4 Fields)</span>
+            </button>
+
+            <button
+              type="button"
+              id="translator-mode-coach-btn"
+              onClick={() => setEntryMode('coach')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                entryMode === 'coach'
+                  ? 'bg-[#2F4A3E] text-[#F4EDE1] shadow-sm font-semibold border border-[#C99A44]/40'
+                  : 'text-[#F4EDE1]/60 hover:text-[#F4EDE1] hover:bg-white/5'
+              }`}
+            >
+              <Bot className="w-3.5 h-3.5 text-[#C99A44]" />
+              <span>Intake Coach</span>
               <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/30 uppercase">
-                Step-by-Step
+                Multi-Turn
               </span>
             </button>
           </div>
@@ -284,201 +283,212 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
         </div>
       </div>
 
-      {/* Input Form: Free-Form Mode vs Guided Mode */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {entryMode === 'freeform' ? (
-          /* Free-Form Paragraph Box */
-          <div className="space-y-3">
-            <div className="relative">
-              <textarea
+      {/* Input Section */}
+      {entryMode === 'coach' ? (
+        /* Multi-turn Conversational Intake Coach (Change 5) */
+        <ConversationalIntakeCoach
+          onComplete={(compiled) => {
+            setInputText(compiled);
+            onTranslate(compiled);
+          }}
+          isLoading={isLoading}
+        />
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {entryMode === 'freeform' ? (
+            /* Free-Form Paragraph Box with PromptTextarea & Voice Dictation (Change 1 & Change 4) */
+            <div className="space-y-3">
+              <PromptTextarea
                 id="institutional-experience-input"
-                rows={4}
                 value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Share institutional experience, past facility duties, shop repairs, or trade work (e.g., 'Worked 4 years on the facilities maintenance crew repairing commercial boilers, replacing HVAC filters, operating electrical diagnostics, and managing 12 crew members with strict safety logging...')"
-                className="w-full bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-4 text-[#F4EDE1] placeholder-[#F4EDE1]/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A44]/50 focus:border-[#C99A44] font-sans transition-all leading-relaxed"
+                onChange={setInputText}
+                onSubmit={() => {
+                  if (inputText.trim()) onTranslate(inputText);
+                }}
+                placeholder="Share institutional experience, past facility duties, shop repairs, or trade work (Type or click mic to speak)..."
+                isLoading={isLoading}
+                submitButtonText="Translate to Commercial Standard"
               />
-            </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="text-xs font-mono text-[#F4EDE1]/50">
-                {inputText.trim() ? `${inputText.trim().split(/\s+/).length} words entered` : 'Enter institutional duties above or switch to Guided Mode for question-by-question input'}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                {inputText && (
-                  <button
-                    type="button"
-                    onClick={() => setInputText('')}
-                    className="px-3 py-2 text-xs text-[#F4EDE1]/60 hover:text-[#F4EDE1] bg-black/40 border border-[#2B2B2B] rounded-lg hover:bg-white/5 transition-colors"
-                  >
-                    Clear Input
-                  </button>
-                )}
-                <button
-                  id="translate-capability-submit-btn"
-                  type="submit"
-                  disabled={!inputText.trim() || isLoading}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-[#0B0F0E]" />
-                      <span>Translating Capabilities...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 text-[#0B0F0E]" />
-                      <span>Translate to Commercial Standard</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Guided Mode: 4 Short Structured Input Fields */
-          <div className="space-y-4 bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-5 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#2B2B2B]">
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#C99A44] font-semibold uppercase tracking-wider">
-                  <ListChecks className="w-4 h-4 text-[#C99A44]" />
-                  <span>Guided Capability Questions</span>
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <div className="text-xs font-mono text-[#F4EDE1]/50">
+                  {inputText.trim() ? `${inputText.trim().split(/\s+/).length} words entered` : 'Enter institutional duties above or switch to Guided Mode'}
                 </div>
-                <p className="text-xs text-[#F4EDE1]/60">
-                  Answer any of the 4 prompts below. All fields are optional — enter what applies and the engine will combine and translate them.
-                </p>
-              </div>
-              <span className="text-[11px] font-mono text-[#F4EDE1]/50 bg-black/50 px-2 py-1 rounded border border-[#2B2B2B] shrink-0">
-                All 4 fields optional
-              </span>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Question 1: Role / Title */}
-              <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
-                <label 
-                  htmlFor="guided-role-input"
-                  className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">1</span>
-                  <span>What was your job title or role called there?</span>
-                </label>
-                <input
-                  id="guided-role-input"
-                  type="text"
-                  value={guidedRole}
-                  onChange={(e) => setGuidedRole(e.target.value)}
-                  placeholder="e.g., Kitchen Lead, Tier 1 Maintenance Tech, Order Picker, Forklift Lead..."
-                  className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44]"
-                />
-              </div>
-
-              {/* Question 2: Daily Physical Duties */}
-              <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
-                <label 
-                  htmlFor="guided-tasks-input"
-                  className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">2</span>
-                  <span>What did you physically do most days? (2-3 things)</span>
-                </label>
-                <textarea
-                  id="guided-tasks-input"
-                  rows={2}
-                  value={guidedTasks}
-                  onChange={(e) => setGuidedTasks(e.target.value)}
-                  placeholder="e.g., Prepped 500+ meals daily, logged inventory manifests, operated pallet jacks, inspected plumbing..."
-                  className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
-                />
-              </div>
-
-              {/* Question 3: Numbers & Scale */}
-              <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
-                <label 
-                  htmlFor="guided-scale-input"
-                  className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">3</span>
-                  <span>Any numbers that show scale? (people supervised, items handled, frequency)</span>
-                </label>
-                <textarea
-                  id="guided-scale-input"
-                  rows={2}
-                  value={guidedScale}
-                  onChange={(e) => setGuidedScale(e.target.value)}
-                  placeholder="e.g., Led a 6-person crew, processed 1,200 units per shift, maintained 100% zero-defect safety logs..."
-                  className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
-                />
-              </div>
-
-              {/* Question 4: Certifications, Safety & Systems */}
-              <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
-                <label 
-                  htmlFor="guided-certifications-input"
-                  className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">4</span>
-                  <span>Any certifications, safety protocols, or specialized systems you used?</span>
-                </label>
-                <textarea
-                  id="guided-certifications-input"
-                  rows={2}
-                  value={guidedCertifications}
-                  onChange={(e) => setGuidedCertifications(e.target.value)}
-                  placeholder="e.g., OSHA 10, ServSafe food safety, HACCP sanitation, lock-out/tag-out, computerized work logs..."
-                  className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
-                />
-              </div>
-            </div>
-
-            {/* Guided Actions Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-              <div className="text-xs font-mono text-[#F4EDE1]/50">
-                {!isGuidedEmpty ? (
-                  <span className="text-[#C99A44] flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5" />
-                    Answers will be structured and combined on submission
-                  </span>
-                ) : (
-                  <span>Fill in any field above to translate your capabilities</span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                {!isGuidedEmpty && (
-                  <button
-                    type="button"
-                    onClick={handleClearGuided}
-                    className="px-3 py-2 text-xs text-[#F4EDE1]/60 hover:text-[#F4EDE1] bg-black/40 border border-[#2B2B2B] rounded-lg hover:bg-white/5 transition-colors"
-                  >
-                    Clear All Fields
-                  </button>
-                )}
-                <button
-                  id="translate-capability-guided-submit-btn"
-                  type="submit"
-                  disabled={isGuidedEmpty || isLoading}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-[#0B0F0E]" />
-                      <span>Translating Capabilities...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 text-[#0B0F0E]" />
-                      <span>Translate to Commercial Standard</span>
-                    </>
+                <div className="flex flex-wrap items-center gap-2">
+                  {inputText && (
+                    <button
+                      type="button"
+                      onClick={() => setInputText('')}
+                      className="px-3 py-1.5 text-xs text-[#F4EDE1]/60 hover:text-[#F4EDE1] bg-black/40 border border-[#2B2B2B] rounded-lg hover:bg-white/5 transition-colors"
+                    >
+                      Clear Input
+                    </button>
                   )}
-                </button>
+                  <button
+                    id="translate-capability-submit-btn"
+                    type="submit"
+                    disabled={!inputText.trim() || isLoading}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#0B0F0E]" />
+                        <span>Translating Capabilities...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-[#0B0F0E]" />
+                        <span>Translate to Commercial Standard</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </form>
+          ) : (
+            /* Guided Mode: 4 Short Structured Input Fields */
+            <div className="space-y-4 bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-5 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#2B2B2B]">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2 text-xs font-mono text-[#C99A44] font-semibold uppercase tracking-wider">
+                    <ListChecks className="w-4 h-4 text-[#C99A44]" />
+                    <span>Guided Capability Questions</span>
+                  </div>
+                  <p className="text-xs text-[#F4EDE1]/60">
+                    Answer any of the 4 prompts below. All fields are optional — enter what applies and the engine will combine and translate them.
+                  </p>
+                </div>
+                <span className="text-[11px] font-mono text-[#F4EDE1]/50 bg-black/50 px-2 py-1 rounded border border-[#2B2B2B] shrink-0">
+                  All 4 fields optional
+                </span>
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Question 1: Role / Title */}
+                <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
+                  <label 
+                    htmlFor="guided-role-input"
+                    className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">1</span>
+                    <span>What was your job title or role called there?</span>
+                  </label>
+                  <input
+                    id="guided-role-input"
+                    type="text"
+                    value={guidedRole}
+                    onChange={(e) => setGuidedRole(e.target.value)}
+                    placeholder="e.g., Kitchen Lead, Tier 1 Maintenance Tech, Order Picker, Forklift Lead..."
+                    className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44]"
+                  />
+                </div>
+
+                {/* Question 2: Daily Physical Duties */}
+                <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
+                  <label 
+                    htmlFor="guided-tasks-input"
+                    className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">2</span>
+                    <span>What did you physically do most days? (2-3 things)</span>
+                  </label>
+                  <textarea
+                    id="guided-tasks-input"
+                    rows={2}
+                    value={guidedTasks}
+                    onChange={(e) => setGuidedTasks(e.target.value)}
+                    placeholder="e.g., Prepped 500+ meals daily, logged inventory manifests, operated pallet jacks, inspected plumbing..."
+                    className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
+                  />
+                </div>
+
+                {/* Question 3: Numbers & Scale */}
+                <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
+                  <label 
+                    htmlFor="guided-scale-input"
+                    className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">3</span>
+                    <span>Any numbers that show scale? (people supervised, items handled, frequency)</span>
+                  </label>
+                  <textarea
+                    id="guided-scale-input"
+                    rows={2}
+                    value={guidedScale}
+                    onChange={(e) => setGuidedScale(e.target.value)}
+                    placeholder="e.g., Led a 6-person crew, processed 1,200 units per shift, maintained 100% zero-defect safety logs..."
+                    className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
+                  />
+                </div>
+
+                {/* Question 4: Certifications, Safety & Systems */}
+                <div className="space-y-1.5 p-3.5 rounded-lg bg-black/40 border border-[#2B2B2B] focus-within:border-[#C99A44]/60 transition-colors">
+                  <label 
+                    htmlFor="guided-certifications-input"
+                    className="block text-xs font-medium text-[#F4EDE1] flex items-center gap-1.5 font-sans"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-[#C99A44]/20 text-[#C99A44] font-mono text-[10px] flex items-center justify-center font-bold">4</span>
+                    <span>Any certifications, safety protocols, or specialized systems you used?</span>
+                  </label>
+                  <textarea
+                    id="guided-certifications-input"
+                    rows={2}
+                    value={guidedCertifications}
+                    onChange={(e) => setGuidedCertifications(e.target.value)}
+                    placeholder="e.g., OSHA 10, ServSafe food safety, HACCP sanitation, lock-out/tag-out, computerized work logs..."
+                    className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {/* Guided Actions Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <div className="text-xs font-mono text-[#F4EDE1]/50">
+                  {!isGuidedEmpty ? (
+                    <span className="text-[#C99A44] flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5" />
+                      Answers will be structured and combined on submission
+                    </span>
+                  ) : (
+                    <span>Fill in any field above to translate your capabilities</span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {!isGuidedEmpty && (
+                    <button
+                      type="button"
+                      onClick={handleClearGuided}
+                      className="px-3 py-2 text-xs text-[#F4EDE1]/60 hover:text-[#F4EDE1] bg-black/40 border border-[#2B2B2B] rounded-lg hover:bg-white/5 transition-colors"
+                    >
+                      Clear All Fields
+                    </button>
+                  )}
+                  <button
+                    id="translate-capability-guided-submit-btn"
+                    type="submit"
+                    disabled={isGuidedEmpty || isLoading}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#0B0F0E]" />
+                        <span>Translating Capabilities...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-[#0B0F0E]" />
+                        <span>Translate to Commercial Standard</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </form>
+      )}
       {/* Results Display */}
       {currentResult && (
         <div className="space-y-6 pt-2">

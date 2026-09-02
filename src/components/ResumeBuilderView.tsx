@@ -19,6 +19,7 @@ import {
 import { FullApplicationPackage, TranslationResult } from '../types';
 import { generateFullPackageDocx } from '../utils/generateFullPackageDocx';
 import { generateFullPackagePdf } from '../utils/generateFullPackagePdf';
+import { ModeDescriptionBanner } from './common/ModeDescriptionBanner';
 
 interface ResumeBuilderViewProps {
   currentPackage: FullApplicationPackage | null;
@@ -147,7 +148,10 @@ ${candidate.fullName}
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* View Header */}
+      {/* Mode Description Banner (Change 3) */}
+      <ModeDescriptionBanner mode="resume" />
+
+      {/* View Header with Action Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-800 pb-4">
         <div>
           <div className="flex items-center gap-2">

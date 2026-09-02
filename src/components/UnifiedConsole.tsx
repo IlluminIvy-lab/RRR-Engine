@@ -30,6 +30,7 @@ import { generateResumeDocx } from '../utils/generateResumeDocx';
 import { generateFullPackageDocx } from '../utils/generateFullPackageDocx';
 import { generateFullPackagePdf } from '../utils/generateFullPackagePdf';
 import { printCapabilityTranslator } from '../utils/printCapabilityTranslator';
+import { PromptTextarea } from './common/PromptTextarea';
 
 interface ConsoleMessage {
   id: string;
@@ -857,34 +858,18 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
         </div>
       </div>
 
-      {/* Input Field */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSendMessage();
-        }}
-        className="flex items-center gap-2"
-      >
-        <div className="relative flex-1">
-          <input
-            id="console-prompt-input"
-            type="text"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            placeholder="Type institutional experience, 'Generate Full Package', 'Show Tracker', or 'Start Decision Tree'..."
-            className="w-full bg-[#2B2B2B] border border-[#F4EDE1]/20 rounded-xl px-4 py-3.5 text-[#F4EDE1] placeholder-[#F4EDE1]/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#C99A44] focus:border-[#C99A44] font-sans transition-all"
-          />
-        </div>
-        <button
-          id="console-send-btn"
-          type="submit"
-          disabled={!inputVal.trim() || isLoading}
-          className="px-6 py-3.5 rounded-xl bg-[#C99A44] hover:bg-[#C99A44]/90 text-[#0B0F0E] font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shrink-0"
-        >
-          <span>Run</span>
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
+      {/* Input Field with 2-4 lines auto-expand & Voice Dictation (Change 1 & Change 4) */}
+      <div className="w-full">
+        <PromptTextarea
+          id="console-prompt-input"
+          value={inputVal}
+          onChange={setInputVal}
+          onSubmit={handleSendMessage}
+          placeholder="Type institutional experience, 'Generate Full Package', 'Show Tracker', or 'Start Decision Tree' (Type or click mic to speak)..."
+          isLoading={isLoading}
+          submitButtonText="Run"
+        />
+      </div>
     </div>
   );
 };
