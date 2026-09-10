@@ -7,7 +7,7 @@ export type AppMode =
   | 'advisor'          // Standalone Reentry AI Advisor
   | 'georgia_vault';   // Georgia Resource Vault
 
-export type ReentryPhase = 'Day 1-3' | 'Day 3-10' | 'Day 10-30';
+export type ReentryPhase = 'Pre-Release' | 'Day 1-3' | 'Day 3-10' | 'Day 10-30' | 'Day 90' | 'Month 6';
 
 // Multi-Session Management (Change 6)
 export interface SavedSession {
@@ -160,6 +160,12 @@ export interface GeorgiaResourceItem {
   notes: string;
   badge?: string;
   directUrl?: string;
+  eligibility?: string;
+  hoursOfOperation?: string;
+  transportationAccess?: string;
+  cost?: string;
+  referralRequirements?: string;
+  dateLastVerified?: string;
 }
 
 // Global Sync & Share
@@ -171,4 +177,3 @@ export interface AppExportData {
   trackerItems: TrackerItem[];
   decisionHistory: DecisionHistoryEntry[];
 }
-
