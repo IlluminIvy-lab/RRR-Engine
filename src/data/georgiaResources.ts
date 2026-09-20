@@ -42,7 +42,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '400 Whitehall St SW, Atlanta, GA 30303',
     contact: '(678) 413-8400',
     notes: 'Primary downtown Atlanta DDS center with dedicated Reentry State ID issuance and DOC fee-waiver processing.',
-    badge: 'Official State ID'
+    badge: 'Official State ID',
+    cost: '$32 fee (waived with GDC/DOC voucher)',
+    referralRequirements: 'GDC release paperwork or DOC fee-waiver voucher for expedited/free processing'
   },
   {
     name: 'Georgia DDS Customer Service Center (Macon)',
@@ -51,7 +53,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '200 Cherry St, Macon, GA 31201 (Terminal Station)',
     contact: '(678) 413-8400',
     notes: 'Central Georgia DDS service center located in historic Terminal Station. Accepts GDC release paperwork and fee vouchers for rapid ID issuance.',
-    badge: 'Official State ID'
+    badge: 'Official State ID',
+    cost: '$32 fee (waived with GDC release paperwork/fee voucher)',
+    referralRequirements: 'GDC release paperwork accepted for fee waiver'
   },
   {
     name: 'Georgia State Office of Vital Records',
@@ -60,7 +64,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '1680 Phoenix Blvd, Suite 100, Atlanta, GA 30349',
     contact: '(404) 679-4702',
     notes: 'Walk-in lobby service at this state facility is currently suspended until further notice. Order online via ROVER/VitalChek, apply by mail, or visit local county health department vital records offices (e.g. Fulton, DeKalb, Clayton, Bibb) for in-person same-day birth certificates.',
-    badge: 'Vital Records (Online/County)'
+    badge: 'Vital Records (Online/County)',
+    transportationAccess: 'Walk-in lobby currently suspended — use online (ROVER/VitalChek), mail, or a county health department office instead',
+    referralRequirements: 'None for online/mail order; county health department walk-in is the in-person alternative'
   },
   // Transit
   {
@@ -70,7 +76,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '2424 Piedmont Rd NE, Atlanta, GA 30324 (HQ / Reduced Fare Office)',
     contact: '(404) 848-5000',
     notes: 'Comprehensive rail and bus transit spanning Fulton, DeKalb, and Clayton. Reduced Fare Breeze card office and transit pass distribution; note that Five Points station offices are modified during the Five Points Transformation project.',
-    badge: 'Transit Mobility'
+    badge: 'Transit Mobility',
+    cost: 'Reduced Fare Breeze card program available at this office'
   },
   {
     name: 'Macon-Bibb Transit Authority (MTA Terminal Station)',
@@ -89,7 +96,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '275 Pryor St SW, Atlanta, GA 30303',
     contact: '(404) 215-6600',
     notes: '24/7 intake, residential beds, lockers, mail services, case management, and transit vouchers.',
-    badge: 'Rapid Intake'
+    badge: 'Rapid Intake',
+    hoursOfOperation: '24/7 intake',
+    cost: 'Free'
   },
   {
     name: 'City of Refuge (Workforce & Housing Campus)',
@@ -98,7 +107,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '1300 Joseph E Boone Blvd NW, Atlanta, GA 30314',
     contact: '(404) 874-2241',
     notes: 'Comprehensive campus with transitional housing, workforce innovation academy, culinary school, and auto repair trade training.',
-    badge: 'Workforce Campus'
+    badge: 'Workforce Campus',
+    cost: 'Free (workforce/housing campus)'
   },
   {
     name: 'Daybreak Resource Center (Macon)',
@@ -107,7 +117,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '174 Walnut St, Macon, GA 31201',
     contact: '(478) 216-9119',
     notes: 'Daytime shelter, hygiene facilities, mail drop, telehealth clinic, and legal ID assistance.',
-    badge: 'Central GA Daybreak'
+    badge: 'Central GA Daybreak',
+    hoursOfOperation: 'Daytime hours (daytime shelter, not overnight)',
+    cost: 'Free'
   },
   // Banking
   {
@@ -117,7 +129,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: 'Metro Atlanta Branches (2357 Benjamin E Mays Dr SW, Atlanta | 1342 Glenwood Ave SE, Atlanta)',
     contact: '(855) 889-4328',
     notes: 'Verified Fresh Start second-chance checking account with Visa debit card, online/mobile banking, and opportunity to graduate to standard checking after 12 months in good standing.',
-    badge: 'Fresh Start Checking'
+    badge: 'Fresh Start Checking',
+    eligibility: 'Designed for those needing a second-chance account; can graduate to standard checking after 12 months in good standing'
   },
   {
     name: 'Robins Financial Credit Union (Central Georgia)',
@@ -126,7 +139,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '5999 Zebulon Rd, Macon, GA 31210 / 515 Mulberry St, Macon, GA 31201',
     contact: '(478) 923-3773',
     notes: 'Community-first credit union offering low-barrier checking, direct deposit, and credit building loans across Macon-Bibb and Warner Robins.',
-    badge: 'Central GA Credit Union'
+    badge: 'Central GA Credit Union',
+    eligibility: 'Low-barrier account opening'
   },
   // Trades & Apprenticeships
   {
@@ -136,7 +150,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '501 Pulliam St SW #250, Atlanta, GA 30312 (Intake Office)',
     contact: '(404) 523-8107',
     notes: 'Union headquarters & intake office routing candidates to the Atlanta Electrical Training Center (AEJATC) in Norcross (6601 Bay Circle). 4-5 year paid commercial electrical apprenticeship with $18–$55+/hr wage progression and 100% employer-funded healthcare.',
-    badge: 'Union Apprenticeship'
+    badge: 'Union Apprenticeship',
+    cost: 'Paid apprenticeship ($18–$55+/hr wage progression), 100% employer-funded healthcare'
   },
   {
     name: 'Technical College System of Georgia (TCSG) - HOPE Career Grant',
@@ -145,7 +160,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: 'System Office: 1800 Century Place NE, Atlanta, GA 30345 (Campuses: Atlanta Tech, Central GA Tech, Chattahoochee Tech)',
     contact: '(404) 679-1600',
     notes: '100% tuition-free programs for Welding, Commercial Truck Driving (CDL), Diesel Tech, Electrical, Precision Machining, and HVAC.',
-    badge: '100% Free Tuition'
+    badge: '100% Free Tuition',
+    cost: 'Free — 100% tuition covered'
   },
   {
     name: 'First Step Staffing (Atlanta Corridor)',
@@ -154,7 +170,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '236 Auburn Ave NE #203, Atlanta, GA 30303',
     contact: '(404) 577-3395',
     notes: 'Fast-track W-2 commercial employment with daily provided transit van transportation to warehouse/manufacturing sites.',
-    badge: 'Same-Week W-2'
+    badge: 'Same-Week W-2',
+    transportationAccess: 'Daily provided transit van to warehouse/manufacturing job sites',
+    cost: 'Free (fast-track W-2 employment placement)'
   },
   {
     name: 'WorkSource Georgia / WorkSource Atlanta',
@@ -163,6 +181,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
     notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training.',
-    badge: 'WIOA Grants'
+    badge: 'WIOA Grants',
+    cost: 'Free — covered by WIOA training grants ($5,000–$8,000)'
   }
 ];

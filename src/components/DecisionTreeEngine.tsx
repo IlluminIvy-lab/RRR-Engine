@@ -112,7 +112,9 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
   const phases: { id: ReentryPhase; label: string; desc: string }[] = [
     { id: 'Day 1-3', label: 'Phase 1: Day 1-3', desc: 'Vital Records, IDs & Immediate Shelter' },
     { id: 'Day 3-10', label: 'Phase 2: Day 3-10', desc: 'Banking Setup & Mobile Dispatch' },
-    { id: 'Day 10-30', label: 'Phase 3: Day 10-30', desc: 'Trade Apprenticeships & W-2 Hiring' }
+    { id: 'Day 10-30', label: 'Phase 3: Day 10-30', desc: 'Trade Apprenticeships & W-2 Hiring' },
+    { id: 'Day 90', label: 'Phase 4: Day 90', desc: 'Employment Retention & Credit Building' },
+    { id: 'Month 6', label: 'Phase 5: Month 6', desc: 'Stability Review & Long-Term Planning' }
   ];
 
   const exportDossier = () => {
@@ -165,7 +167,7 @@ ${history.map((h) => `
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-stone-400 max-w-2xl">
-              Sequential phase guidance spanning Day 1-3, Day 3-10, and Day 10-30. Single-question branching protocol across IDs, transit, housing, and second-chance banking.
+              Sequential phase guidance spanning Day 1-3, Day 3-10, Day 10-30, Day 90, and Month 6. Single-question branching protocol across IDs, transit, housing, second-chance banking, employment retention, and long-term stability.
             </p>
           </div>
           <div className="flex items-center gap-2">

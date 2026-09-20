@@ -130,7 +130,7 @@ export interface DecisionOption {
 export interface DecisionNode {
   id: string;
   phase: ReentryPhase;
-  domain: 'IDs & Vital Records' | 'Transit & Mobility' | 'Transitional Housing' | 'Banking & Financial Setup' | 'GA Trade Pathways' | 'Community Supervision & Compliance';
+  domain: 'IDs & Vital Records' | 'Transit & Mobility' | 'Transitional Housing' | 'Banking & Financial Setup' | 'GA Trade Pathways' | 'Community Supervision & Compliance' | 'Employment Retention & Advancement' | 'Long-Term Financial Stability';
   question: string;
   contextBanner?: string;
   options: [DecisionOption, DecisionOption, DecisionOption];

@@ -224,9 +224,75 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
       },
       {
         key: 'C',
-        label: 'Restart Decision Tree from Day 1-3 with an updated profile or different corridor location.',
-        actionGuidance: 'Reset decision tree state to evaluate alternative scenarios (e.g. transitioning from Atlanta to Macon corridor).',
-        gaSpecificResource: 'RRR Reentry Decision Tree Engine.',
+        label: 'Continue to Day 90: check employment retention and start building credit.',
+        actionGuidance: 'Your first 30 days are about landing a foothold. Day 90 is about proving you can hold it and starting to build a financial track record while you do.',
+        gaSpecificResource: 'RRR Reentry Decision Tree Engine \u2014 Phase 4: Day 90.',
+        nextNodeId: 'node-8-day90',
+        targetPhase: 'Day 90'
+      }
+    ]
+  },
+  'node-8-day90': {
+    id: 'node-8-day90',
+    phase: 'Day 90',
+    domain: 'Employment Retention & Advancement',
+    contextBanner: 'Day 90 Check-In: Employment Retention & Credit Building',
+    question: 'Ninety days in, what best describes where you are with your job and your finances?',
+    options: [
+      {
+        key: 'A',
+        label: 'I\u2019m still employed at my Day 10-30 placement and want to know what comes next.',
+        actionGuidance: 'Ask your supervisor directly about a 90-day performance review and what raise, shift, or promotion path exists. Most fair-chance and W-2 placement employers formalize advancement at this mark \u2014 don\u2019t wait to be offered it, ask for it by name.',
+        gaSpecificResource: 'WorkSource Georgia / WorkSource Atlanta career centers can help you request a formal skills assessment or wage-progression conversation if your employer doesn\u2019t initiate one.',
+        nextNodeId: 'node-9-month6',
+        targetPhase: 'Month 6'
+      },
+      {
+        key: 'B',
+        label: 'My job situation changed (laid off, quit, or hours cut) and I need to re-enter the job search.',
+        actionGuidance: 'Go back through the Capability Translator with your new experience added \u2014 90 days of verified recent work history is a real credential you didn\u2019t have on Day 1. Use it.',
+        gaSpecificResource: 'WorkSource Georgia / WorkSource Atlanta (818 Pollard Blvd SW, Atlanta | Middle GA: 3090 Mercer Univ Dr, Macon) for re-placement and WIOA-funded upskilling.',
+        nextNodeId: 'node-9-month6',
+        targetPhase: 'Month 6'
+      },
+      {
+        key: 'C',
+        label: 'I\u2019m employed and stable enough to start building credit or savings for the first time.',
+        actionGuidance: 'Open or check in on your second-chance checking account, ask specifically about a credit-builder loan or secured card, and set up even a small automatic transfer into savings \u2014 consistency matters more than amount this early.',
+        gaSpecificResource: 'Peach State Federal Credit Union (Fresh Start Checking, graduates to standard checking after 12 months) or Robins Financial Credit Union (Central GA) for credit-building products.',
+        nextNodeId: 'node-9-month6',
+        targetPhase: 'Month 6'
+      }
+    ]
+  },
+  'node-9-month6': {
+    id: 'node-9-month6',
+    phase: 'Month 6',
+    domain: 'Long-Term Financial Stability',
+    contextBanner: 'Month 6 Milestone: Stability Review & Long-Term Planning',
+    question: 'At six months, what\u2019s the honest state of your stability \u2014 housing, income, and any supervision requirements?',
+    options: [
+      {
+        key: 'A',
+        label: 'Stable on all fronts \u2014 I want to plan my next real step up (credential, trade upgrade, or new role).',
+        actionGuidance: 'This is the point to stack a credential on top of your work history instead of starting over \u2014 a HOPE Career Grant certificate or union apprenticeship carries more weight now that you have six months of verified performance behind it.',
+        gaSpecificResource: 'Technical College System of Georgia (TCSG) HOPE Career Grant or IBEW Local 613 apprenticeship intake for the next credential tier.',
+        nextNodeId: null,
+        targetPhase: 'Month 6'
+      },
+      {
+        key: 'B',
+        label: 'Housing or income is still shaky and I need to re-stabilize before moving forward.',
+        actionGuidance: 'Re-stabilizing at Month 6 is not a failure of the plan \u2014 go back through the Day 1-3 housing and Day 3-10 banking checkpoints with your current, updated information rather than starting completely from scratch.',
+        gaSpecificResource: 'Gateway Center (275 Pryor St SW, Atlanta) or Daybreak Resource Center (174 Walnut St, Macon) for a re-stabilization intake.',
+        nextNodeId: 'node-3-housing',
+        targetPhase: 'Day 1-3'
+      },
+      {
+        key: 'C',
+        label: 'Export my complete 6-month journey as a full record, or start a fresh plan from Day 1-3.',
+        actionGuidance: 'Download or copy your complete sequential decision record with every milestone, address, and resource from Day 1 through Month 6.',
+        gaSpecificResource: 'RRR Reentry Action Dossier Generator.',
         nextNodeId: 'node-1-id',
         targetPhase: 'Day 1-3'
       }
