@@ -264,8 +264,20 @@ export async function generateResumeDocx(
           createSectionHeading('Core Technical & Operational Competencies'),
           createCompetencyTable(),
 
-          // 3. Quantified Achievements
-          createSectionHeading('Quantified Professional Achievements & Operational Outcomes'),
+          // 3. AI-Drafted Bullets (user must verify before use)
+          createSectionHeading('AI-Drafted Resume Bullets — Verify Before Use'),
+          new Paragraph({
+            spacing: { before: 40, after: 80 },
+            children: [
+              new TextRun({
+                text: 'These are AI starting drafts, not verified accomplishments. Replace every [bracketed placeholder] with your real facts before sending to an employer.',
+                size: 17,
+                italics: true,
+                color: 'B45309',
+                font: 'Arial',
+              }),
+            ],
+          }),
           ...data.resumeBullets.map((bullet) => {
             return new Paragraph({
               bullet: { level: 0 },

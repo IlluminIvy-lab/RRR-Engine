@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Briefcase, 
   CheckCircle2, 
@@ -39,7 +39,7 @@ import { ConversationalIntakeCoach } from './ConversationalIntakeCoach';
 
 interface CapabilityTranslatorViewProps {
   onTranslate: (text: string) => Promise<TranslationResult | null>;
-  currentResult: TranslationResult | null;
+  activeResult: TranslationResult | null;
   isLoading: boolean;
   onSendToDecisionTree?: () => void;
   onClearTranslation?: () => void;
@@ -73,6 +73,19 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
   const [candidatePhone, setCandidatePhone] = useState('');
   const [candidateEmail, setCandidateEmail] = useState('');
   const [candidateLocation, setCandidateLocation] = useState('Atlanta / Macon, GA Corridor');
+
+  // Editable draft bullets. The translator produces AI drafts with [bracketed
+  // placeholders] — the user replaces them with real facts here, and every
+  // downstream consumer (copy, PDF, DOCX, print, resume handoff) uses the
+  // edited versions, never the raw drafts.
+  const [editedBullets, setEditedBullets] = useState<string[]>([]);
+  useEffect(() => {
+    setEditedBullets(currentResult?.resumeBullets ?? []);
+  }, [currentResult]);
+
+  const activeResult = currentResult
+    ? { ...currentResult, resumeBullets: editedBullets }
+    : null;
 
   // Helper to compile guided answers into a formatted paragraph
   const compileGuidedAnswers = (): string => {
@@ -133,7 +146,7 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
   };
 
   const handlePrintToPdf = (res?: TranslationResult | null) => {
-    const target = res || currentResult;
+    const target = res || activeResult;
     if (!target) return;
     printCapabilityTranslator(target, {
       candidateName: candidateName.trim() || undefined,
@@ -155,7 +168,7 @@ ${res.competencies.hardSkills.map((s) => `- ${s}`).join('\n')}
 ### High-Agency / Execution Skills:
 ${res.competencies.softSkills.map((s) => `- ${s}`).join('\n')}
 
-## OUTCOME-DRIVEN RESUME ACHIEVEMENTS
+## AI-DRAFTED RESUME BULLETS (VERIFY BEFORE USE)
 ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
 
 ---
@@ -490,7 +503,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
         </form>
       )}
       {/* Results Display */}
-      {currentResult && (
+      {activeResult && (
         <div className="space-y-6 pt-2">
           {/* Top Actions Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0B0F0E] p-3 rounded-lg border border-[#2B2B2B]">
@@ -506,7 +519,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
             <div className="flex flex-wrap items-center gap-2">
               <button
                 id="print-to-pdf-btn"
-                onClick={() => handlePrintToPdf(currentResult)}
+                onClick={() => handlePrintToPdf(activeResult)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#C99A44] hover:bg-[#b88c3a] text-xs font-bold text-[#0B0F0E] shadow-sm transition-colors"
                 title="Print clean black-and-white dossier or Save as PDF via native browser dialog"
               >
@@ -536,7 +549,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
 
               <button
                 id="copy-full-dossier-btn"
-                onClick={() => handleCopy(generateFullMarkdown(currentResult), 'full')}
+                onClick={() => handleCopy(generateFullMarkdown(activeResult), 'full')}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-800 hover:bg-stone-700 text-xs font-medium text-[#F4EDE1] border border-[#2B2B2B] transition-colors"
               >
                 {copiedSection === 'full' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -583,11 +596,11 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                     </span>
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-[#F4EDE1] font-serif tracking-tight">
-                    {currentResult.commercialTitle}
+                    {activeResult.commercialTitle}
                   </h3>
                 </div>
                 <button
-                  onClick={() => handleCopy(currentResult.commercialTitle, 'title')}
+                  onClick={() => handleCopy(activeResult.commercialTitle, 'title')}
                   className="p-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-[#F4EDE1]/60 hover:text-[#F4EDE1] transition-colors"
                   title="Copy Title"
                 >
@@ -607,7 +620,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 </div>
                 <button
                   onClick={() => handleCopy(
-                    `Hard Skills:\n${currentResult.competencies.hardSkills.map(s => `- ${s}`).join('\n')}\n\nSoft Skills:\n${currentResult.competencies.softSkills.map(s => `- ${s}`).join('\n')}`,
+                    `Hard Skills:\n${activeResult.competencies.hardSkills.map(s => `- ${s}`).join('\n')}\n\nSoft Skills:\n${activeResult.competencies.softSkills.map(s => `- ${s}`).join('\n')}`,
                     'competencies'
                   )}
                   className="text-[#F4EDE1]/60 hover:text-[#F4EDE1] p-1.5 rounded hover:bg-stone-800 transition-colors"
@@ -623,7 +636,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   Technical & Hard Skills
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {currentResult.competencies.hardSkills.map((skill, idx) => (
+                  {activeResult.competencies.hardSkills.map((skill, idx) => (
                     <div
                       key={idx}
                       className="flex items-start gap-2 p-2.5 rounded-lg bg-black/60 border border-[#2B2B2B] text-xs text-[#F4EDE1]"
@@ -641,7 +654,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   High-Agency Execution Skills
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {currentResult.competencies.softSkills.map((skill, idx) => (
+                  {activeResult.competencies.softSkills.map((skill, idx) => (
                     <div
                       key={idx}
                       className="flex items-start gap-2 p-2.5 rounded-lg bg-black/60 border border-[#2B2B2B] text-xs text-[#F4EDE1]"
@@ -664,7 +677,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   </span>
                 </div>
                 <button
-                  onClick={() => handleCopy(currentResult.gaPathway, 'pathway')}
+                  onClick={() => handleCopy(activeResult.gaPathway, 'pathway')}
                   className="text-[#F4EDE1]/60 hover:text-[#F4EDE1] p-1.5 rounded hover:bg-stone-800 transition-colors"
                   title="Copy Pathway"
                 >
@@ -678,7 +691,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   <span>Fastest-Hiring Corridor Placement (Atlanta - Macon - Savannah Hub)</span>
                 </div>
                 <p className="text-sm text-[#F4EDE1] leading-relaxed font-sans">
-                  {currentResult.gaPathway}
+                  {activeResult.gaPathway}
                 </p>
                 <div className="flex flex-wrap gap-2 pt-2 border-t border-[#2F4A3E]/60 text-[11px] font-mono text-[#F4EDE1]/70">
                   <span className="px-2 py-0.5 rounded bg-black/60 border border-[#2B2B2B]">
@@ -700,12 +713,12 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 <div className="flex items-center gap-2">
                   <FileCheck className="w-4 h-4 text-[#C99A44]" />
                   <span className="text-xs font-mono font-bold tracking-wider uppercase text-[#F4EDE1]">
-                    3. High-Impact Action-Driven Resume Bullets (Clear Outcomes)
+                    3. AI-Drafted Resume Bullets — Verify & Add Your Real Numbers
                   </span>
                 </div>
                 <button
                   onClick={() => handleCopy(
-                    currentResult.resumeBullets.map((b) => `• ${b}`).join('\n\n'),
+                    activeResult.resumeBullets.map((b) => `• ${b}`).join('\n\n'),
                     'bullets'
                   )}
                   className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-stone-800 hover:bg-stone-700 text-xs font-mono text-[#F4EDE1] transition-colors"
@@ -715,8 +728,12 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 </button>
               </div>
 
+              <p className="text-[11px] text-amber-300/90 font-sans bg-amber-950/30 border border-amber-800/40 rounded-lg px-3 py-2">
+                These are AI starting drafts, not verified accomplishments. Replace every [bracketed placeholder] with your real facts before using them anywhere — nothing here is sent to an employer until you edit and confirm it below.
+              </p>
+
               <div className="space-y-3">
-                {currentResult.resumeBullets.map((bullet, idx) => (
+                {activeResult.resumeBullets.map((bullet, idx) => (
                   <div
                     key={idx}
                     className="p-3.5 rounded-lg bg-black/60 border border-[#2B2B2B] hover:border-[#C99A44]/40 transition-colors flex items-start gap-3 group"
@@ -725,9 +742,22 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                       {idx + 1}
                     </div>
                     <div className="space-y-1 flex-1">
-                      <p className="text-xs sm:text-sm text-[#F4EDE1] leading-relaxed font-sans">
-                        {bullet}
-                      </p>
+                      <textarea
+                        value={bullet}
+                        onChange={(e) => {
+                          const next = [...editedBullets];
+                          next[idx] = e.target.value;
+                          setEditedBullets(next);
+                        }}
+                        rows={3}
+                        aria-label={`Draft bullet ${idx + 1} — edit to add your real facts`}
+                        className="w-full bg-black/40 border border-[#2B2B2B] rounded px-2 py-1.5 text-xs sm:text-sm text-[#F4EDE1] leading-relaxed font-sans focus:outline-none focus:ring-1 focus:ring-[#C99A44] resize-y"
+                      />
+                      {/\[[^\]]+\]/.test(bullet) && (
+                        <span className="text-[10px] font-mono text-amber-400/90">
+                          [bracketed placeholder] — replace with your real fact
+                        </span>
+                      )}
                     </div>
                     <button
                       onClick={() => handleCopy(bullet, `bullet-${idx}`)}
@@ -743,7 +773,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
               {/* Bottom Quick Resume Export Action */}
               <div className="pt-3 border-t border-[#2B2B2B] flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-xs text-[#F4EDE1]/70 font-sans">
-                  Ready to apply? Export these accomplishments and trade competencies into an employer-ready resume.
+                  These are AI drafts — verify every line and fill in your real numbers, then export into your resume.
                 </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <button
@@ -771,7 +801,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
       )}
 
       {/* Resume Customization & Download Modal */}
-      {isExportModalOpen && currentResult && (
+      {isExportModalOpen && activeResult && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-[#0B0F0E] border border-[#2B2B2B] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 relative">
             <button
@@ -900,7 +930,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 </div>
                 <div className="flex items-center gap-1.5 text-[#F4EDE1]/80">
                   <Check className="w-3.5 h-3.5 text-[#C99A44]" />
-                  <span>Target Title: {currentResult.commercialTitle}</span>
+                  <span>Target Title: {activeResult.commercialTitle}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[#F4EDE1]/80">
                   <Check className="w-3.5 h-3.5 text-[#C99A44]" />
@@ -908,7 +938,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 </div>
                 <div className="flex items-center gap-1.5 text-[#F4EDE1]/80">
                   <Check className="w-3.5 h-3.5 text-[#C99A44]" />
-                  <span>3 Quantified Outcome-Driven Resume Bullets</span>
+                  <span>3 AI-Drafted Resume Bullets (verify & add your numbers)</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[#F4EDE1]/80">
                   <Check className="w-3.5 h-3.5 text-[#C99A44]" />
@@ -944,7 +974,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   type="button"
                   onClick={() => {
                     setIsExportModalOpen(false);
-                    handlePrintToPdf(currentResult);
+                    handlePrintToPdf(activeResult);
                   }}
                   className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-xs shadow-md transition-colors"
                 >
@@ -955,7 +985,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 <button
                   id="confirm-generate-pdf-btn"
                   type="button"
-                  onClick={() => handleDownloadPdf(currentResult)}
+                  onClick={() => handleDownloadPdf(activeResult)}
                   className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-xs shadow-md transition-colors"
                 >
                   <FileDown className="w-4 h-4" />
@@ -965,7 +995,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                 <button
                   id="confirm-generate-docx-btn"
                   type="button"
-                  onClick={() => handleDownloadDocx(currentResult)}
+                  onClick={() => handleDownloadDocx(activeResult)}
                   className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-[#0B0F0E] font-bold text-xs shadow-md transition-colors"
                 >
                   <FileText className="w-4 h-4" />
@@ -978,7 +1008,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
       )}
 
       {/* Clean Black & White Professional Layout for Native Browser Print / Print to PDF */}
-      {currentResult && (
+      {activeResult && (
         <div id="printable-capability-dossier" className="hidden print:block print-dossier-root">
           {/* Document Header */}
           <div className="print-dossier-header">
@@ -986,7 +1016,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
               {candidateName.trim() ? candidateName.trim().toUpperCase() : 'PROFESSIONAL CANDIDATE'}
             </div>
             <div className="print-dossier-subtitle">
-              {currentResult.commercialTitle.toUpperCase()}
+              {activeResult.commercialTitle.toUpperCase()}
             </div>
             <div className="print-dossier-meta">
               {[
@@ -1018,7 +1048,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   Technical & Hard Skills
                 </div>
                 <ul className="list-disc pl-4 text-xs space-y-1">
-                  {currentResult.competencies.hardSkills.map((skill, i) => (
+                  {activeResult.competencies.hardSkills.map((skill, i) => (
                     <li key={i}>{skill}</li>
                   ))}
                 </ul>
@@ -1029,7 +1059,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                   High-Agency Execution Skills
                 </div>
                 <ul className="list-disc pl-4 text-xs space-y-1">
-                  {currentResult.competencies.softSkills.map((skill, i) => (
+                  {activeResult.competencies.softSkills.map((skill, i) => (
                     <li key={i}>{skill}</li>
                   ))}
                 </ul>
@@ -1040,10 +1070,10 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
           {/* Section: High-Impact Outcome Resume Bullets */}
           <div className="print-section">
             <div className="print-section-heading">
-              3. Outcome-Driven Professional Achievements
+              3. AI-Drafted Resume Bullets (Verify Before Use)
             </div>
             <div className="space-y-2 mb-3">
-              {currentResult.resumeBullets.map((bullet, i) => (
+              {activeResult.resumeBullets.map((bullet, i) => (
                 <div key={i} className="print-bullet-item">
                   <strong>•</strong> {bullet}
                 </div>
@@ -1058,10 +1088,10 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
             </div>
             <div className="print-competency-box">
               <p className="text-xs leading-relaxed font-semibold mb-1">
-                {currentResult.gaPathway}
+                {activeResult.gaPathway}
               </p>
               <p className="text-[10px] text-stone-700">
-                Placement & Training Tracks: Technical College System of Georgia (TCSG) HOPE Career Grant (100% Tuition-Free) | Georgia Registered Apprenticeships | Verified Fair-Chance Employers.
+                Placement & Training Tracks: Technical College System of Georgia (TCSG) HOPE Career Grant | Georgia Registered Apprenticeships | Research each employer directly — the app does not verify fair-chance status.
               </p>
             </div>
           </div>

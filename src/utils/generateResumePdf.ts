@@ -142,8 +142,15 @@ export function generateResumePdf(
 
   y = Math.max(currentY1, currentY2) + 10;
 
-  // Section C: Quantified Operational Achievements (Resume Bullets)
-  drawSectionTitle('Quantified Professional Achievements & Operational Outcomes');
+  // Section C: AI-Drafted Resume Bullets (user must verify before use)
+  drawSectionTitle('AI-Drafted Resume Bullets — Verify Before Use');
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(8.5);
+  doc.setTextColor(180, 83, 9);
+  const draftNote = 'These are AI starting drafts, not verified accomplishments. Replace every [bracketed placeholder] with your real facts before sending to an employer.';
+  const splitNote = doc.splitTextToSize(draftNote, contentWidth);
+  doc.text(splitNote, margin, y);
+  y += splitNote.length * 11 + 6;
 
   data.resumeBullets.forEach((bullet, index) => {
     if (y > pageHeight - 70) {

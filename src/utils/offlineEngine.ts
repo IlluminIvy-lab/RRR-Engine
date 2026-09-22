@@ -7,9 +7,21 @@ import { makeLine } from './provenance';
  * metric-driven resume bullets, and Georgia corridor pathways 100% offline.
  */
 
+/**
+ * Client-Side Offline Capability Engine (anti-fabrication build)
+ *
+ * Maps the user's own words to a commercial title and skill labels via
+ * input-keyword matching — that mapping is the legitimate translation
+ * function. It NEVER invents metrics, volumes, percentages, headcounts,
+ * employer names, dates, certifications, or "verified employer" claims.
+ * Resume bullets are AI drafts with [bracketed placeholders] where the
+ * user's real numbers go; the Capability Translator view requires the
+ * user to verify and edit them before they flow into any resume or export.
+ * Georgia pathways are research leads, not verified placements.
+ */
 export function translateCapabilityOffline(experience: string): TranslationResult {
   const expLower = experience.toLowerCase();
-  
+
   let commercialTitle = "Industrial Facilities & Operations Specialist";
   let hardSkills = [
     "Inventory Control & Supply Chain Staging",
@@ -24,47 +36,47 @@ export function translateCapabilityOffline(experience: string): TranslationResul
     "Clear Operational Reporting"
   ];
   let bullets = [
-    "Directed daily logistics and inventory staging across a high-volume operational facility, maintaining 99.8% material accountability and zero safety infractions.",
-    "Led cross-functional crews in routine maintenance and preventive diagnostics, decreasing equipment downtime by 35% through structured preventative checkups.",
-    "Trained and onboarded over 25 personnel in strict safety protocols, standard operating procedures, and compliance reporting under rigorous regulatory oversight."
+    "Coordinated daily logistics and inventory staging across an operational facility [add facility type / team size].",
+    "Performed routine maintenance and preventive diagnostics on equipment [add equipment type], following standard safety procedures.",
+    "Trained and supported team members on safety protocols, standard operating procedures, and compliance reporting [add team size, if applicable]."
   ];
   let gaPathways = [
-    "Georgia Logistics & Freight Corridor (I-75/I-85: Clayton & Henry County distribution hubs, UPS Smart Hub, Home Depot Supply Chain)",
-    "IBEW Local 613 & Ironworkers Local 387 Union Apprenticeship programs with zero-cost tuition and direct wage scaling",
-    "Technical College System of Georgia (TCSG) 100% tuition-free HOPE Career Grant certification pathways in Commercial Industrial Operations"
+    "Georgia logistics & freight corridor — I-75/I-85 distribution hubs (Clayton & Henry County). Research openings and each employer's hiring policies before applying.",
+    "Union apprenticeship programs (e.g. IBEW Local 613, Ironworkers Local 387) — check current intake and requirements with the local directly.",
+    "Technical College System of Georgia (TCSG) HOPE Career Grant certification pathways — confirm eligibility and program availability."
   ];
 
   if (expLower.includes("cook") || expLower.includes("kitchen") || expLower.includes("food") || expLower.includes("culinary") || expLower.includes("baker") || expLower.includes("dining")) {
-    commercialTitle = "Executive Line Cook / High-Volume Food Service Production Manager";
+    commercialTitle = "Line Cook / High-Volume Food Service Production";
     hardSkills = [
-      "ServSafe Food Safety & Sanitation Standards",
+      "Food Safety & Sanitation Standards",
       "High-Volume Batch Production & Prep",
       "Portion Control & Waste Minimization",
       "Commercial Kitchen Equipment Operation"
     ];
     softSkills = [
       "High-Volume Pressure Resilience",
-      "Kitchen Brigade Team Leadership",
-      "Fast-Paced Shift Coordination",
-      "Strict Regulatory Compliance"
+      "Kitchen Team Coordination",
+      "Fast-Paced Shift Execution",
+      "Regulatory Compliance"
     ];
     bullets = [
-      "Orchestrated continuous food production for 1,200+ individuals daily within strict per-meal budgetary and nutritional constraints, achieving 100% health inspection compliance.",
-      "Maintained exhaustive inventory controls across raw dry goods, refrigerated stocks, and commercial sanitation supplies, reducing food spoilage by 22%.",
-      "Mentored and supervised 15 kitchen prep crew members on sanitized food handling, knife safety protocols, and rapid line turnaround during peak service hours."
+      "Produced food service at volume within per-meal budgetary and nutritional constraints [add daily volume / setting].",
+      "Managed inventory across dry goods, refrigerated stocks, and sanitation supplies [add scale].",
+      "Supervised and mentored prep crew members on food handling, knife safety, and line turnaround [add team size]."
     ];
     gaPathways = [
-      "Atlanta Metro Hospitality & Culinary Corridor (Downtown/Midtown hotel networks, Georgia World Congress Center, Hartsfield-Jackson Concessions)",
-      "Grady Health System & Emory Healthcare Food & Nutrition Services (Verified Fair-Chance healthcare hospitality employers)",
-      "Atlanta Technical College / Central Georgia Tech Culinary Arts HOPE Career Grant programs"
+      "Atlanta metro hospitality & culinary corridor (Downtown/Midtown hotels, Georgia World Congress Center, Hartsfield-Jackson concessions) — research employers directly.",
+      "Hospital food & nutrition services departments (e.g. Grady, Emory) — verify hiring policies with each employer; the app does not verify fair-chance status.",
+      "Atlanta Technical College / Central Georgia Tech Culinary Arts HOPE Career Grant programs — confirm eligibility."
     ];
   } else if (expLower.includes("mechanic") || expLower.includes("auto") || expLower.includes("diesel") || expLower.includes("vehicle") || expLower.includes("engine") || expLower.includes("transmission")) {
-    commercialTitle = "Heavy Equipment & Fleet Maintenance Technician";
+    commercialTitle = "Equipment & Fleet Maintenance Technician";
     hardSkills = [
       "Hydraulic & Pneumatic System Diagnostics",
-      "Diesel/Gasoline Powertrain Overhaul",
-      "Preventative Maintenance Scheduling",
-      "Diagnostic Scan Tool Telemetry"
+      "Diesel/Gasoline Powertrain Service",
+      "Preventive Maintenance Scheduling",
+      "Diagnostic Scan Tool Use"
     ];
     softSkills = [
       "Root-Cause Troubleshooting",
@@ -73,38 +85,38 @@ export function translateCapabilityOffline(experience: string): TranslationResul
       "Crew Coordination Under Deadlines"
     ];
     bullets = [
-      "Conducted comprehensive mechanical diagnostics, engine repairs, and preventative maintenance across a multi-vehicle fleet, maintaining 98% operational readiness.",
-      "Rebuilt and calibrated high-pressure hydraulic pumps and braking assemblies in accordance with manufacturer technical specifications and environmental standards.",
-      "Maintained meticulous work-order logs and parts manifests, cutting diagnostic turnaround time by 30% through disciplined workspace organization."
+      "Performed mechanical diagnostics, repairs, and preventive maintenance [add fleet size / vehicle types].",
+      "Serviced hydraulic pumps and braking assemblies to manufacturer specifications [add equipment types].",
+      "Maintained work-order logs and parts manifests [add tracking system, if any]."
     ];
     gaPathways = [
-      "MARTA Transit Bus & Rail Maintenance Apprenticeship (Fair-chance transit career pathway with full pension & benefits)",
-      "Georgia Quick Start Clean Energy & EV Manufacturing Pipeline (SK Battery, Hyundai Metaplant, Rivian corridor)",
-      "UA Local 72 & Heavy Equipment Operators Local 926 Registered Apprenticeships"
+      "MARTA transit bus & rail maintenance apprenticeships — check current postings and requirements.",
+      "Georgia clean-energy & EV manufacturing pipeline (e.g. SK Battery, Hyundai Metaplant) — research roles and hiring policies directly.",
+      "Registered apprenticeships (e.g. UA Local 72) — verify intake with the local directly."
     ];
   } else if (expLower.includes("weld") || expLower.includes("fabricat") || expLower.includes("metal") || expLower.includes("machin") || expLower.includes("cutting") || expLower.includes("iron")) {
-    commercialTitle = "Certified Structural Fabricator & Production Welder";
+    commercialTitle = "Structural Fabricator / Production Welder";
     hardSkills = [
-      "SMAW / GMAW (MIG/TIG) Precision Welding",
-      "Blueprint & Architectural Schematic Reading",
-      "Metal Tolerance Measurement & Grinding",
-      "Rigid Quality Assurance Inspection"
+      "SMAW / GMAW Welding Processes",
+      "Blueprint & Schematic Reading",
+      "Metal Measurement & Grinding",
+      "Quality Inspection"
     ];
     softSkills = [
-      "Extreme Detail Precision",
+      "Detail Precision",
       "Physical Endurance & Focus",
-      "Strict PPE & Hazmat Adherence",
-      "Constructive Quality Feedback"
+      "PPE & Hot-Work Safety Discipline",
+      "Quality Feedback"
     ];
     bullets = [
-      "Fabricated, fitted, and welded structural steel components meeting AWS D1.1 specifications with a sub-1% weld defect rate across all quality inspections.",
-      "Interpreted complex multi-view blueprints and technical schematics to cut, bend, and bevel heavy structural plate with 1/16-inch tolerance precision.",
-      "Enforced rigid hot-work safety standards and equipment maintenance regimes across 500+ fabrication hours without a single lost-time safety incident."
+      "Fabricated, fitted, and welded structural components to job specifications [add code/spec if applicable — only if true].",
+      "Read blueprints and technical schematics to cut, bend, and bevel plate [add material / tolerance context].",
+      "Followed hot-work safety standards and equipment maintenance routines [add setting / timeframe]."
     ];
     gaPathways = [
-      "Ironworkers Local 387 / Boilermakers Local 26 Registered Apprenticeships",
-      "Norfolk Southern / CSX Mechanical Rail Car Repair shops (Atlanta & Macon yards)",
-      "Central Georgia Technical College (Macon) Tuition-Free HOPE Career Grant Welding Specialist program"
+      "Registered apprenticeships (e.g. Ironworkers Local 387, Boilermakers Local 26) — verify intake with the local directly.",
+      "Rail mechanical shops (Atlanta & Macon yards) — research openings directly.",
+      "Central Georgia Technical College (Macon) HOPE Career Grant welding programs — confirm eligibility."
     ];
   } else if (expLower.includes("electric") || expLower.includes("wire") || expLower.includes("power") || expLower.includes("voltage") || expLower.includes("conduit") || expLower.includes("panel")) {
     commercialTitle = "Commercial Electrical Apprentice / Industrial Electrician";
@@ -116,91 +128,91 @@ export function translateCapabilityOffline(experience: string): TranslationResul
     ];
     softSkills = [
       "Systematic Problem Solving",
-      "Strict Lockout/Tagout Safety Discipline",
+      "Lockout/Tagout Safety Discipline",
       "Blueprint Interpretation",
       "Reliable Team Communication"
     ];
     bullets = [
-      "Installed and routed over 2,500 linear feet of electrical conduit, wireways, and junction boxes following strict NEC adherence and inspection guidelines.",
-      "Conducted continuity tests and voltage drop calculations to troubleshoot tripped circuits and restore critical infrastructure within tight response times.",
-      "Enforced rigorous Lockout/Tagout (LOTO) procedures across high-voltage distribution switchgear, maintaining flawless safety records."
+      "Installed and routed conduit, wireways, and junction boxes per NEC and inspection requirements [add project scale].",
+      "Troubleshot circuits using continuity tests and voltage-drop calculations [add setting].",
+      "Applied lockout/tagout procedures on distribution equipment [add voltage class / setting]."
     ];
     gaPathways = [
-      "IBEW Local 613 Atlanta Electrical Apprenticeship (Direct entry, earn-while-you-learn union wage progression)",
-      "Georgia Power Substation & Commercial Field Service pipelines",
-      "Chattahoochee Technical College Electrical Commercial Construction HOPE Grant diploma"
+      "IBEW Local 613 Atlanta electrical apprenticeship — verify intake and requirements with the local directly.",
+      "Georgia Power substation & commercial field service pipelines — research openings directly.",
+      "Chattahoochee Technical College electrical construction HOPE Grant diploma — confirm eligibility."
     ];
   } else if (expLower.includes("health") || expLower.includes("care") || expLower.includes("nurse") || expLower.includes("medical") || expLower.includes("orderly") || expLower.includes("patient") || expLower.includes("hospital")) {
-    commercialTitle = "Clinical Support Operations Specialist / Patient Logistics Coordinator";
+    commercialTitle = "Clinical Support Operations Specialist";
     hardSkills = [
-      "Sterile Processing & Infection Control",
-      "Patient Mobility & Logistics Transfer",
-      "EHR Documentation & Compliance",
-      "Vital Sign Protocol Tracking"
+      "Infection Control Practices",
+      "Patient Mobility & Transport Support",
+      "Documentation & Compliance",
+      "Supply Staging"
     ];
     softSkills = [
       "Compassionate De-escalation",
-      "Acute Crisis Management",
+      "Crisis Management",
       "Interdisciplinary Team Collaboration",
-      "Strict HIPAA Confidentiality"
+      "Confidentiality (HIPAA Awareness)"
     ];
     bullets = [
-      "Coordinated sanitation and patient transport logistics across high-volume healthcare wards, achieving 100% adherence to infection control protocols.",
-      "Monitored medical inventory, sterile supply staging, and emergency kit readiness, eliminating delayed patient care interventions.",
-      "Maintained detailed logs and handover summaries, facilitating seamless communication between clinical shifts and supervisory staff."
+      "Coordinated sanitation and patient-transport logistics [add unit / facility type].",
+      "Monitored medical inventory and sterile supply staging [add scale].",
+      "Maintained logs and handover summaries supporting shift-to-shift communication [add documentation system, if any]."
     ];
     gaPathways = [
-      "Grady Health System (Atlanta's premier Fair-Chance healthcare employer for facilities, transport, and clinical support)",
-      "Piedmont Healthcare / Emory Healthcare Environmental & Facilities divisions",
-      "Georgia HOPE Career Grant Phlebotomy, Sterile Processing, or CNA certifications at Atlanta Technical College"
+      "Hospital facilities, transport, and clinical-support departments (e.g. Grady, Piedmont, Emory) — verify each employer's hiring policies directly; the app does not verify fair-chance status.",
+      "Georgia HOPE Career Grant certifications (phlebotomy, sterile processing, CNA) at Atlanta Technical College — confirm eligibility.",
+      "Healthcare support staffing agencies — research terms and placement fees before signing anything."
     ];
   } else if (expLower.includes("warehouse") || expLower.includes("forklift") || expLower.includes("shipping") || expLower.includes("inventory") || expLower.includes("stock") || expLower.includes("dock")) {
-    commercialTitle = "Logistics & Distribution Operations Lead";
+    commercialTitle = "Logistics & Distribution Operations Associate";
     hardSkills = [
-      "Forklift & PIT Equipment Operation",
-      "WMS / Barcode Manifest Tracking",
+      "Forklift & Powered Industrial Truck Operation",
+      "Barcode / Manifest Tracking",
       "Cross-Dock Freight Staging",
-      "OSHA Warehouse Safety Compliance"
+      "Warehouse Safety Compliance"
     ];
     softSkills = [
       "Fast-Paced Shift Accountability",
-      "Multi-Tasking Freight Coordination",
+      "Freight Coordination",
       "Punctuality & Shift Reliability",
-      "High-Attention Physical Precision"
+      "Physical Precision"
     ];
     bullets = [
-      "Staged, scanned, and dispatched over 4,500 freight pallets monthly across high-density storage bays with zero pallet damage or misrouted consignments.",
-      "Conducted daily pre-operation inspections on electric forklifts and reach trucks, documenting battery maintenance and hydraulic integrity.",
-      "Spearheaded dock staging efficiency improvements that decreased truck turn-times by 22% during peak seasonal distribution periods."
+      "Staged, scanned, and dispatched freight across storage bays [add volume / equipment used].",
+      "Performed pre-operation inspections on forklifts and material-handling equipment, documenting findings [add inspection checklist / system, if any].",
+      "Improved dock staging workflows [add what changed and any measurable result — only if true]."
     ];
     gaPathways = [
-      "UPS Smart Hub (Atlanta / Fulton Industrial Blvd - Top regional Fair-Chance logistics employer)",
-      "Home Depot Supply Chain Distribution Centers (Locust Grove / Henry County corridor)",
-      "Georgia Department of Economic Development Certified Logistics Associate (CLA) fast-track programs"
+      "Metro Atlanta distribution hubs (e.g. Fulton Industrial Blvd corridor, Henry County) — research openings and hiring policies directly.",
+      "Georgia Department of Economic Development Certified Logistics Associate (CLA) programs — verify schedule and cost.",
+      "Warehouse staffing firms — research terms and placement fees before signing anything."
     ];
   } else if (expLower.includes("clerk") || expLower.includes("admin") || expLower.includes("office") || expLower.includes("records") || expLower.includes("computer") || expLower.includes("data")) {
     commercialTitle = "Administrative Operations & Records Specialist";
     hardSkills = [
-      "Records Management & Filing Audits",
-      "Data Entry & Spreadsheet Analysis",
-      "Document Quality Assurance",
-      "Confidential Data Protection"
+      "Records Management & Filing",
+      "Data Entry & Spreadsheet Use",
+      "Document Quality Review",
+      "Confidential Data Handling"
     ];
     softSkills = [
-      "High Discretion & Integrity",
-      "Meticulous Verification Accuracy",
+      "Discretion & Integrity",
+      "Verification Accuracy",
       "Professional Written Communication",
-      "Independent Workflow Prioritization"
+      "Independent Prioritization"
     ];
     bullets = [
-      "Processed and archived over 800 confidential operational records weekly with 100% adherence to strict regulatory privacy compliance guidelines.",
-      "Digitized and cross-referenced physical log sheets against internal databases, identifying and resolving over 120 administrative discrepancies.",
-      "Drafted weekly executive summaries and shift turnover briefs, ensuring seamless departmental coordination and zero operational oversights."
+      "Processed and archived operational records [add volume / record type] following privacy requirements.",
+      "Reconciled physical logs against internal databases, resolving discrepancies [add system used].",
+      "Drafted summaries and shift turnover briefs supporting departmental coordination [add audience / frequency]."
     ];
     gaPathways = [
-      "Fulton County Government & City of Atlanta Ban-the-Box administrative support positions",
-      "Goodwill of North Georgia Career Centers (Administrative skills training and direct employer placement)",
-      "Technical College System of Georgia (TCSG) Business Technology HOPE Grant programs"
+      "Fulton County / City of Atlanta administrative support postings — check which roles are covered by ban-the-box policies.",
+      "Goodwill of North Georgia career centers — verify current training and placement services directly.",
+      "Technical College System of Georgia (TCSG) Business Technology HOPE Grant programs — confirm eligibility."
     ];
   }
 

@@ -46,19 +46,18 @@ async function startServer() {
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: `You are the RRR Capability Engine & Career Architect.
-Your task is MODE 1: CAPABILITY TRANSLATOR & BENCHMARKING.
-Convert the provided raw duties, institutional jobs, or life skills into high-agency, commercial career assets.
+Your task is MODE 1: CAPABILITY TRANSLATOR.
+Convert the provided raw duties, institutional jobs, or life skills into commercial career assets.
+
+ANTI-FABRICATION CONTRACT (hard rules — violating any of them fails the task):
+1. Use ONLY facts stated in the input experience text. Never invent employers, job titles the user did not hold, dates, locations, metrics, volumes, percentages, headcounts, certifications, or credentials.
+2. RESUME BULLETS: Draft exactly 3 achievement bullets grounded strictly in the input. Where a hiring manager would expect a number (volume, team size, timeframe), write a bracketed placeholder the user fills in, e.g. "[add team size]" or "[add timeframe]". Never write a specific number the user did not provide.
+3. COMPETENCIES: List only skills evidenced by or directly implied by the input. Return exactly 4 hard skills and 4 soft skills; if the input supports fewer, use "[add skill]" placeholders for the rest rather than inventing skills.
+4. GA PATHWAYS: 2-3 Georgia / Atlanta / Macon corridor training resources, apprenticeship programs, or employer types the user can research. Frame them as leads to verify — never call any employer "verified", and never make claims about an organization's hiring practices.
+5. Plain, direct language. Zero buzzwords, zero patronizing language.
 
 INPUT EXPERIENCE:
-"${experience}"
-
-Strict Output Requirements:
-1. COMMERCIAL TITLE: Industry-standard professional job title.
-2. COMPETENCIES: Exactly 4 core technical/hard skills and 4 high-agency execution/soft skills.
-3. RESUME BULLETS: Exactly 3 high-impact, metric-driven achievement bullets starting with strong action verbs (quantify volume, percentages, headcounts, or compliance).
-4. GA FAIR-CHANCE PATHWAYS: 2-3 verified Fair-Chance / Second-Chance employers, hospital networks, or union apprenticeship locals in the Georgia/Atlanta/Macon corridor.
-
-Zero generic filler, zero buzzwords, zero patronizing language.`,
+"${experience}"`,
           config: {
             responseMimeType: 'application/json',
             responseSchema: {
@@ -87,11 +86,11 @@ Zero generic filler, zero buzzwords, zero patronizing language.`,
                 resumeBullets: {
                   type: Type.ARRAY,
                   items: { type: Type.STRING },
-                  description: '3 high-impact, metric-driven achievement bullets starting with strong action verbs',
+                  description: '3 AI-drafted bullets grounded only in the input; bracketed placeholders where the user must add their own numbers — never invented metrics',
                 },
                 gaPathway: {
                   type: Type.STRING,
-                  description: '2-3 verified Fair-Chance employers, hospital networks, or union apprenticeship locals in the Georgia/Atlanta/Macon corridor',
+                  description: '2-3 Georgia corridor training/apprenticeship resources or employer types framed as research leads; no verified-employer claims',
                 },
               },
               required: ['commercialTitle', 'competencies', 'resumeBullets', 'gaPathway'],
