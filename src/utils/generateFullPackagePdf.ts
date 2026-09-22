@@ -1,5 +1,14 @@
 import { jsPDF } from 'jspdf';
-import { FullApplicationPackage } from '../types';
+import { FullApplicationPackage, ResumeLine } from '../types';
+import {
+  AI_DRAFT_TAG,
+  MISSING_PLACEHOLDER_ORG,
+  MISSING_PLACEHOLDER_DATES,
+  MISSING_PLACEHOLDER_PHONE,
+  MISSING_PLACEHOLDER_EMAIL,
+  displayOrPlaceholder,
+  needsReview,
+} from './provenance';
 
 export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
   const doc = new jsPDF({
@@ -42,7 +51,7 @@ export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(113, 113, 122);
-  const contactStr = `${candidate.cityStateZip}  |  ${candidate.phone}  |  ${candidate.email}  |  ${candidate.linkedinOrPortfolio || 'Verified Professional'}`;
+  const contactStr = `${candidate.cityStateZip}  |  ${displayOrPlaceholder(candidate.phone, MISSING_PLACEHOLDER_PHONE)}  |  ${displayOrPlaceholder(candidate.email, MISSING_PLACEHOLDER_EMAIL)}  |  ${candidate.linkedinOrPortfolio || 'References available upon request'}`;
   doc.text(contactStr, margin, y);
   y += 14;
 
@@ -95,16 +104,32 @@ export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
 
   // 3. Professional Experience
   drawHeading('Professional Experience & Operational Execution');
+
+  // Provenance tag for lines the user hasn't verified — drawn in amber italic
+  // right after the line's text so the exported file never silently ships
+  // AI-drafted content as fact.
+  const drawDraftTag = (line: ResumeLine, textX: number, textY: number, lastLineWidth: number) => {
+    if (!needsReview(line)) return;
+    const tag = ` [${line.provenance === 'missing' ? 'ADD INFO' : AI_DRAFT_TAG.toUpperCase()}]`;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(180, 83, 9);
+    doc.text(tag, textX + lastLineWidth + 2, textY);
+  };
+
   resume.professionalExperience.forEach((exp) => {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9.5);
     doc.setTextColor(24, 24, 27);
     doc.text(exp.roleTitle, margin, y);
 
-    const meta = ` |  ${exp.organization} (${exp.location})  [${exp.dateRange}]`;
+    const orgKnown = exp.organization.trim().length > 0;
+    const datesKnown = exp.dateRange.trim().length > 0;
+    const meta = ` |  ${orgKnown ? exp.organization : MISSING_PLACEHOLDER_ORG} (${exp.location})  [${datesKnown ? exp.dateRange : MISSING_PLACEHOLDER_DATES}]`;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
-    doc.setTextColor(113, 113, 122);
+    if (orgKnown && datesKnown) doc.setTextColor(113, 113, 122);
+    else doc.setTextColor(180, 83, 9);
     doc.text(meta, margin + doc.getTextWidth(exp.roleTitle) + 4, y);
     y += 12;
 
@@ -114,8 +139,15 @@ export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
       doc.setTextColor(39, 39, 42);
       doc.setFillColor(180, 83, 9);
       doc.circle(margin + 4, y - 2.5, 1.5, 'F');
-      const splitB = doc.splitTextToSize(b, contentWidth - 16);
+      const splitB = doc.splitTextToSize(b.text, contentWidth - 16);
       doc.text(splitB, margin + 12, y);
+      const lastLine = splitB[splitB.length - 1] || '';
+      const lastLineWidth = doc.getTextWidth(lastLine);
+      drawDraftTag(b, margin + 12, y + (splitB.length - 1) * 11, lastLineWidth);
+      // restore bullet font state
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(39, 39, 42);
       y += splitB.length * 11 + 3;
     });
     y += 4;
@@ -123,17 +155,31 @@ export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
 
   // 4. Certifications & Education
   drawHeading('Certifications & Georgia Career Pathways');
-  const allCreds = [...resume.certificationsAndTraining, ...resume.educationAndHopeGrants];
-  allCreds.forEach((c) => {
-    doc.setFont('helvetica', 'normal');
+  const allCreds: ResumeLine[] = [...resume.certificationsAndTraining, ...resume.educationAndHopeGrants];
+  if (allCreds.length === 0) {
+    doc.setFont('helvetica', 'italic');
     doc.setFontSize(8.5);
-    doc.setTextColor(39, 39, 42);
-    doc.setFillColor(3, 105, 161);
-    doc.circle(margin + 4, y - 2.5, 1.5, 'F');
-    const splitC = doc.splitTextToSize(c, contentWidth - 16);
-    doc.text(splitC, margin + 12, y);
-    y += splitC.length * 11 + 2;
-  });
+    doc.setTextColor(161, 161, 170);
+    doc.text('No certifications or education entries listed — add yours before sending.', margin, y);
+    y += 14;
+  } else {
+    allCreds.forEach((c) => {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(39, 39, 42);
+      doc.setFillColor(3, 105, 161);
+      doc.circle(margin + 4, y - 2.5, 1.5, 'F');
+      const splitC = doc.splitTextToSize(c.text, contentWidth - 16);
+      doc.text(splitC, margin + 12, y);
+      const lastLine = splitC[splitC.length - 1] || '';
+      const lastLineWidth = doc.getTextWidth(lastLine);
+      drawDraftTag(c, margin + 12, y + (splitC.length - 1) * 11, lastLineWidth);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(39, 39, 42);
+      y += splitC.length * 11 + 2;
+    });
+  }
 
   // PAGE 2: TARGETED COVER LETTER
   doc.addPage();
@@ -153,7 +199,7 @@ export function generateFullPackagePdf(pkg: FullApplicationPackage): void {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(113, 113, 122);
-  doc.text(`${candidate.cityStateZip}  |  ${candidate.phone}  |  ${candidate.email}`, margin, ly);
+  doc.text(`${candidate.cityStateZip}  |  ${displayOrPlaceholder(candidate.phone, MISSING_PLACEHOLDER_PHONE)}  |  ${displayOrPlaceholder(candidate.email, MISSING_PLACEHOLDER_EMAIL)}`, margin, ly);
   ly += 16;
 
   doc.setDrawColor(228, 228, 231);

@@ -1,4 +1,5 @@
-import { TranslationResult, FullApplicationPackage } from '../types';
+import { TranslationResult, FullApplicationPackage, ResumeLine } from '../types';
+import { makeLine } from './provenance';
 
 /**
  * Client-Side Offline Capability Engine
@@ -217,11 +218,20 @@ export function translateCapabilityOffline(experience: string): TranslationResul
   };
 }
 
+/**
+ * ANTI-FABRICATION CONTRACT (release-blocker fix):
+ * This engine no longer invents employers, dates, metrics, certifications, or
+ * contact info. Anything the user hasn't provided comes back as "" with
+ * provenance "missing"; anything the engine drafts comes back marked
+ * "ai_inferred" for the review checkpoint. The ONLY user facts available here
+ * are the target title, name, location, and (optionally) a Mode 1 translation.
+ */
 export function generateFullPackageOffline(
   targetTitle: string,
   candidateName = "J. Carter",
   location = "Atlanta, GA",
-  industry = "Logistics & Supply Chain"
+  industry = "Logistics & Supply Chain",
+  translation?: TranslationResult | null
 ): FullApplicationPackage {
   const cleanTitle = targetTitle?.trim() || "Commercial Operations Specialist";
   const name = candidateName?.trim() || "J. Carter";
@@ -239,6 +249,43 @@ export function generateFullPackageOffline(
       ? 'Logistics & Supply Chain'
       : 'General Operations';
 
+  // Bullets: grounded in the user's own translator output when available,
+  // otherwise neutral capability statements with NO invented metrics,
+  // employers, or numbers. All marked ai_inferred for checkpoint review.
+  const hasTranslation = !!(translation && translation.resumeBullets && translation.resumeBullets.length > 0);
+  const bullets: ResumeLine[] = hasTranslation
+    ? translation!.resumeBullets.map((b) => makeLine(b, 'ai_inferred'))
+    : [
+        makeLine(
+          "Executes daily operational workflows following standard operating procedures and applicable safety requirements.",
+          'ai_inferred'
+        ),
+        makeLine(
+          "Coordinates with team members to maintain workflow continuity and resolve routine operational issues.",
+          'ai_inferred'
+        ),
+        makeLine(
+          "Maintains equipment, work areas, and records to required operational standards.",
+          'ai_inferred'
+        ),
+      ];
+
+  // Competencies: derived from the user's translation when available,
+  // otherwise a neutral (non-claim) starter set.
+  const competenciesGrid: string[][] = hasTranslation
+    ? [
+        translation!.competencies.hardSkills.slice(0, 3),
+        translation!.competencies.softSkills.slice(0, 3),
+      ]
+    : [
+        ["Standard Operating Procedure (SOP) Adherence", "Workflow Coordination", "Safety-Conscious Execution"],
+        ["Team Communication", "Task Prioritization", "Documentation & Reporting"],
+      ];
+
+  const summary = hasTranslation
+    ? `Operations professional targeting ${cleanTitle} roles in the ${loc} corridor. Capability Translator assessment highlights ${translation!.commercialTitle} strengths, including ${translation!.competencies.hardSkills.slice(0, 2).join(" and ")}. Focused on procedure-driven execution, workflow coordination, and safety-conscious operations. Complete the review checklist to verify every line before sending.`
+    : `Candidate targeting ${cleanTitle} roles in the ${loc} corridor. Run the Capability Translator (Mode 1) on your experience, then work through the review checklist — every line on this resume must be confirmed by you before it goes to an employer.`;
+
   return {
     id: `pkg-offline-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
     targetJobTitle: cleanTitle,
@@ -246,61 +293,47 @@ export function generateFullPackageOffline(
     createdAt: new Date().toISOString(),
     candidate: {
       fullName: name,
-      cityStateZip: `${loc} 30303`,
-      phone: "(404) 555-0194",
-      email: `${name.toLowerCase().replace(/[^a-z]/g, "") || "candidate"}@career-email.com`,
-      linkedinOrPortfolio: "linkedin.com/in/career-profile"
+      cityStateZip: loc,
+      // NEVER invented — the review checkpoint collects these.
+      phone: "",
+      email: "",
+      phoneProvenance: 'missing',
+      emailProvenance: 'missing',
+      linkedinOrPortfolio: undefined,
     },
     resume: {
       targetTitle: cleanTitle,
-      summary: `High-discipline, safety-certified Operations Specialist with extensive experience directing fast-paced workflows, inventory staging, and team execution in high-volume, regulated environments. Proven record of enforcing zero-defect compliance, reducing maintenance downtime, and leading cross-functional crews under demanding operational constraints. Ready to deliver immediate reliability and operational excellence to Georgia commercial teams.`,
-      competenciesGrid: [
-        ["Standard Operating Procedure (SOP) Enforcement", "Preventative Equipment Maintenance", "High-Volume Inventory Control"],
-        ["OSHA & Regulatory Compliance", "Crisis De-escalation & Crew Leadership", "Logistics & Workflow Optimization"]
-      ],
+      summary,
+      competenciesGrid,
+      // ONE role. No invented second employer, no invented dates.
+      // Organization / dates stay blank until the user fills them in.
       professionalExperience: [
         {
           roleTitle: cleanTitle,
-          organization: "Commercial Operations & Staging Facility",
+          roleTitleProvenance: 'user_provided',
+          organization: "",
+          organizationProvenance: 'missing',
           location: loc,
-          dateRange: "2021 – 2024",
-          bullets: [
-            "Managed end-to-end material staging, equipment maintenance, and facility operations across a 40,000 sq. ft. facility with 99.8% inventory accuracy.",
-            "Supervised daily workflow coordination for a 12-person crew, enforcing rigorous OSHA safety standards across 4,000+ operational hours without safety incidents.",
-            "Streamlined parts procurement and preventative diagnostics, reducing machinery downtime by 28% and ensuring 100% inspection pass rates."
-          ]
+          locationProvenance: 'user_provided',
+          dateRange: "",
+          dateRangeProvenance: 'missing',
+          bullets,
         },
-        {
-          roleTitle: "Lead Logistics & Inventory Coordinator",
-          organization: "Regional Supply Distribution Hub",
-          location: "Macon / Central GA",
-          dateRange: "2019 – 2021",
-          bullets: [
-            "Directed intake, tracking, and staging for over 50 tons of inventory monthly under rigid turnaround deadlines.",
-            "Audited physical stock against digital manifest records, resolving supply discrepancies within 24 hours.",
-            "Trained and onboarded 18 new team members on equipment operation, material handling protocols, and team communication standards."
-          ]
-        }
       ],
-      certificationsAndTraining: [
-        "OSHA 10-Hour General Industry Safety Certification",
-        "Forklift / Powered Industrial Truck (PIT) Operator Safety Certification",
-        "First Aid, CPR & AED Certified Responder"
-      ],
-      educationAndHopeGrants: [
-        "Technical College System of Georgia (TCSG) – Commercial Logistics Specialist (HOPE Career Grant Pathway)",
-        "High School Diploma / GED Equivalency – Verified State Credential"
-      ]
+      // NEVER pre-filled: listing a certification the user hasn't confirmed
+      // they hold is fabrication. The review checkpoint offers one-tap adds.
+      certificationsAndTraining: [],
+      educationAndHopeGrants: [],
     },
     coverLetter: {
-      hiringManagerOrDepartment: "Hiring Manager & Operations Leadership",
-      targetCompanyOrHospital: "Georgia Commercial Operations",
+      hiringManagerOrDepartment: "Hiring Manager",
+      targetCompanyOrHospital: "",
       targetRoleTitle: cleanTitle,
       companyAddressOrCorridor: `${loc} Corridor`,
-      openingParagraph: `I am writing to express my strong interest in the ${cleanTitle} position at your organization. With a disciplined background managing rigorous operational protocols, multi-person crew coordination, and strict compliance standards in high-volume environments, I offer the dependable execution and immediate reliability your team requires.`,
-      bodyParagraph: `Throughout my career, I have thrived in high-accountability environments where precision, physical endurance, and adherence to standard operating procedures are non-negotiable. In my previous role, I directed inventory staging and preventive maintenance workflows for daily operations, consistently maintaining over 99% accuracy and zero safety violations. My hands-on experience troubleshooting technical bottlenecks and mentoring crew members allows me to bridge technical skill with operational leadership, driving bottom-line efficiency from day one.`,
-      closingParagraph: `I am deeply committed to establishing a long-term, high-impact career within the Georgia corridor and welcome the opportunity to discuss how my work ethic, adaptability, and operational rigor will directly benefit your team. Thank you for your time, consideration, and dedication to merit-based hiring.`,
-      signOff: "Respectfully,"
+      openingParagraph: `I am writing to express my interest in the ${cleanTitle} position. ${hasTranslation ? `My background includes operational experience assessed through the RRR Capability Translator as ${translation!.commercialTitle}.` : "I am building a verified record of my capabilities through the RRR platform."} I am pursuing opportunities with Georgia employers committed to merit-based hiring.`,
+      bodyParagraph: `I bring a disciplined approach to standard operating procedures, workflow coordination, and safety-conscious execution. ${hasTranslation ? `My assessed strengths include ${translation!.competencies.hardSkills.slice(0, 3).join(", ")}.` : "I am prepared to discuss how my experience aligns with your team\u2019s operational needs."} I welcome the chance to show what consistent, reliable execution looks like on your team.`,
+      closingParagraph: `I am committed to building a long-term career in the Georgia corridor and would welcome the opportunity to discuss this role further. Thank you for your time and consideration.`,
+      signOff: "Respectfully,",
     }
   };
 }

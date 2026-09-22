@@ -21,6 +21,7 @@ import {
   SavedSession
 } from './types';
 import { translateCapabilityOffline, generateFullPackageOffline } from './utils/offlineEngine';
+import { normalizePackage } from './utils/provenance';
 
 export default function App() {
   const [currentMode, setCurrentMode] = useState<AppMode>('unified');
@@ -63,7 +64,9 @@ export default function App() {
   const [applicationPackages, setApplicationPackages] = useState<FullApplicationPackage[]>(() => {
     try {
       const saved = localStorage.getItem('rrr_application_packages');
-      return saved ? JSON.parse(saved) : [];
+      // Normalize: upgrades packages saved under the old pre-provenance shape
+      // (string bullets, no provenance fields) so old sessions keep working.
+      return saved ? (JSON.parse(saved) as unknown[]).map(normalizePackage) : [];
     } catch {
       return [];
     }
@@ -223,7 +226,7 @@ export default function App() {
 
     // If browser is offline, use offline engine immediately
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      const offlinePkg = generateFullPackageOffline(targetTitle, candidateName, location, industry);
+      const offlinePkg = generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation);
       setApplicationPackages((prev) => [offlinePkg, ...prev.filter((p) => p.targetJobTitle !== offlinePkg.targetJobTitle)]);
       showToast(`Offline Mode: Application Package generated for "${targetTitle}"`);
       setIsLoading(false);
@@ -251,7 +254,7 @@ export default function App() {
       return data;
     } catch (err) {
       console.warn('Live API generation failed, using offline engine templates:', err);
-      const fallbackPkg = generateFullPackageOffline(targetTitle, candidateName, location, industry);
+      const fallbackPkg = generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation);
       setApplicationPackages((prev) => [fallbackPkg, ...prev.filter((p) => p.targetJobTitle !== fallbackPkg.targetJobTitle)]);
       showToast(`Offline Engine: Application package generated for "${targetTitle}"`);
       return fallbackPkg;
@@ -313,7 +316,7 @@ export default function App() {
   const handleImportData = (data: AppExportData) => {
     if (data.lastTranslation) setCurrentTranslation(data.lastTranslation);
     if (data.applicationPackages && Array.isArray(data.applicationPackages)) {
-      setApplicationPackages(data.applicationPackages);
+      setApplicationPackages(data.applicationPackages.map(normalizePackage));
     }
     if (data.trackerItems && Array.isArray(data.trackerItems)) {
       setTrackerItems(data.trackerItems);
@@ -366,7 +369,7 @@ export default function App() {
 
   const handleLoadSession = (session: SavedSession) => {
     setCurrentTranslation(session.currentTranslation);
-    setApplicationPackages(session.applicationPackages || []);
+    setApplicationPackages((session.applicationPackages || []).map(normalizePackage));
     setTrackerItems(session.trackerItems || []);
     setDecisionHistory(session.decisionHistory || []);
     setActiveSessionId(session.id);

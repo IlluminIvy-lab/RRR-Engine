@@ -12,12 +12,40 @@ import {
   AlignmentType,
   convertInchesToTwip
 } from 'docx';
-import { FullApplicationPackage } from '../types';
+import { FullApplicationPackage, LineProvenance } from '../types';
+import {
+  AI_DRAFT_TAG,
+  MISSING_PLACEHOLDER_ORG,
+  MISSING_PLACEHOLDER_DATES,
+  MISSING_PLACEHOLDER_PHONE,
+  MISSING_PLACEHOLDER_EMAIL,
+  displayOrPlaceholder,
+  needsReview,
+} from './provenance';
 
 export async function generateFullPackageDocx(pkg: FullApplicationPackage): Promise<void> {
   const candidate = pkg.candidate;
   const resume = pkg.resume;
   const coverLetter = pkg.coverLetter;
+
+  const phone = displayOrPlaceholder(candidate.phone, MISSING_PLACEHOLDER_PHONE);
+  const email = displayOrPlaceholder(candidate.email, MISSING_PLACEHOLDER_EMAIL);
+
+  // Provenance tag appended to any line the user hasn't verified, so the
+  // exported file never silently ships AI-drafted content as fact.
+  const draftTagRun = (provenance: LineProvenance) =>
+    new TextRun({
+      text: ` [${provenance === 'missing' ? 'ADD INFO' : AI_DRAFT_TAG.toUpperCase()}]`,
+      size: 16,
+      italics: true,
+      color: 'B45309',
+      font: 'Arial',
+    });
+
+  const flaggedBulletRuns = (text: string, provenance: LineProvenance) => [
+    new TextRun({ text, size: 18, color: '27272A', font: 'Arial' }),
+    ...(needsReview({ text, provenance }) ? [draftTagRun(provenance)] : []),
+  ];
 
   const createSectionHeading = (title: string) => {
     return new Paragraph({
@@ -133,7 +161,7 @@ export async function generateFullPackageDocx(pkg: FullApplicationPackage): Prom
             },
             children: [
               new TextRun({
-                text: `${candidate.cityStateZip}   |   ${candidate.phone}   |   ${candidate.email}   |   ${candidate.linkedinOrPortfolio || 'Verified Professional Candidate'}`,
+                text: `${candidate.cityStateZip}   |   ${phone}   |   ${email}   |   ${candidate.linkedinOrPortfolio || 'References available upon request'}`,
                 size: 17,
                 color: '52525B',
                 font: 'Arial',
@@ -161,82 +189,96 @@ export async function generateFullPackageDocx(pkg: FullApplicationPackage): Prom
 
           // Professional Experience
           createSectionHeading('Professional Experience & Operational Leadership'),
-          ...resume.professionalExperience.flatMap((role) => [
-            new Paragraph({
-              spacing: { before: 100, after: 20 },
-              children: [
-                new TextRun({
-                  text: role.roleTitle,
-                  bold: true,
-                  size: 20,
-                  color: '18181B',
-                  font: 'Arial',
-                }),
-                new TextRun({
-                  text: `   |   ${role.organization} (${role.location})`,
-                  bold: true,
-                  size: 19,
-                  color: '4B5563',
-                  font: 'Arial',
-                }),
-                new TextRun({
-                  text: `   [${role.dateRange}]`,
-                  italics: true,
-                  size: 18,
-                  color: 'B45309',
-                  font: 'Arial',
-                }),
-              ],
-            }),
-            ...role.bullets.map((b) =>
+          ...resume.professionalExperience.flatMap((role) => {
+            const orgKnown = role.organization.trim().length > 0;
+            const datesKnown = role.dateRange.trim().length > 0;
+            return [
               new Paragraph({
-                bullet: { level: 0 },
-                spacing: { before: 30, after: 30 },
+                spacing: { before: 100, after: 20 },
                 children: [
                   new TextRun({
-                    text: b,
+                    text: role.roleTitle,
+                    bold: true,
+                    size: 20,
+                    color: '18181B',
+                    font: 'Arial',
+                  }),
+                  new TextRun({
+                    text: `   |   ${orgKnown ? role.organization : MISSING_PLACEHOLDER_ORG} (${role.location})`,
+                    bold: true,
+                    size: 19,
+                    color: orgKnown ? '4B5563' : '9CA3AF',
+                    italics: !orgKnown,
+                    font: 'Arial',
+                  }),
+                  new TextRun({
+                    text: `   [${datesKnown ? role.dateRange : MISSING_PLACEHOLDER_DATES}]`,
+                    italics: true,
                     size: 18,
-                    color: '27272A',
+                    color: datesKnown ? 'B45309' : '9CA3AF',
                     font: 'Arial',
                   }),
                 ],
-              })
-            ),
-          ]),
+              }),
+              ...role.bullets.map((b) =>
+                new Paragraph({
+                  bullet: { level: 0 },
+                  spacing: { before: 30, after: 30 },
+                  children: flaggedBulletRuns(b.text, b.provenance),
+                })
+              ),
+            ];
+          }),
 
           // Certifications & Training
           createSectionHeading('Certifications, Safety & Professional Training'),
-          ...resume.certificationsAndTraining.map((cert) =>
-            new Paragraph({
-              bullet: { level: 0 },
-              spacing: { before: 30, after: 30 },
-              children: [
-                new TextRun({
-                  text: cert,
-                  size: 18,
-                  color: '27272A',
-                  font: 'Arial',
+          ...(resume.certificationsAndTraining.length === 0
+            ? [
+                new Paragraph({
+                  spacing: { before: 30, after: 30 },
+                  children: [
+                    new TextRun({
+                      text: 'No certifications listed — add certifications you hold before sending.',
+                      size: 18,
+                      italics: true,
+                      color: '9CA3AF',
+                      font: 'Arial',
+                    }),
+                  ],
                 }),
-              ],
-            })
-          ),
+              ]
+            : resume.certificationsAndTraining.map((cert) =>
+                new Paragraph({
+                  bullet: { level: 0 },
+                  spacing: { before: 30, after: 30 },
+                  children: flaggedBulletRuns(cert.text, cert.provenance),
+                })
+              )),
 
           // Education & Georgia HOPE Grants
           createSectionHeading('Education & Georgia HOPE Career Grant Pathways'),
-          ...resume.educationAndHopeGrants.map((edu) =>
-            new Paragraph({
-              bullet: { level: 0 },
-              spacing: { before: 30, after: 30 },
-              children: [
-                new TextRun({
-                  text: edu,
-                  size: 18,
-                  color: '27272A',
-                  font: 'Arial',
+          ...(resume.educationAndHopeGrants.length === 0
+            ? [
+                new Paragraph({
+                  spacing: { before: 30, after: 30 },
+                  children: [
+                    new TextRun({
+                      text: 'No education entries listed.',
+                      size: 18,
+                      italics: true,
+                      color: '9CA3AF',
+                      font: 'Arial',
+                    }),
+                  ],
                 }),
-              ],
-            })
-          ),
+              ]
+            : resume.educationAndHopeGrants.map((edu) =>
+                new Paragraph({
+                  bullet: { level: 0 },
+                  spacing: { before: 30, after: 30 },
+                  children: flaggedBulletRuns(edu.text, edu.provenance),
+                })
+              )),
         ],
       },
 
@@ -273,7 +315,7 @@ export async function generateFullPackageDocx(pkg: FullApplicationPackage): Prom
             },
             children: [
               new TextRun({
-                text: `${candidate.cityStateZip}   |   ${candidate.phone}   |   ${candidate.email}`,
+                text: `${candidate.cityStateZip}   |   ${phone}   |   ${email}`,
                 size: 17,
                 color: '71717A',
                 font: 'Arial',

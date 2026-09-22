@@ -47,20 +47,39 @@ export interface TranslationResult {
 }
 
 // MODE 2: Complete Resume & Cover Letter Builder
+//
+// CLAIM-LEVEL PROVENANCE (fabrication fix):
+// Every generated resume line carries a provenance label so the UI and the
+// exported files can distinguish "the user said this" from "the model made
+// this up". Unknown fields are returned as "" with provenance "missing" —
+// never as plausible-sounding filler.
+export type LineProvenance = 'user_provided' | 'ai_inferred' | 'missing';
+
+export interface ResumeLine {
+  text: string;
+  provenance: LineProvenance;
+}
+
 export interface CandidateContactInfo {
   fullName: string;
   cityStateZip: string; // e.g. "Atlanta, GA 30303"
-  phone: string;
-  email: string;
+  phone: string; // "" when unknown — never invented
+  email: string; // "" when unknown — never invented
+  phoneProvenance: LineProvenance;
+  emailProvenance: LineProvenance;
   linkedinOrPortfolio?: string;
 }
 
 export interface ResumeRole {
   roleTitle: string;
-  organization: string; // e.g. "Commercial Facilities Logistics Hub"
-  location: string;     // e.g. "Atlanta, GA"
-  dateRange: string;    // e.g. "2021 – 2024"
-  bullets: string[];
+  roleTitleProvenance: LineProvenance;
+  organization: string; // "" when unknown — never invented (was: hardcoded fake employer)
+  organizationProvenance: LineProvenance;
+  location: string;
+  locationProvenance: LineProvenance;
+  dateRange: string; // "" when unknown — never invented (was: hardcoded "2021 – 2024")
+  dateRangeProvenance: LineProvenance;
+  bullets: ResumeLine[];
 }
 
 export interface FullResumeData {
@@ -68,8 +87,8 @@ export interface FullResumeData {
   summary: string;
   competenciesGrid: string[][]; // 2x3 grid (6 competencies)
   professionalExperience: ResumeRole[];
-  certificationsAndTraining: string[];
-  educationAndHopeGrants: string[];
+  certificationsAndTraining: ResumeLine[];
+  educationAndHopeGrants: ResumeLine[];
 }
 
 export interface FullCoverLetterData {

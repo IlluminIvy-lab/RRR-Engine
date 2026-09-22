@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI, Type } from '@google/genai';
 import { translateCapabilityOffline, generateFullPackageOffline } from './src/utils/offlineEngine';
+import { normalizePackage } from './src/utils/provenance';
 
 async function startServer() {
   const app = express();
@@ -114,6 +115,13 @@ Zero generic filler, zero buzzwords, zero patronizing language.`,
 
   // -------------------------------------------------------------
   // MODE 2: COMPLETE RESUME & COVER LETTER BUILDER
+  //
+  // ANTI-FABRICATION CONTRACT (release-blocker fix):
+  // The prompt below hard-grounds the model: it may ONLY use facts present
+  // in the candidate info / translator context. Anything unknown comes back
+  // as "" with provenance "missing" — never invented. Every resume line
+  // carries user_provided | ai_inferred | missing provenance so the review
+  // checkpoint and exporters can flag it.
   // -------------------------------------------------------------
   app.post('/api/generate-full-package', async (req, res) => {
     const {
@@ -128,30 +136,51 @@ Zero generic filler, zero buzzwords, zero patronizing language.`,
 
     if (ai) {
       try {
+        const provenanceEnum = {
+          type: Type.STRING,
+          enum: ['user_provided', 'ai_inferred', 'missing'],
+          description:
+            'user_provided = fact stated by the user; ai_inferred = rephrasing/generalization with no new facts; missing = unknown, text MUST be ""',
+        };
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: `You are the RRR Capability Engine & Career Architect.
 Your task is MODE 2: COMPLETE RESUME & COVER LETTER BUILDER.
 
-CANDIDATE INFO:
+CANDIDATE INFO (provided by the user — treat as ground truth):
 - Name: ${candidateName}
 - Target Job Title: ${targetJobTitle}
 - Location: ${cityStateZip}
 - Industry / Sector: ${industrySector}
-- Prior Capabilities Context: ${JSON.stringify(translatedData || {})}
+- Prior Capabilities Context (the user's own Capability Translator output — the ONLY source of work-history facts you may use):
+${JSON.stringify(translatedData || {})}
+
+ANTI-FABRICATION RULES — violating any of these is a critical failure:
+1. You may ONLY state facts that appear in CANDIDATE INFO or Prior Capabilities Context above. If a fact is not there, you do not know it.
+2. NEVER invent: employer or organization names, employment dates or date ranges, work locations beyond the given Location, metrics (volumes, percentages, headcounts, dollar amounts, square footage), certifications or licenses, education credentials, phone numbers, or email addresses.
+3. Any field you cannot fill from the sources above MUST be returned as an empty string "" with provenance "missing". Do NOT substitute plausible-sounding filler text.
+4. Every resume line and role field carries a provenance label:
+   - "user_provided": the fact was stated directly in the candidate info or translator context.
+   - "ai_inferred": a reasonable rephrasing or generalization of user-stated experience. Adds NO new facts.
+   - "missing": unknown — the text field MUST be "".
+5. Professional Experience: include 1-2 roles ONLY if the translator context supports them. Never invent a second employer to fill space — one honest role beats two invented ones. Write 2-4 bullets per role grounded in the translator context; if the context is thin, write fewer clearly-marked bullets rather than inventing detail. No invented metrics — if the user gave no numbers, the bullet has no numbers.
+6. Certifications & Training: list ONLY credentials the user has actually mentioned. If none were mentioned, return an empty array [].
+7. Education: list ONLY credentials the user has mentioned. Do not present grant pathways or programs as earned credentials.
+8. Cover letter: every accomplishment claim must trace to the provided context. No invented numbers, employers, or results.
+9. Phone / email: if not provided above, return "" with provenance "missing" — never generate a phone number or email address.
 
 Generate a complete ATS-ready Application Package:
 1. PROFESSIONAL RESUME:
-   - Professional summary (2-3 sentences, high-agency, zero fluff).
-   - Core Competencies grid (2 rows of 3 skill pillars each).
-   - Professional Experience: 2 structured roles with dates, locations, organizations, and 3 high-impact metric-driven operational bullets each.
-   - Certifications & Safety Training: 3 relevant certifications (e.g. OSHA-10/30, Forklift, ServSafe, CPR/First Aid).
-   - Education & Georgia Career Pathways: HOPE Career Grant pathway, TCSG college, or union apprentice local (e.g., IBEW Local 613, Central Georgia Tech).
+   - Professional summary (2-3 sentences, high-agency, zero fluff, grounded in the context above).
+   - Core Competencies grid (2 rows of 3 skill pillars each, drawn from the translator context when available).
+   - Professional Experience: roles with dates, locations, organizations, and grounded bullets — with per-field provenance.
+   - Certifications & Safety Training: ONLY user-mentioned credentials, each labeled.
+   - Education & Georgia Career Pathways: ONLY user-mentioned credentials, each labeled.
 2. TARGETED COVER LETTER:
-   - 3-paragraph high-agency cover letter addressed to hiring manager, connecting operational autonomy, safety compliance, and discipline directly to bottom-line results.
-   - Opening paragraph: Specific role target and value proposition.
-   - Body paragraph: Concrete operational accomplishments, high volume handled, and compliance rigor.
-   - Closing paragraph: Professional invitation for interview and direct contact.`,
+   - 3-paragraph high-agency cover letter, every claim grounded in the provided context.
+   - Opening paragraph: specific role target and value proposition.
+   - Body paragraph: accomplishments stated in the translator context — no invented metrics.
+   - Closing paragraph: professional invitation for interview and direct contact.`,
           config: {
             responseMimeType: 'application/json',
             responseSchema: {
@@ -164,10 +193,18 @@ Generate a complete ATS-ready Application Package:
                   properties: {
                     fullName: { type: Type.STRING },
                     cityStateZip: { type: Type.STRING },
-                    phone: { type: Type.STRING },
-                    email: { type: Type.STRING },
+                    phone: {
+                      type: Type.STRING,
+                      description: 'Phone number if provided by the user, else "" — never invent one',
+                    },
+                    email: {
+                      type: Type.STRING,
+                      description: 'Email if provided by the user, else "" — never invent one',
+                    },
+                    phoneProvenance: provenanceEnum,
+                    emailProvenance: provenanceEnum,
                   },
-                  required: ['fullName', 'cityStateZip', 'phone', 'email'],
+                  required: ['fullName', 'cityStateZip', 'phone', 'email', 'phoneProvenance', 'emailProvenance'],
                 },
                 resume: {
                   type: Type.OBJECT,
@@ -187,24 +224,71 @@ Generate a complete ATS-ready Application Package:
                         type: Type.OBJECT,
                         properties: {
                           roleTitle: { type: Type.STRING },
-                          organization: { type: Type.STRING },
+                          roleTitleProvenance: provenanceEnum,
+                          organization: {
+                            type: Type.STRING,
+                            description: 'Employer name if stated by the user, else "" — never invent',
+                          },
+                          organizationProvenance: provenanceEnum,
                           location: { type: Type.STRING },
-                          dateRange: { type: Type.STRING },
+                          locationProvenance: provenanceEnum,
+                          dateRange: {
+                            type: Type.STRING,
+                            description: 'Dates if stated by the user, else "" — never invent',
+                          },
+                          dateRangeProvenance: provenanceEnum,
                           bullets: {
                             type: Type.ARRAY,
-                            items: { type: Type.STRING },
+                            items: {
+                              type: Type.OBJECT,
+                              properties: {
+                                text: { type: Type.STRING },
+                                provenance: provenanceEnum,
+                              },
+                              required: ['text', 'provenance'],
+                            },
                           },
                         },
-                        required: ['roleTitle', 'organization', 'location', 'dateRange', 'bullets'],
+                        required: [
+                          'roleTitle',
+                          'roleTitleProvenance',
+                          'organization',
+                          'organizationProvenance',
+                          'location',
+                          'locationProvenance',
+                          'dateRange',
+                          'dateRangeProvenance',
+                          'bullets',
+                        ],
                       },
                     },
                     certificationsAndTraining: {
                       type: Type.ARRAY,
-                      items: { type: Type.STRING },
+                      items: {
+                        type: Type.OBJECT,
+                        properties: {
+                          text: {
+                            type: Type.STRING,
+                            description: 'ONLY a credential the user mentioned; empty array if none were mentioned',
+                          },
+                          provenance: provenanceEnum,
+                        },
+                        required: ['text', 'provenance'],
+                      },
                     },
                     educationAndHopeGrants: {
                       type: Type.ARRAY,
-                      items: { type: Type.STRING },
+                      items: {
+                        type: Type.OBJECT,
+                        properties: {
+                          text: {
+                            type: Type.STRING,
+                            description: 'ONLY a credential the user mentioned; empty array if none were mentioned',
+                          },
+                          provenance: provenanceEnum,
+                        },
+                        required: ['text', 'provenance'],
+                      },
                     },
                   },
                   required: [
@@ -244,15 +328,24 @@ Generate a complete ATS-ready Application Package:
         });
 
         const parsed = JSON.parse(response.text || '{}');
-        return res.json(parsed);
+        // Normalize: guarantees id/createdAt and provenance fields even if the
+        // model omits them; blanks become "missing", unlabeled lines default
+        // to "ai_inferred" so nothing silently ships as user-verified.
+        return res.json(
+          normalizePackage({
+            id: `pkg-live-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+            createdAt: new Date().toISOString(),
+            ...parsed,
+          })
+        );
       } catch (error) {
         console.error('Gemini API package generation error, using offline engine fallback:', error);
-        const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector);
+        const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector, translatedData);
         return res.json(fallback);
       }
     }
 
-    const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector);
+    const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector, translatedData);
     return res.json(fallback);
   });
 
