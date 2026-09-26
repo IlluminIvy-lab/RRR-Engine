@@ -60,7 +60,7 @@ const COACH_STEPS = [
       'Maintained 50,000+ sq ft institutional facility',
       'Staged and loaded 400+ pallets per week',
       'Completed 25+ work orders weekly with zero rework',
-      'Maintained 100% zero-defect safety log over 3 years',
+      'Maintained safety logs [add timeframe and incident record — only if true]',
     ],
   },
   {
