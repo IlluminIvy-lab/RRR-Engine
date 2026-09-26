@@ -53,7 +53,7 @@ const COACH_STEPS = [
     step: 3,
     title: 'Operational Scale & Numbers',
     coachQuestion: "Let's quantify your impact. What numbers show scale (people supervised, meals served, pallets moved, square footage)?",
-    placeholder: 'e.g. Supervised 8-person crew, managed 1,200 meals per day, maintained 60,000 sq ft facility...',
+    placeholder: 'e.g. Supervised a work crew [add crew size and how often — only if true], managed meals per shift [add count and timeframe — only if true], maintained a facility [add square footage — only if true]...',
     samplePills: [
       'Supervised a work crew [add crew size and how often — only if true]',
       'Processed meals on tight schedules [add meal count and timeframe — only if true]',

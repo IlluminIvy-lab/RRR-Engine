@@ -411,7 +411,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                     rows={2}
                     value={guidedTasks}
                     onChange={(e) => setGuidedTasks(e.target.value)}
-                    placeholder="e.g., Prepped 500+ meals daily, logged inventory manifests, operated pallet jacks, inspected plumbing..."
+                    placeholder="e.g., Prepped meals daily [add count and timeframe — only if true], logged inventory manifests, operated pallet jacks, inspected plumbing..."
                     className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
                   />
                 </div>
