@@ -430,7 +430,7 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
                     rows={2}
                     value={guidedScale}
                     onChange={(e) => setGuidedScale(e.target.value)}
-                    placeholder="e.g., Led a 6-person crew, processed 1,200 units per shift, maintained 100% zero-defect safety logs..."
+                    placeholder="e.g., Led a work crew, processed units per shift, kept safety logs [add numbers — only if true]..."
                     className="w-full bg-black/80 border border-[#2B2B2B] rounded-md px-3 py-2 text-xs sm:text-sm text-[#F4EDE1] placeholder-[#F4EDE1]/35 focus:outline-none focus:ring-1 focus:ring-[#C99A44] focus:border-[#C99A44] leading-relaxed"
                   />
                 </div>
