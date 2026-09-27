@@ -111,6 +111,17 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
     !guidedScale.trim() && 
     !guidedCertifications.trim();
 
+  // Stale-result guard: the displayed result is only valid for the exact input
+  // that produced it (stored as rawExperience). If the user edits the input
+  // afterwards — or the result was restored from localStorage against
+  // different input — the old result must never display as if it were
+  // current. It stays hidden until the user re-translates.
+  const currentInputText =
+    entryMode === 'guided' ? compileGuidedAnswers() : inputText;
+  const isResultStale =
+    !!activeResult &&
+    currentInputText.trim() !== (activeResult.rawExperience || '').trim();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoading) return;
@@ -502,8 +513,32 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
           )}
         </form>
       )}
-      {/* Results Display */}
-      {activeResult && (
+      {/* Results Display — hidden whenever the input no longer matches the
+          result's source input (see stale-result guard above) */}
+      {isResultStale && (
+        <div className="flex items-start gap-3 bg-[#0B0F0E] border border-[#C99A44]/40 rounded-xl p-4">
+          <RefreshCw className="w-4 h-4 mt-0.5 text-[#C99A44] shrink-0" />
+          <div className="space-y-2">
+            <p className="text-xs text-[#F4EDE1]/80 leading-relaxed">
+              <span className="font-semibold text-[#F4EDE1]">Input changed.</span>{' '}
+              The saved result no longer matches your current input, so it's hidden.
+              Run Translate again for a fresh result.
+            </p>
+            {onClearTranslation && (
+              <button
+                type="button"
+                onClick={onClearTranslation}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 border border-rose-900/40 transition-colors"
+                title="Clear saved translation from localStorage"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Clear Saved</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+      {activeResult && !isResultStale && (
         <div className="space-y-6 pt-2">
           {/* Top Actions Bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0B0F0E] p-3 rounded-lg border border-[#2B2B2B]">
