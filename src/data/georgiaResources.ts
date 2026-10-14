@@ -79,7 +79,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     contact: '(404) 848-5000',
     notes: 'Comprehensive rail and bus transit spanning Fulton, DeKalb, and Clayton. Reduced Fare Breeze card office and transit pass distribution; note that Five Points station offices are modified during the Five Points Transformation project.',
     badge: 'Transit Mobility',
-    cost: 'Reduced Fare Breeze card program available at this office'
+    cost: 'Reduced Fare Breeze card program available at this office',
     hoursOfOperation: 'Reduced Fare Office: Mon–Fri 8:30 AM–5:00 PM (Five Points location closed for construction)',
   },
   {
@@ -120,10 +120,9 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '174 Walnut St, Macon, GA 31201',
     contact: '(478) 216-9119',
     notes: 'Daytime shelter, hygiene facilities, mail drop, telehealth clinic, and legal ID assistance.',
-    hoursOfOperation: 'Mon–Fri ~7:30 AM–3:00 PM (Tuesdays open 7:00 AM)',
+    hoursOfOperation: 'Mon–Fri ~7:30 AM–3:00 PM (Tuesdays open 7:00 AM); daytime shelter, not overnight',
     dateLastVerified: '2026-10-13',
     badge: 'Central GA Daybreak',
-    hoursOfOperation: 'Daytime hours (daytime shelter, not overnight)',
     cost: 'Free'
   },
   // Banking
