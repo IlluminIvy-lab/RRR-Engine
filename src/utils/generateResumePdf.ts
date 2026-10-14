@@ -93,7 +93,8 @@ export function generateResumePdf(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(63, 63, 70); // zinc-700
-  const summaryText = `High-discipline, outcome-driven operational specialist aligning rigorous institutional experience and facilities execution into commercial standards. Demonstrates proven capability in high-accountability environments with strict adherence to safety protocols, equipment reliability, team coordination, and rapid problem resolution across the Georgia logistics and infrastructure corridor.`;
+  // AI-drafted summary — uses the user's edited version; never the hardcoded template.
+  const summaryText = `[AI-DRAFTED — VERIFY BEFORE USE] ${(data.summary ?? '').trim()}`;
   const splitSummary = doc.splitTextToSize(summaryText, contentWidth);
   doc.text(splitSummary, margin, y);
   y += splitSummary.length * 13 + 12;

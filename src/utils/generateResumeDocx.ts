@@ -247,12 +247,12 @@ export async function generateResumeDocx(
           }),
 
           // 1. Professional Summary
-          createSectionHeading('Commercial Capability Summary'),
+          createSectionHeading('Commercial Capability Summary [AI-DRAFTED — VERIFY BEFORE USE]'),
           new Paragraph({
             spacing: { before: 80, after: 140 },
             children: [
               new TextRun({
-                text: `High-discipline, outcome-driven operational specialist aligning rigorous institutional experience and facilities execution into commercial standards. Demonstrates proven capability in high-accountability environments with strict adherence to safety protocols, equipment reliability, team coordination, and rapid problem resolution across the Georgia logistics and infrastructure corridor.`,
+                text: `[AI-DRAFTED — VERIFY BEFORE USE] ${(data.summary ?? '').trim()}`,
                 size: 19, // 9.5pt
                 color: '3F3F46',
                 font: 'Arial',

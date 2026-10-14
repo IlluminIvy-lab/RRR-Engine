@@ -183,5 +183,172 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training.',
     badge: 'WIOA Grants',
     cost: 'Free — covered by WIOA training grants ($5,000–$8,000)'
+  },
+  // Legal Aid
+  {
+    name: 'Georgia Justice Project',
+    category: 'Legal Aid',
+    corridor: 'Atlanta Metro',
+    address: '438 Edgewood Ave SE, Atlanta, GA 30312',
+    contact: '(404) 827-0027',
+    notes: 'Free criminal legal defense and reentry services for Georgians who cannot afford an attorney. Runs a record-clearing screener and record restriction (Georgia’s term for expungement) work.',
+    badge: 'Free Legal Defense',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Atlanta Legal Aid Society',
+    category: 'Legal Aid',
+    corridor: 'Atlanta Metro',
+    address: '54 Ellis St NE, Atlanta, GA 30303',
+    contact: '(404) 524-5811',
+    notes: 'Free civil legal services for low-income metro Atlantans — housing, family, consumer, health, employment, and benefits cases. Serving since 1924.',
+    badge: 'Free Civil Legal Aid',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Georgia Legal Services Program (Macon)',
+    category: 'Legal Aid',
+    corridor: 'Macon / Central GA',
+    address: '241 Third Street, Suite 230, Macon, GA 31201',
+    contact: '(478) 751-6261',
+    notes: 'Free civil legal services for low-income people across the 154 Georgia counties outside metro Atlanta.',
+    badge: 'Free Civil Legal Aid',
+    dateLastVerified: '2026-10-13'
+  },
+  // Employment & Job Placement
+  {
+    name: 'Goodwill of North Georgia — Career Centers',
+    category: 'Employment & Job Placement',
+    corridor: 'Atlanta Metro',
+    address: '2201 Lawrenceville Hwy, Suite 300, Decatur, GA 30033',
+    contact: '(404) 420-9900',
+    notes: 'Free career centers: job listings, resume help, coaching, and training certifications, plus dedicated second-chance work — 31,000+ returning citizens served, 15,000+ placed over the past decade.',
+    badge: 'Second-Chance Careers',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Georgia Vocational Rehabilitation Agency (GVRA)',
+    category: 'Employment & Job Placement',
+    corridor: 'Statewide GA',
+    address: '200 Piedmont Ave SE, West Tower, Suite 1410, Atlanta, GA 30334',
+    contact: '(844) 367-4872',
+    notes: 'State agency helping Georgians with disabilities achieve employment and independence — free employment services, training, and employer matching.',
+    badge: 'State Employment Services',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Walking the Last Mile to Reentry (GA Dept. of Labor)',
+    category: 'Employment & Job Placement',
+    corridor: 'Atlanta Metro',
+    address: '148 Andrew Young Int’l Blvd NE, Suite 700, Atlanta, GA 30303',
+    contact: '(404) 232-7305',
+    notes: 'State reentry-to-work program: skills assessments, resume building, mock interviews, job placement, and employer connections for justice-involved people. Serves Fulton, Gwinnett, and DeKalb counties.',
+    badge: 'Reentry Job Placement',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Center for Employment Opportunities (CEO) — Atlanta',
+    category: 'Employment & Job Placement',
+    corridor: 'Atlanta Metro',
+    address: '938 Peachtree St NE, Atlanta, GA 30309',
+    contact: '(404) 689-6579',
+    notes: 'Immediate paid transitional employment, job coaching, and full-time placement for people with recent convictions.',
+    badge: 'Paid Transitional Work',
+    dateLastVerified: '2026-10-13'
+  },
+  // Healthcare
+  {
+    name: 'Grady Health System',
+    category: 'Healthcare',
+    corridor: 'Atlanta Metro',
+    address: '80 Jesse Hill Jr Dr SE, Atlanta, GA 30303',
+    contact: '(404) 616-1000',
+    notes: 'Atlanta’s largest safety-net hospital and Level I trauma center. Serves uninsured and underinsured patients on a sliding-scale basis.',
+    badge: 'Safety-Net Hospital',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Mercy Care Atlanta',
+    category: 'Healthcare',
+    corridor: 'Atlanta Metro',
+    address: '424 Decatur St SE, Atlanta, GA 30312',
+    contact: '(678) 843-8600',
+    notes: 'Federally qualified health center: primary, dental, vision, mental health, and specialty care. Sliding-scale fees; no one turned away for inability to pay.',
+    badge: 'Sliding-Scale Care',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Macon-Bibb County Health Department',
+    category: 'Healthcare',
+    corridor: 'Macon / Central GA',
+    address: '1600 Forsyth St, Macon, GA 31201',
+    contact: '(478) 745-0411',
+    notes: 'County public health: low-cost clinic, dental, WIC, immunizations, and vital records (birth certificates Mon–Fri 8am–4pm). No one denied for inability to pay. Call ahead — the department is relocating.',
+    badge: 'Public Health Clinic',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'First Choice Primary Care (Macon)',
+    category: 'Healthcare',
+    corridor: 'Macon / Central GA',
+    address: '2460 Shurling Dr, Macon, GA 31211',
+    contact: '(478) 787-4266',
+    notes: 'Federally qualified health center: primary care, chronic disease management, screenings, immunizations, and prescription assistance for insured, uninsured, and underinsured adults.',
+    badge: 'Sliding-Scale Care',
+    dateLastVerified: '2026-10-13'
+  },
+  // Food Assistance
+  {
+    name: 'Atlanta Community Food Bank',
+    category: 'Food Assistance',
+    corridor: 'Atlanta Metro',
+    address: '3400 North Desert Dr, East Point, GA 30344',
+    contact: '(404) 892-3333',
+    notes: 'Feeding America member food bank serving metro Atlanta and north Georgia through 700+ partner agencies. Online food-finder and pantry referral tool.',
+    badge: 'Food Pantry Network',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'Middle Georgia Community Food Bank',
+    category: 'Food Assistance',
+    corridor: 'Macon / Central GA',
+    address: '4490 Ocmulgee East Blvd, Macon, GA 31217',
+    contact: '(478) 742-3958',
+    notes: 'Feeding America member food bank serving 24 Middle Georgia counties via 200+ partner agencies. Online pantry finder, mobile distributions, and SNAP application assistance.',
+    badge: 'Food Pantry Network',
+    dateLastVerified: '2026-10-13'
+  },
+  // Vital Records & DDS
+  {
+    name: 'Fulton County Board of Health — Vital Records',
+    category: 'Vital Records & DDS',
+    corridor: 'Atlanta Metro',
+    address: '141 Pryor St SW, Suite 1029A, Atlanta, GA 30303',
+    contact: '(770) 520-7500',
+    notes: 'Issues certified birth and death certificates in person for vital events anywhere in Georgia. Walk-in service, $25 search fee, valid photo ID required.',
+    badge: 'In-Person Birth Certificates',
+    dateLastVerified: '2026-10-13'
+  },
+  // Housing & Support
+  {
+    name: 'Atlanta Mission',
+    category: 'Housing & Support',
+    corridor: 'Atlanta Metro',
+    address: '2353 Bolton Rd NW, Atlanta, GA 30318',
+    contact: '(404) 588-4000',
+    notes: 'Atlanta’s largest homeless-services nonprofit: four shelters (men’s, recovery, women-and-children) plus transitional housing, vocational training, and meals.',
+    badge: 'Emergency Shelter',
+    dateLastVerified: '2026-10-13'
+  },
+  {
+    name: 'The Salvation Army — Red Shield Services (Metro Atlanta)',
+    category: 'Housing & Support',
+    corridor: 'Atlanta Metro',
+    address: '469 Marietta St NW, Atlanta, GA 30313',
+    contact: '(404) 486-2700',
+    notes: 'Emergency and transitional shelter for men, women, and families. Cold-weather program opens to anyone when temperatures drop below 40°F; family transitional program up to one year.',
+    badge: 'Emergency Shelter',
+    dateLastVerified: '2026-10-13'
   }
 ];
+

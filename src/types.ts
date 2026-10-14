@@ -40,6 +40,7 @@ export interface TranslationResult {
   commercialTitle: string;
   competencies: TranslationCompetencies;
   resumeBullets: string[];
+  summary?: string; // AI-drafted professional summary — user-editable, never asserted as fact
   gaPathway?: string;
   gaPathways?: string[]; // 2-3 verified Fair-Chance / Second-Chance employers, hospital networks, or union apprenticeship locals
   rawExperience?: string;
@@ -172,7 +173,7 @@ export interface DecisionHistoryEntry {
 // Georgia Resource Vault
 export interface GeorgiaResourceItem {
   name: string;
-  category: 'Vital Records & DDS' | 'Transit & Mobility' | 'Housing & Support' | 'Second Chance Banking' | 'Apprenticeships & Trades' | 'Fair-Chance Employers & Hospitals';
+  category: 'Vital Records & DDS' | 'Transit & Mobility' | 'Housing & Support' | 'Second Chance Banking' | 'Apprenticeships & Trades' | 'Fair-Chance Employers & Hospitals' | 'Legal Aid' | 'Employment & Job Placement' | 'Healthcare' | 'Food Assistance';
   corridor: 'Atlanta Metro' | 'Macon / Central GA' | 'Statewide GA';
   address?: string;
   contact?: string;

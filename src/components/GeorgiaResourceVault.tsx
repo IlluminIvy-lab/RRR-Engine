@@ -24,7 +24,11 @@ export const GeorgiaResourceVault: React.FC = () => {
     'Transit & Mobility',
     'Housing & Support',
     'Second Chance Banking',
-    'Apprenticeships & Trades'
+    'Apprenticeships & Trades',
+    'Legal Aid',
+    'Employment & Job Placement',
+    'Healthcare',
+    'Food Assistance'
   ];
 
   // Short labels for the tab buttons (full category names stay on the cards)
@@ -34,7 +38,11 @@ export const GeorgiaResourceVault: React.FC = () => {
     'Transit & Mobility': 'Transit',
     'Housing & Support': 'Housing',
     'Second Chance Banking': 'Banking',
-    'Apprenticeships & Trades': 'Trades'
+    'Apprenticeships & Trades': 'Trades',
+    'Legal Aid': 'Legal Aid',
+    'Employment & Job Placement': 'Employment',
+    'Healthcare': 'Healthcare',
+    'Food Assistance': 'Food'
   };
 
   const categoryCount = (c: string) =>

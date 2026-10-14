@@ -83,8 +83,18 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
     setEditedBullets(currentResult?.resumeBullets ?? []);
   }, [currentResult]);
 
+  // AI-drafted professional summary. Pre-filled as a starting draft — the user
+  // edits it to reflect their real background, and every downstream consumer
+  // (print, PDF, DOCX) uses the edited version, labeled as AI-drafted.
+  const SUMMARY_TEMPLATE =
+    'High-discipline, outcome-driven operational specialist aligning rigorous institutional experience and facilities execution into commercial standards. Demonstrates proven capability in high-accountability environments with strict adherence to safety protocols, equipment reliability, team coordination, and rapid problem resolution across the Georgia logistics and infrastructure corridor.';
+  const [editedSummary, setEditedSummary] = useState<string>(SUMMARY_TEMPLATE);
+  useEffect(() => {
+    setEditedSummary(SUMMARY_TEMPLATE);
+  }, [currentResult]);
+
   const activeResult = currentResult
-    ? { ...currentResult, resumeBullets: editedBullets }
+    ? { ...currentResult, resumeBullets: editedBullets, summary: editedSummary }
     : null;
 
   // Helper to compile guided answers into a formatted paragraph
@@ -742,6 +752,37 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
               </div>
             </div>
 
+            {/* Section: AI-Drafted Professional Summary (editable) */}
+            <div className="lg:col-span-12 bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-[#2B2B2B] pb-2.5">
+                <div className="flex items-center gap-2">
+                  <FileCheck className="w-4 h-4 text-[#C99A44]" />
+                  <span className="text-xs font-mono font-bold tracking-wider uppercase text-[#F4EDE1]">
+                    AI-Drafted Professional Summary \u2014 Edit Before Use
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleCopy(activeResult.summary ?? '', 'summary')}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-stone-800 hover:bg-stone-700 text-xs font-mono text-[#F4EDE1] transition-colors"
+                >
+                  {copiedSection === 'summary' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedSection === 'summary' ? 'Copied' : 'Copy Summary'}</span>
+                </button>
+              </div>
+
+              <p className="text-[11px] text-amber-300/90 font-sans bg-amber-950/30 border border-amber-800/40 rounded-lg px-3 py-2">
+                This is an AI starting draft, not a verified statement about you. Rewrite it in your own words with only true claims \u2014 nothing here goes on a resume until you edit and confirm it.
+              </p>
+
+              <textarea
+                value={activeResult.summary ?? ''}
+                onChange={(e) => setEditedSummary(e.target.value)}
+                rows={5}
+                aria-label="Professional summary \u2014 edit to reflect only your true background"
+                className="w-full bg-black/40 border border-[#2B2B2B] rounded px-3 py-2.5 text-xs sm:text-sm text-[#F4EDE1] leading-relaxed font-sans focus:outline-none focus:ring-1 focus:ring-[#C99A44] resize-y"
+              />
+            </div>
+
             {/* Section 3: Resume Bullets */}
             <div className="lg:col-span-12 bg-[#0B0F0E] border border-[#2B2B2B] rounded-xl p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-[#2B2B2B] pb-2.5">
@@ -1062,13 +1103,13 @@ ${res.resumeBullets.map((b) => `• ${b}`).join('\n')}
             </div>
           </div>
 
-          {/* Section: Commercial Capability Summary */}
+          {/* Section: Commercial Capability Summary (AI-drafted, user-edited) */}
           <div className="print-section">
             <div className="print-section-heading">
-              1. Commercial Capability Summary
+              1. Commercial Capability Summary <span className="font-normal">[AI-DRAFTED — VERIFY BEFORE USE]</span>
             </div>
             <p className="text-xs leading-relaxed text-black mb-3">
-              High-discipline, outcome-driven operational specialist aligning rigorous institutional experience and facilities execution into commercial standards. Demonstrates proven capability in high-accountability environments with strict adherence to safety protocols, equipment reliability, team coordination, and rapid problem resolution across the Georgia logistics and infrastructure corridor.
+              {activeResult.summary}
             </p>
           </div>
 
