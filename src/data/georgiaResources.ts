@@ -41,7 +41,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '400 Whitehall St SW, Atlanta, GA 30303',
     contact: '(678) 413-8400',
-    notes: 'Primary downtown Atlanta DDS center with dedicated Reentry State ID issuance and DOC fee-waiver processing.',
+    notes: 'Primary downtown Atlanta DDS center with dedicated Reentry State ID issuance and DOC fee-waiver processing. Note: DDS centers are closed Mondays.',
+    dateLastVerified: '2026-10-13',
     badge: 'Official State ID',
     cost: '$32 fee (waived with GDC/DOC voucher)',
     referralRequirements: 'GDC release paperwork or DOC fee-waiver voucher for expedited/free processing'
@@ -52,7 +53,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201 (Terminal Station)',
     contact: '(678) 413-8400',
-    notes: 'Central Georgia DDS service center located in historic Terminal Station. Accepts GDC release paperwork and fee vouchers for rapid ID issuance.',
+    notes: 'Central Georgia DDS service center located in historic Terminal Station. Accepts GDC release paperwork and fee vouchers for rapid ID issuance. Note: DDS centers are closed Mondays.',
+    dateLastVerified: '2026-10-13',
     badge: 'Official State ID',
     cost: '$32 fee (waived with GDC release paperwork/fee voucher)',
     referralRequirements: 'GDC release paperwork accepted for fee waiver'
@@ -117,6 +119,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     address: '174 Walnut St, Macon, GA 31201',
     contact: '(478) 216-9119',
     notes: 'Daytime shelter, hygiene facilities, mail drop, telehealth clinic, and legal ID assistance.',
+    hoursOfOperation: 'Mon–Fri ~7:30 AM–3:00 PM (Tuesdays open 7:00 AM)',
+    dateLastVerified: '2026-10-13',
     badge: 'Central GA Daybreak',
     hoursOfOperation: 'Daytime hours (daytime shelter, not overnight)',
     cost: 'Free'
@@ -180,7 +184,8 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
-    notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training.',
+    notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training. Note: WorkSource Atlanta is now part of the City of Atlanta’s Department of Labor & Employment Services — branding may be in transition.',
+    dateLastVerified: '2026-10-13',
     badge: 'WIOA Grants',
     cost: 'Free — covered by WIOA training grants ($5,000–$8,000)'
   },
