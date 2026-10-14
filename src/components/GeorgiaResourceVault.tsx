@@ -27,6 +27,21 @@ export const GeorgiaResourceVault: React.FC = () => {
     'Apprenticeships & Trades'
   ];
 
+  // Short labels for the tab buttons (full category names stay on the cards)
+  const categoryLabels: Record<string, string> = {
+    'All': 'All',
+    'Vital Records & DDS': 'Vital Records',
+    'Transit & Mobility': 'Transit',
+    'Housing & Support': 'Housing',
+    'Second Chance Banking': 'Banking',
+    'Apprenticeships & Trades': 'Trades'
+  };
+
+  const categoryCount = (c: string) =>
+    c === 'All'
+      ? GEORGIA_CORRIDOR_RESOURCES.length
+      : GEORGIA_CORRIDOR_RESOURCES.filter((r) => r.category === c).length;
+
   const corridors = ['All', 'Atlanta Metro', 'Macon / Central GA', 'Statewide GA'];
 
   const filteredResources = GEORGIA_CORRIDOR_RESOURCES.filter((item: GeorgiaResourceItem) => {
@@ -66,8 +81,9 @@ export const GeorgiaResourceVault: React.FC = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-stone-900/60 p-4 rounded-xl border border-stone-800">
-        <div className="md:col-span-6 relative">
+      <div className="bg-stone-900/60 p-4 rounded-xl border border-stone-800 space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+        <div className="md:col-span-8 relative">
           <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
           <input
             id="resource-search-input"
@@ -79,22 +95,7 @@ export const GeorgiaResourceVault: React.FC = () => {
           />
         </div>
 
-        <div className="md:col-span-3">
-          <select
-            id="resource-category-select"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full bg-stone-950 border border-stone-700/80 rounded-lg px-3 py-2.5 text-xs text-stone-200 focus:outline-none focus:ring-1 focus:ring-amber-500"
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                Category: {c}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <select
             id="resource-corridor-select"
             value={selectedCorridor}
@@ -107,6 +108,32 @@ export const GeorgiaResourceVault: React.FC = () => {
               </option>
             ))}
           </select>
+        </div>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Resource categories">
+          {categories.map((c) => {
+            const isActive = selectedCategory === c;
+            return (
+              <button
+                key={c}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setSelectedCategory(c)}
+                className={
+                  isActive
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/20 text-amber-200 border border-amber-500/50 focus:outline-none focus:ring-1 focus:ring-amber-500'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-950 text-stone-300 border border-stone-700/80 hover:border-amber-500/40 hover:text-amber-200 focus:outline-none focus:ring-1 focus:ring-amber-500'
+                }
+              >
+                {categoryLabels[c]}{' '}
+                <span className={isActive ? 'text-amber-300/80' : 'text-stone-500'}>
+                  ({categoryCount(c)})
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
