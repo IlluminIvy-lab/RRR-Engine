@@ -80,6 +80,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     notes: 'Comprehensive rail and bus transit spanning Fulton, DeKalb, and Clayton. Reduced Fare Breeze card office and transit pass distribution; note that Five Points station offices are modified during the Five Points Transformation project.',
     badge: 'Transit Mobility',
     cost: 'Reduced Fare Breeze card program available at this office'
+    hoursOfOperation: 'Reduced Fare Office: Mon–Fri 8:30 AM–5:00 PM (Five Points location closed for construction)',
   },
   {
     name: 'Macon-Bibb Transit Authority (MTA Terminal Station)',
@@ -107,7 +108,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     category: 'Housing & Support',
     corridor: 'Atlanta Metro',
     address: '1300 Joseph E Boone Blvd NW, Atlanta, GA 30314',
-    contact: '(404) 874-2241',
+    contact: '(404) 952-1201',
     notes: 'Comprehensive campus with transitional housing, workforce innovation academy, culinary school, and auto repair trade training.',
     badge: 'Workforce Campus',
     cost: 'Free (workforce/housing campus)'
@@ -153,9 +154,10 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '501 Pulliam St SW #250, Atlanta, GA 30312 (Intake Office)',
     contact: '(404) 523-8107',
-    notes: 'Union headquarters & intake office routing candidates to the Atlanta Electrical Training Center (AEJATC) in Norcross (6601 Bay Circle). 4-5 year paid commercial electrical apprenticeship with $18–$55+/hr wage progression and 100% employer-funded healthcare.',
+    notes: 'Union headquarters & intake office routing candidates to the Atlanta Electrical Training Center (AEJATC) in Peachtree Corners (6601 Bay Circle). 4-5 year paid apprenticeship — wages progress from apprentice to journeyman rates (ask the hall for the current scale).',
+    dateLastVerified: '2026-10-13',
     badge: 'Union Apprenticeship',
-    cost: 'Paid apprenticeship ($18–$55+/hr wage progression), 100% employer-funded healthcare'
+    cost: 'Paid apprenticeship (wage scale on file at the hall), 100% employer-funded healthcare'
   },
   {
     name: 'Technical College System of Georgia (TCSG) - HOPE Career Grant',
@@ -184,10 +186,10 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
-    notes: 'Federal WIOA training grants ($5,000-$8,000) covering 100% of CDL, forklift certification, and skilled industrial trade training. Note: WorkSource Atlanta is now part of the City of Atlanta’s Department of Labor & Employment Services — branding may be in transition.',
+    notes: 'Federal WIOA training grants (typically $5,000–$10,000, varies by local workforce board) covering 100% of CDL, forklift certification, and skilled industrial trade training. Note: WorkSource Atlanta is now part of the City of Atlanta’s Department of Labor & Employment Services — branding may be in transition.',
     dateLastVerified: '2026-10-13',
     badge: 'WIOA Grants',
-    cost: 'Free — covered by WIOA training grants ($5,000–$8,000)'
+    cost: 'Free — covered by WIOA training grants (amount varies by local board)'
   },
   // Legal Aid
   {
