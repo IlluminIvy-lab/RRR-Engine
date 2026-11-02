@@ -154,13 +154,13 @@ ${history.map((h) => `
       {/* Mode Description Banner (Change 3) */}
       <ModeDescriptionBanner mode="tree" />
 
-      {/* Mode 2 Header */}
+      {/* Mode 4 Header */}
       <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                MODE 2
+                MODE 4
               </span>
               <h2 className="text-lg font-bold text-stone-100">
                 Interactive Reentry Decision Tree

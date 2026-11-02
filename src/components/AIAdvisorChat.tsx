@@ -25,6 +25,43 @@ import {
   DecisionHistoryEntry 
 } from '../types';
 import { PromptTextarea } from './common/PromptTextarea';
+import ReactMarkdown from 'react-markdown';
+
+// Tailwind styling for markdown rendered inside advisor (assistant) messages,
+// so answers show formatted text instead of raw ** / ## markers.
+const advisorMarkdownComponents = {
+  p: ({ children }: { children?: React.ReactNode }) => (
+    <p className="mb-2 last:mb-0">{children}</p>
+  ),
+  strong: ({ children }: { children?: React.ReactNode }) => (
+    <strong className="font-semibold text-[#C99A44]">{children}</strong>
+  ),
+  em: ({ children }: { children?: React.ReactNode }) => <em>{children}</em>,
+  ul: ({ children }: { children?: React.ReactNode }) => (
+    <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>
+  ),
+  ol: ({ children }: { children?: React.ReactNode }) => (
+    <ol className="list-decimal pl-5 mb-2 space-y-1">{children}</ol>
+  ),
+  li: ({ children }: { children?: React.ReactNode }) => <li>{children}</li>,
+  h1: ({ children }: { children?: React.ReactNode }) => (
+    <h3 className="font-bold text-base mt-2 mb-1">{children}</h3>
+  ),
+  h2: ({ children }: { children?: React.ReactNode }) => (
+    <h3 className="font-bold text-base mt-2 mb-1">{children}</h3>
+  ),
+  h3: ({ children }: { children?: React.ReactNode }) => (
+    <h4 className="font-bold mt-2 mb-1">{children}</h4>
+  ),
+  code: ({ children }: { children?: React.ReactNode }) => (
+    <code className="font-mono bg-white/10 px-1 rounded">{children}</code>
+  ),
+  a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
+    <a href={href} target="_blank" rel="noreferrer" className="underline text-sky-300">
+      {children}
+    </a>
+  ),
+};
 
 interface AIAdvisorChatProps {
   currentTranslation: TranslationResult | null;
@@ -272,7 +309,15 @@ Ask me any questions about what your generated bullets mean, how to frame your t
                   : 'bg-black/70 text-[#F4EDE1] border border-[#2B2B2B] rounded-tl-none space-y-2'
               }`}
             >
-              <div className="whitespace-pre-wrap">{msg.content}</div>
+              {msg.sender === 'assistant' ? (
+                <div>
+                  <ReactMarkdown components={advisorMarkdownComponents}>
+                    {msg.content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <div className="whitespace-pre-wrap">{msg.content}</div>
+              )}
 
               {/* Copy button for assistant responses */}
               {msg.sender === 'assistant' && (

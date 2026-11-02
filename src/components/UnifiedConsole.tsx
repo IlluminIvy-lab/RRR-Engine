@@ -367,18 +367,18 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
       <div className="flex items-center justify-between px-2 text-xs font-mono text-[#F4EDE1]/70">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-[#C99A44]" />
-          <span className="font-semibold text-[#F4EDE1]">RRR Unified Operational Console</span>
+          <span className="font-semibold text-[#F4EDE1]">RealReentryRegister — All Four Tools</span>
           <span className="text-[#F4EDE1]/40">•</span>
-          <span className="text-[#C99A44]">4 Active Modes</span>
+          <span className="text-[#C99A44]">4 tools, ready to use</span>
         </div>
 
         <button
           onClick={handleResetConsole}
           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#2F4A3E] hover:bg-[#2F4A3E]/80 text-[#F4EDE1] text-xs transition-colors border border-[#F4EDE1]/15"
-          title="Reset console messages"
+          title="Start over"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset Terminal</span>
+          <span>Start Over</span>
         </button>
       </div>
 
@@ -398,10 +398,10 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
               <div className="w-full space-y-4 pt-1 pb-2">
                 <div className="p-4 rounded-xl bg-[#2F4A3E]/40 border border-[#F4EDE1]/15 text-[#F4EDE1] space-y-1">
                   <div className="font-serif font-bold text-sm text-[#C99A44]">
-                    RealReentryRegister™ Operational Command Center
+                    RealReentryRegister™ — Reentry Tools, All in One Place
                   </div>
                   <p className="text-xs text-[#F4EDE1]/80 font-sans">
-                    Select an operational capability mode below or enter duties, institutional background, or role targets into the prompt console.
+                    Choose a tool below to get started. Or type the work you did — kitchen, maintenance, warehouse, any job — plus the kind of work you want next, and the console will take you to the right tool.
                   </p>
                 </div>
 
@@ -425,16 +425,16 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Capability Translator & Benchmarking
+                          Translator: Your Experience, in Employer Language
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Converts raw institutional tasks, maintenance, kitchen, or trade skills into industry-standard commercial titles, 4 hard/soft competencies, and 3 metric-driven resume bullets. Connects directly to verified Georgia Fair-Chance pathways.
+                          Takes the work you did inside — kitchen, maintenance, warehouse, trades — and restates it the way employers write it: a job title, 4 skills, and 3 resume bullet points with numbers. Links to Georgia fair-chance hiring resources.
                         </p>
                       </div>
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to load sample institutional duties</span>
+                      <span>Tap to see a sample</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
@@ -461,13 +461,13 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
                           Complete Resume & Cover Letter Builder
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Builds full ATS-ready resumes with 4 specialized templates (Functional, Trade/Logistics, Healthcare/Dietary, Reverse-Chronological) and high-agency 3-paragraph commercial cover letters. Export to PDF and editable Word.
+                          Builds a complete resume and cover letter you can send to employers, formatted so employer screening software can read it. Four resume styles to choose from, including ones built for trades, logistics, and kitchen work. Download as PDF or Word.
                         </p>
                       </div>
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to auto-generate full package</span>
+                      <span>Tap to build your resume package</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
@@ -491,10 +491,10 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Research & Application Progress Tracker
+                          Job Application Tracker
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Structured 4-stage pipeline ledger (Research & Targeting, Application & Outreach, Interview & Advocacy, Onboarding & Milestones). Enforces strict single next immediate actions for relentless progress.
+                          Keeps every job you are pursuing in one list, in four stages: finding jobs, applying, interviewing, and starting work. Each job gets one clear next step, so you always know what to do next.
                         </p>
                       </div>
                     </div>
@@ -527,13 +527,13 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
                           Interactive Reentry Decision Tree
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Navigates critical reentry timeline phases (Day 1-3, Day 3-10, Day 10-30) step-by-step with focused multiple-choice questions. Connects immediately to Georgia DDS IDs, vital records, housing, and transit pipelines.
+                          Answers one question at a time and walks you through your first days and weeks home — Day 1–3, Day 3–10, Day 10–30. Connects you to Georgia ID and driver's license offices, vital records, housing, and rides.
                         </p>
                       </div>
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to launch Day 1-3 navigation</span>
+                      <span>Tap to start with Day 1–3</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
@@ -865,7 +865,7 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
           value={inputVal}
           onChange={setInputVal}
           onSubmit={handleSendMessage}
-          placeholder="Type institutional experience, 'Generate Full Package', 'Show Tracker', or 'Start Decision Tree' (Type or click mic to speak)..."
+          placeholder="Type the work you did — or say 'build resume', 'show tracker', or 'start decision tree'. Tap the mic to speak instead..."
           isLoading={isLoading}
           submitButtonText="Run"
         />
