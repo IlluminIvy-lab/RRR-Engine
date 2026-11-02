@@ -186,6 +186,19 @@ export const GeorgiaResourceVault: React.FC = () => {
                   <span className="text-stone-300">{item.contact}</span>
                 </div>
               )}
+              {item.directUrl && (
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <ExternalLink className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                  <a
+                    href={item.directUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-stone-300 hover:text-amber-200 underline decoration-stone-600 hover:decoration-amber-400 underline-offset-2 break-all"
+                  >
+                    {item.directUrl.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+              )}
               <div className="flex items-center justify-between pt-1 text-[10px] text-stone-500">
                 <span>Corridor: {item.corridor}</span>
                 <span className="text-emerald-400 font-semibold">Verified Agency</span>

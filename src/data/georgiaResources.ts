@@ -41,6 +41,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '400 Whitehall St SW, Atlanta, GA 30303',
     contact: '(678) 413-8400',
+    directUrl: 'https://dds.georgia.gov/',
     notes: 'Primary downtown Atlanta DDS center with dedicated Reentry State ID issuance and DOC fee-waiver processing. Note: DDS centers are closed Mondays.',
     dateLastVerified: '2026-10-13',
     badge: 'Official State ID',
@@ -53,6 +54,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201 (Terminal Station)',
     contact: '(678) 413-8400',
+    directUrl: 'https://dds.georgia.gov/',
     notes: 'Central Georgia DDS service center located in historic Terminal Station. Accepts GDC release paperwork and fee vouchers for rapid ID issuance. Note: DDS centers are closed Mondays.',
     dateLastVerified: '2026-10-13',
     badge: 'Official State ID',
@@ -65,6 +67,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '1680 Phoenix Blvd, Suite 100, Atlanta, GA 30349',
     contact: '(404) 679-4702',
+    directUrl: 'https://dph.georgia.gov/vitalrecords',
     notes: 'Walk-in lobby service at this state facility is currently suspended until further notice. Order online via ROVER/VitalChek, apply by mail, or visit local county health department vital records offices (e.g. Fulton, DeKalb, Clayton, Bibb) for in-person same-day birth certificates.',
     badge: 'Vital Records (Online/County)',
     transportationAccess: 'Walk-in lobby currently suspended — use online (ROVER/VitalChek), mail, or a county health department office instead',
@@ -77,6 +80,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '2424 Piedmont Rd NE, Atlanta, GA 30324 (HQ / Reduced Fare Office)',
     contact: '(404) 848-5000',
+    directUrl: 'https://itsmarta.com/',
     notes: 'Comprehensive rail and bus transit spanning Fulton, DeKalb, and Clayton. Reduced Fare Breeze card office and transit pass distribution; note that Five Points station offices are modified during the Five Points Transformation project.',
     badge: 'Transit Mobility',
     cost: 'Reduced Fare Breeze card program available at this office',
@@ -88,6 +92,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201',
     contact: '(478) 803-2500',
+    directUrl: 'https://mbcta.org/',
     notes: 'Central Georgia transfer terminal connecting Macon industrial parks, Ocmulgee corridors, Robins logistics hubs, and Mercer employment centers.',
     badge: 'Macon Transit'
   },
@@ -98,6 +103,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '275 Pryor St SW, Atlanta, GA 30303',
     contact: '(404) 215-6600',
+    directUrl: 'https://gatewayctr.com/',
     notes: '24/7 intake, residential beds, lockers, mail services, case management, and transit vouchers.',
     badge: 'Rapid Intake',
     hoursOfOperation: '24/7 intake',
@@ -109,6 +115,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '1300 Joseph E Boone Blvd NW, Atlanta, GA 30314',
     contact: '(404) 952-1201',
+    directUrl: 'https://cityofrefugeatl.org/',
     notes: 'Comprehensive campus with transitional housing, workforce innovation academy, culinary school, and auto repair trade training.',
     badge: 'Workforce Campus',
     cost: 'Free (workforce/housing campus)'
@@ -119,6 +126,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '174 Walnut St, Macon, GA 31201',
     contact: '(478) 216-9119',
+    directUrl: 'https://depaulusa.org/programs/macon/',
     notes: 'Daytime shelter, hygiene facilities, mail drop, telehealth clinic, and legal ID assistance.',
     hoursOfOperation: 'Mon–Fri ~7:30 AM–3:00 PM (Tuesdays open 7:00 AM); daytime shelter, not overnight',
     dateLastVerified: '2026-10-13',
@@ -132,6 +140,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: 'Metro Atlanta Branches (2357 Benjamin E Mays Dr SW, Atlanta | 1342 Glenwood Ave SE, Atlanta)',
     contact: '(855) 889-4328',
+    directUrl: 'https://www.peachstatefcu.org/',
     notes: 'Verified Fresh Start second-chance checking account with Visa debit card, online/mobile banking, and opportunity to graduate to standard checking after 12 months in good standing.',
     badge: 'Fresh Start Checking',
     eligibility: 'Designed for those needing a second-chance account; can graduate to standard checking after 12 months in good standing'
@@ -142,6 +151,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '5999 Zebulon Rd, Macon, GA 31210 / 515 Mulberry St, Macon, GA 31201',
     contact: '(478) 923-3773',
+    directUrl: 'https://www.robinsfcu.org/',
     notes: 'Community-first credit union offering low-barrier checking, direct deposit, and credit building loans across Macon-Bibb and Warner Robins.',
     badge: 'Central GA Credit Union',
     eligibility: 'Low-barrier account opening'
@@ -153,6 +163,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '501 Pulliam St SW #250, Atlanta, GA 30312 (Intake Office)',
     contact: '(404) 523-8107',
+    directUrl: 'https://ibew613.org/',
     notes: 'Union headquarters & intake office routing candidates to the Atlanta Electrical Training Center (AEJATC) in Peachtree Corners (6601 Bay Circle). 4-5 year paid apprenticeship — wages progress from apprentice to journeyman rates (ask the hall for the current scale).',
     dateLastVerified: '2026-10-13',
     badge: 'Union Apprenticeship',
@@ -164,6 +175,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: 'System Office: 1800 Century Place NE, Atlanta, GA 30345 (Campuses: Atlanta Tech, Central GA Tech, Chattahoochee Tech)',
     contact: '(404) 679-1600',
+    directUrl: 'https://www.tcsg.edu/',
     notes: '100% tuition-free programs for Welding, Commercial Truck Driving (CDL), Diesel Tech, Electrical, Precision Machining, and HVAC.',
     badge: '100% Free Tuition',
     cost: 'Free — 100% tuition covered'
@@ -174,6 +186,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '236 Auburn Ave NE #203, Atlanta, GA 30303',
     contact: '(404) 577-3395',
+    directUrl: 'https://firststepstaffing.com/',
     notes: 'Fast-track W-2 commercial employment with daily provided transit van transportation to warehouse/manufacturing sites.',
     badge: 'Same-Week W-2',
     transportationAccess: 'Daily provided transit van to warehouse/manufacturing job sites',
@@ -185,6 +198,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
+    directUrl: 'https://worksourcegaportal.com/',
     notes: 'Federal WIOA training grants (typically $5,000–$10,000, varies by local workforce board) covering 100% of CDL, forklift certification, and skilled industrial trade training. Note: WorkSource Atlanta is now part of the City of Atlanta’s Department of Labor & Employment Services — branding may be in transition.',
     dateLastVerified: '2026-10-13',
     badge: 'WIOA Grants',
@@ -197,6 +211,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '438 Edgewood Ave SE, Atlanta, GA 30312',
     contact: '(404) 827-0027',
+    directUrl: 'https://gjp.org/',
     notes: 'Free criminal legal defense and reentry services for Georgians who cannot afford an attorney. Runs a record-clearing screener and record restriction (Georgia’s term for expungement) work.',
     badge: 'Free Legal Defense',
     dateLastVerified: '2026-10-13'
@@ -207,6 +222,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '54 Ellis St NE, Atlanta, GA 30303',
     contact: '(404) 524-5811',
+    directUrl: 'https://atlantalegalaid.org/',
     notes: 'Free civil legal services for low-income metro Atlantans — housing, family, consumer, health, employment, and benefits cases. Serving since 1924.',
     badge: 'Free Civil Legal Aid',
     dateLastVerified: '2026-10-13'
@@ -217,6 +233,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '241 Third Street, Suite 230, Macon, GA 31201',
     contact: '(478) 751-6261',
+    directUrl: 'https://www.glsp.org/',
     notes: 'Free civil legal services for low-income people across the 154 Georgia counties outside metro Atlanta.',
     badge: 'Free Civil Legal Aid',
     dateLastVerified: '2026-10-13'
@@ -228,6 +245,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '2201 Lawrenceville Hwy, Suite 300, Decatur, GA 30033',
     contact: '(404) 420-9900',
+    directUrl: 'https://goodwillng.org/',
     notes: 'Free career centers: job listings, resume help, coaching, and training certifications, plus dedicated second-chance work — 31,000+ returning citizens served, 15,000+ placed over the past decade.',
     badge: 'Second-Chance Careers',
     dateLastVerified: '2026-10-13'
@@ -238,6 +256,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: '200 Piedmont Ave SE, West Tower, Suite 1410, Atlanta, GA 30334',
     contact: '(844) 367-4872',
+    directUrl: 'https://gvs.georgia.gov/',
     notes: 'State agency helping Georgians with disabilities achieve employment and independence — free employment services, training, and employer matching.',
     badge: 'State Employment Services',
     dateLastVerified: '2026-10-13'
@@ -258,6 +277,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '938 Peachtree St NE, Atlanta, GA 30309',
     contact: '(404) 689-6579',
+    directUrl: 'https://ceoworks.org/',
     notes: 'Immediate paid transitional employment, job coaching, and full-time placement for people with recent convictions.',
     badge: 'Paid Transitional Work',
     dateLastVerified: '2026-10-13'
@@ -269,6 +289,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '80 Jesse Hill Jr Dr SE, Atlanta, GA 30303',
     contact: '(404) 616-1000',
+    directUrl: 'https://www.gradyhealth.org/',
     notes: 'Atlanta’s largest safety-net hospital and Level I trauma center. Serves uninsured and underinsured patients on a sliding-scale basis.',
     badge: 'Safety-Net Hospital',
     dateLastVerified: '2026-10-13'
@@ -279,6 +300,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '424 Decatur St SE, Atlanta, GA 30312',
     contact: '(678) 843-8600',
+    directUrl: 'https://mercyatlanta.org/',
     notes: 'Federally qualified health center: primary, dental, vision, mental health, and specialty care. Sliding-scale fees; no one turned away for inability to pay.',
     badge: 'Sliding-Scale Care',
     dateLastVerified: '2026-10-13'
@@ -289,6 +311,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '1600 Forsyth St, Macon, GA 31201',
     contact: '(478) 745-0411',
+    directUrl: 'http://northcentralhealthdistrict.org/department/bibb-county-health-department/',
     notes: 'County public health: low-cost clinic, dental, WIC, immunizations, and vital records (birth certificates Mon–Fri 8am–4pm). No one denied for inability to pay. Call ahead — the department is relocating.',
     badge: 'Public Health Clinic',
     dateLastVerified: '2026-10-13'
@@ -299,6 +322,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '2460 Shurling Dr, Macon, GA 31211',
     contact: '(478) 787-4266',
+    directUrl: 'https://fcpcga.org/',
     notes: 'Federally qualified health center: primary care, chronic disease management, screenings, immunizations, and prescription assistance for insured, uninsured, and underinsured adults.',
     badge: 'Sliding-Scale Care',
     dateLastVerified: '2026-10-13'
@@ -310,6 +334,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '3400 North Desert Dr, East Point, GA 30344',
     contact: '(404) 892-3333',
+    directUrl: 'https://acfb.org/',
     notes: 'Feeding America member food bank serving metro Atlanta and north Georgia through 700+ partner agencies. Online food-finder and pantry referral tool.',
     badge: 'Food Pantry Network',
     dateLastVerified: '2026-10-13'
@@ -320,6 +345,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '4490 Ocmulgee East Blvd, Macon, GA 31217',
     contact: '(478) 742-3958',
+    directUrl: 'https://mgcfb.org/',
     notes: 'Feeding America member food bank serving 24 Middle Georgia counties via 200+ partner agencies. Online pantry finder, mobile distributions, and SNAP application assistance.',
     badge: 'Food Pantry Network',
     dateLastVerified: '2026-10-13'
@@ -331,6 +357,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '141 Pryor St SW, Suite 1029A, Atlanta, GA 30303',
     contact: '(770) 520-7500',
+    directUrl: 'https://fultoncountyboh.com/',
     notes: 'Issues certified birth and death certificates in person for vital events anywhere in Georgia. Walk-in service, $25 search fee, valid photo ID required.',
     badge: 'In-Person Birth Certificates',
     dateLastVerified: '2026-10-13'
@@ -342,6 +369,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '2353 Bolton Rd NW, Atlanta, GA 30318',
     contact: '(404) 588-4000',
+    directUrl: 'https://atlantamission.org/',
     notes: 'Atlanta’s largest homeless-services nonprofit: four shelters (men’s, recovery, women-and-children) plus transitional housing, vocational training, and meals.',
     badge: 'Emergency Shelter',
     dateLastVerified: '2026-10-13'
@@ -352,6 +380,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '469 Marietta St NW, Atlanta, GA 30313',
     contact: '(404) 486-2700',
+    directUrl: 'https://atlanta.salvationarmy.org/',
     notes: 'Emergency and transitional shelter for men, women, and families. Cold-weather program opens to anyone when temperatures drop below 40°F; family transitional program up to one year.',
     badge: 'Emergency Shelter',
     dateLastVerified: '2026-10-13'
