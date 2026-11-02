@@ -238,7 +238,7 @@ Ask me what your bullet points mean, how to talk about your skills with a hiring
                 <span>STANDALONE ADVISOR</span>
               </span>
               <h2 className="text-lg font-bold text-[#F4EDE1] font-serif tracking-wide">
-                Reentry Career Advisor & Output Explainer
+                Reentry Career Advisor
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#F4EDE1]/70 max-w-3xl leading-relaxed">
