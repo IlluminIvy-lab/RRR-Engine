@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-unified-console-btn"
             onClick={() => onSelectMode('unified')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'unified'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -102,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-mode-1-translator-btn"
             onClick={() => onSelectMode('translator')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'translator'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-mode-2-resume-builder-btn"
             onClick={() => onSelectMode('resume_builder')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'resume_builder'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-mode-3-tracker-btn"
             onClick={() => onSelectMode('tracker')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'tracker'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-mode-4-decision-tree-btn"
             onClick={() => onSelectMode('decision_tree')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'decision_tree'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-ga-vault-btn"
             onClick={() => onSelectMode('georgia_vault')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'georgia_vault'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -167,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="nav-advisor-btn"
             onClick={() => onSelectMode('advisor')}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium transition-all ${
               currentMode === 'advisor'
                 ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
                 : 'text-[#F4EDE1]/80 hover:text-[#F4EDE1] hover:bg-[#2F4A3E]/70 border border-[#F4EDE1]/15 bg-[#2F4A3E]/30'
@@ -182,7 +182,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="open-saved-sessions-btn"
               onClick={onOpenSavedSessions}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#F4EDE1]/90 bg-[#2F4A3E]/40 hover:bg-[#2F4A3E] border border-[#2B2B2B] hover:border-[#C99A44]/40 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#F4EDE1]/90 bg-[#2F4A3E]/40 hover:bg-[#2F4A3E] border border-[#2B2B2B] hover:border-[#C99A44]/40 transition-colors shadow-sm"
               title="Saved Sessions & History Snapshots"
             >
               <FolderArchive className="w-3.5 h-3.5 text-[#C99A44]" />
@@ -194,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="open-share-sync-modal-btn"
             onClick={onOpenShareModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#C99A44] bg-[#2F4A3E] hover:bg-[#2F4A3E]/90 border border-[#C99A44]/40 transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#C99A44] bg-[#2F4A3E] hover:bg-[#2F4A3E]/90 border border-[#C99A44]/40 transition-colors shadow-sm"
             title="Share assets, export JSON, or sync to cloud"
           >
             <Share2 className="w-3.5 h-3.5 text-[#C99A44]" />
@@ -206,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="privacy-quick-wipe-btn"
               onClick={() => setShowWipeConfirm(true)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-400 bg-rose-950/40 hover:bg-rose-950/70 border border-rose-800/50 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-rose-400 bg-rose-950/40 hover:bg-rose-950/70 border border-rose-800/50 transition-colors shadow-sm"
               title="Privacy Quick-Wipe: Clear all local history, resumes, and cache"
             >
               <ShieldAlert className="w-3.5 h-3.5" />

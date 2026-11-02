@@ -64,7 +64,25 @@ export const PromptTextarea: React.FC<PromptTextareaProps> = ({
     const minHeight = 52;
     const maxHeight = 112; // Capped at ~4 lines of text
 
-    const calculatedHeight = Math.max(minHeight, Math.min(textarea.scrollHeight, maxHeight));
+    // Snap the height to a whole number of text lines. The raw cap
+    // (scrollHeight clamped at maxHeight) can land mid-line and clip the
+    // last visible line of a long placeholder in half; whole-line heights
+    // (vertical padding + N * line-height + border) always cut cleanly at
+    // a line boundary, with any extra lines reachable by scrolling.
+    const lineHeightPx = 23.2; // 1.45rem line-height set inline below
+    const verticalPaddingPx = 12; // py-1.5 = 6px top + 6px bottom
+    const borderPx = 2; // 1px border top + bottom (border-box sizing)
+    const maxLines = Math.max(
+      minRows,
+      Math.floor((maxHeight - verticalPaddingPx - borderPx) / lineHeightPx)
+    );
+    const neededLines = Math.ceil(
+      (textarea.scrollHeight - verticalPaddingPx) / lineHeightPx
+    );
+    const lines = Math.min(Math.max(minRows, neededLines), maxLines);
+    const snappedHeight = verticalPaddingPx + lines * lineHeightPx + borderPx;
+
+    const calculatedHeight = Math.max(minHeight, Math.min(snappedHeight, maxHeight));
     textarea.style.height = `${calculatedHeight}px`;
   }, [value]);
 

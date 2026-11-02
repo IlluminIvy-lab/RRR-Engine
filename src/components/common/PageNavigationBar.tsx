@@ -3,10 +3,6 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Terminal, 
-  FileText, 
-  Layers, 
-  CheckSquare, 
-  Compass, 
   Bot, 
   Landmark,
   BookmarkCheck,
@@ -103,7 +99,7 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
             id="bottom-saved-sessions-btn"
             type="button"
             onClick={onOpenSavedSessions}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#C99A44] bg-black/60 hover:bg-black/90 border border-[#2B2B2B] hover:border-[#C99A44]/50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#C99A44] bg-black/60 hover:bg-black/90 border border-[#2B2B2B] hover:border-[#C99A44]/50 transition-colors"
           >
             <FolderOpen className="w-3.5 h-3.5 text-[#C99A44]" />
             <span>My Saved Sessions</span>
@@ -115,7 +111,7 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
             type="button"
             onClick={handlePrev}
             disabled={currentIndex === -1 && currentMode === 'unified'}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#F4EDE1]/80 hover:text-[#F4EDE1] bg-stone-800 hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed border border-[#2B2B2B] transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#F4EDE1]/80 hover:text-[#F4EDE1] bg-stone-800 hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed border border-[#2B2B2B] transition-colors"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span>Prev</span>
@@ -127,125 +123,12 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
             type="button"
             onClick={handleNext}
             disabled={currentMode === 'advisor'}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-[#0B0F0E] bg-[#C99A44] hover:bg-[#b88c3a] disabled:opacity-40 disabled:cursor-not-allowed shadow-md transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-bold text-[#0B0F0E] bg-[#C99A44] hover:bg-[#b88c3a] disabled:opacity-40 disabled:cursor-not-allowed shadow-md transition-colors"
           >
             <span>Next</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
-      </div>
-
-      {/* Direct Page Jump Buttons (Non-gated, accessible anytime) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 pt-1">
-        {/* Unified Terminal */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('unified')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${
-            currentMode === 'unified'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <Terminal className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">Terminal</span>
-        </button>
-
-        {/* Page 1: Translator */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('translator')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all relative ${
-            currentMode === 'translator'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <FileText className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">1. Translator</span>
-          {currentTranslation && (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-1.5 right-1.5"></span>
-          )}
-        </button>
-
-        {/* Page 2: Resume */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('resume_builder')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all relative ${
-            currentMode === 'resume_builder'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <Layers className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">2. Resume</span>
-          {applicationPackages.length > 0 && (
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 absolute top-1.5 right-1.5"></span>
-          )}
-        </button>
-
-        {/* Page 3: Tracker */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('tracker')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all relative ${
-            currentMode === 'tracker'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <CheckSquare className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">3. Tracker</span>
-          {trackerItems.length > 0 && (
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 absolute top-1.5 right-1.5"></span>
-          )}
-        </button>
-
-        {/* Page 4: Decision Tree */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('decision_tree')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all relative ${
-            currentMode === 'decision_tree'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <Compass className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">4. Decisions</span>
-          {decisionHistory.length > 0 && (
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 absolute top-1.5 right-1.5"></span>
-          )}
-        </button>
-
-        {/* Standalone AI Advisor */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('advisor')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${
-            currentMode === 'advisor'
-              ? 'bg-sky-500 text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-sky-400 hover:text-sky-300 border border-[#2B2B2B]'
-          }`}
-        >
-          <Bot className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">AI Advisor</span>
-        </button>
-
-        {/* GA Vault */}
-        <button
-          type="button"
-          onClick={() => onSelectMode('georgia_vault')}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${
-            currentMode === 'georgia_vault'
-              ? 'bg-[#C99A44] text-[#0B0F0E] font-bold shadow-sm'
-              : 'bg-black/40 hover:bg-black/70 text-[#F4EDE1]/70 hover:text-[#F4EDE1] border border-[#2B2B2B]'
-          }`}
-        >
-          <Landmark className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate">GA Vault</span>
-        </button>
       </div>
     </div>
   );

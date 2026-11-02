@@ -28,86 +28,86 @@ interface ModeInfoData {
 const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
   translator: {
     modeNumber: 'MODE 1',
-    title: 'Institutional Capability Translator & Benchmarking',
-    tagline: 'Transform non-traditional, facility, and institutional experience into commercial career assets.',
+    title: 'Translator: Your Experience, in Employer Language',
+    tagline: 'Takes the work you did inside and restates it the way employers write it.',
     detailedMission:
-      'Mode 1 decodes institutional jobs, facility maintenance, culinary production, shop repairs, and administrative clerk duties into high-agency corporate and trade language. It eliminates stigmatizing jargon and replaces it with quantifiable operational metrics, industry-standard titles, and ATS-friendly skill competencies.',
+      'Mode 1 takes the jobs you held inside — kitchen work, maintenance, laundry, clerk duties, shop repairs — and restates them the way employers describe the same work: a standard job title, your skills, and short bullet points with numbers. It leaves out prison labels and uses the words hiring managers and resume software actually search for.',
     inputsAccepted: [
-      'Raw institutional job descriptions & facility crew duties',
-      'Physical equipment handled (forklifts, boilers, HVAC, POS systems)',
-      'Quantifiable scale (headcounts managed, units packed, square footage)',
-      'Spoken dictation via Web Speech API or multi-turn conversational intake',
+      'The jobs and duties you had inside, in your own words',
+      'Equipment you used (forklifts, kitchen equipment, HVAC, registers)',
+      'Numbers that show scale (meals served, people you supervised, rooms or units handled)',
+      'Talking instead of typing — use the microphone, or answer the intake coach one question at a time',
     ],
     outputsProduced: [
-      'Commercial Alignment Title: Industry-standard job title benchmarked against Georgia labor market data.',
-      'Core Competencies: Exactly 4 technical hard skills and 4 high-agency execution soft skills.',
-      'Outcome-Driven Resume Bullets: 3 quantified, high-impact achievements starting with strong action verbs.',
-      'Georgia Corridor Placement: 2–3 verified Fair-Chance employers, hospital networks, or union apprenticeship locals in the Atlanta–Macon corridor.',
+      'A job title employers actually use, matched to Georgia job openings.',
+      'Your skills: 4 hands-on skills and 4 workplace strengths.',
+      '3 resume bullet points with numbers, each starting with a strong action word.',
+      'Links to Georgia fair-chance hiring resources that fit your experience.',
     ],
     georgiaCorridorAdvantage:
-      'Directly mapped to Georgia HOPE Career Grant tuition-free programs and W-2 second-chance hiring corridors across Metro Atlanta, Central Georgia, and Savannah.',
+      'Points to Georgia programs that can pay for training, including the HOPE Career Grant at Georgia technical colleges, and to fair-chance employers across metro Atlanta and central Georgia.',
   },
   resume_builder: {
     modeNumber: 'MODE 2',
-    title: 'Complete Resume & Targeted Cover Letter Builder',
-    tagline: 'Generate complete, employer-ready application packages in seconds.',
+    title: 'Complete Resume & Cover Letter Builder',
+    tagline: 'Builds a finished resume and cover letter you can send to employers.',
     detailedMission:
-      'Mode 2 synthesizes translated capabilities into full application packages ready for submission to hiring managers and Applicant Tracking Systems (ATS). Choose between 4 specialized layouts (Functional Capability-First, Trade & Logistics, Healthcare & Dietary, and Classic Chronological) to present your strongest strengths upfront.',
+      'Mode 2 turns your translated experience into a complete application package: a resume and a cover letter, ready to send. Pick from 4 resume styles — including ones built for trades, logistics, and kitchen and health care work — formatted so employer screening software can read them, with your strongest experience first.',
     inputsAccepted: [
-      'Target commercial job title or sector selection',
-      'Candidate contact information (Name, City/State, Phone, Email)',
-      'Automated pull from Mode 1 Capability Translator results',
-      'Industry focus (Logistics, Healthcare, Electrical Trades, Culinary, Facilities)',
+      'The job title or kind of work you are applying for',
+      'Your contact details (name, city and state, phone, email)',
+      'Your Mode 1 Translator results — pulled in automatically',
+      'The kind of work you want: logistics, health care, trades, kitchen, facilities',
     ],
     outputsProduced: [
-      'Employer-Ready Professional Resume: Structured markdown, PDF export, and editable Word (.docx) document.',
-      'Targeted 3-Paragraph Cover Letter: Executive communication connecting operational autonomy and compliance to the hiring manager’s bottom line.',
-      'Competencies Matrix: 2x3 high-density technical and operational skills grid.',
-      'Georgia Education & Certifications: HOPE Grant eligibility and trade pathways pre-populated.',
+      'A finished resume you can download as a PDF or an editable Word document.',
+      'A 3-paragraph cover letter written for the job you picked.',
+      'A skills grid showing your hands-on skills and workplace strengths side by side.',
+      'Your Georgia training and certificates, including HOPE Career Grant programs.',
     ],
     georgiaCorridorAdvantage:
-      'Generates compliant documents formatted specifically for Georgia corporate portals, union halls (IBEW, UA, SMART), and hospital HR systems (Grady, Emory, Piedmont).',
+      'Formatted for the places Georgia employers actually hire: company hiring portals, union halls (IBEW, UA, SMART), and hospital systems (Grady, Emory, Piedmont).',
   },
   tracker: {
     modeNumber: 'MODE 3',
-    title: 'Research & Application Progress Tracker',
-    tagline: 'Organize applications, follow-ups, interview advocacy, and onboarding milestones.',
+    title: 'Job Application Tracker',
+    tagline: 'Keeps every job you are pursuing in one list, so you always know your next step.',
     detailedMission:
-      'Mode 3 provides an operational pipeline to manage your commercial job search. It prevents missed follow-ups, logs Fair-Chance policy responses, and enforces a high-agency rule: every single opportunity always maintains a clear NEXT IMMEDIATE ACTION.',
+      'Mode 3 keeps your whole job search in one list, in four stages: finding jobs, applying, interviewing, and starting work. Every job on the list gets one clear next step, so nothing is forgotten and no follow-up is missed.',
     inputsAccepted: [
-      'Employer names, target positions, and corridor locations',
-      'Target hourly wage or salary expectations ($18–$35+/hr)',
-      'Hiring manager & recruiter contact notes',
-      'Fair-Chance hiring policy verifications and background check notes',
+      'Employer names, job titles, and locations',
+      'The pay you are hoping for (for example, $18–$35+ an hour)',
+      'Notes on who you talked to — hiring managers and recruiters',
+      'Notes on each employer\'s fair-chance policy and what they said about background checks',
     ],
     outputsProduced: [
-      'Stage 1 (Research & Targeting): Market intelligence and second-chance policy verification.',
-      'Stage 2 (Application & Outreach): Application submission timestamps and direct outreach tracking.',
-      'Stage 3 (Interview & Advocacy): Interview prep, background disclosure talking points, and callback schedules.',
-      'Stage 4 (Onboarding & Milestones): W-4 paperwork, direct deposit setup, and 30/60/90-day retention goals.',
+      'Stage 1 — Finding jobs: employers worth targeting, and checking their fair-chance policies.',
+      'Stage 2 — Applying: what you sent, and when you sent it.',
+      'Stage 3 — Interviewing: prep notes, how to talk about your background, and callback dates.',
+      'Stage 4 — Starting work: first-day paperwork, direct deposit setup, and goals for your first 30, 60, and 90 days.',
     ],
     georgiaCorridorAdvantage:
-      'Pre-populated with verified Georgia Fair-Chance employers, Georgia DDS clearance milestones, and union apprenticeship intake dates.',
+      'Pre-loaded with Georgia fair-chance employers, Georgia DDS state ID steps, and union apprenticeship start dates.',
   },
   decision_tree: {
     modeNumber: 'MODE 4',
-    title: 'Interactive Reentry Decision Tree & Milestones',
-    tagline: 'Step-by-step navigation through critical post-release milestones.',
+    title: 'Interactive Reentry Decision Tree',
+    tagline: 'Answers one question at a time and walks you through your first days and weeks home.',
     detailedMission:
-      'Mode 4 breaks down the reentry timeline into structured, non-overwhelming decision nodes. It presents exactly ONE focused multiple-choice question at a time to resolve IDs, vital records, transit passes, transitional housing, second-chance banking, and community supervision requirements without administrative gridlock.',
+      'Mode 4 walks you through the first month home one question at a time — Day 1–3, Day 3–10, Day 10–30 — covering state ID, vital records, rides, housing, banking, and any supervision requirements, without dumping everything on you at once.',
     inputsAccepted: [
-      'Single-click answers to Options A, B, or C at each milestone stage',
-      'Current timeline phase selection (Day 1–3, Day 3–10, Day 10–30)',
-      'Real-world status regarding state IDs, housing stability, and transit access',
+      'One tap per question — pick option A, B, or C',
+      'Which stage you are in: Day 1–3, Day 3–10, or Day 10–30',
+      'Where you stand right now on ID, housing, and rides',
     ],
     outputsProduced: [
-      'Actionable step-by-step execution plans for every selection',
-      'Direct Georgia resource referrals (DDS locations, MARTA programs, Second-Chance Credit Unions)',
-      'Exportable decision history and compliance checklist for parole/probation reporting',
-      'Seamless link directly back to Mode 1 Capability Translator once vital records are secured',
+      'A step-by-step plan for each answer you pick.',
+      'Direct referrals to Georgia help: DDS offices for ID, MARTA for rides, second-chance banks and credit unions.',
+      'A record of your answers you can export — useful for supervision check-ins.',
+      'A link back to the Mode 1 Translator once your ID and records are in hand.',
     ],
     georgiaCorridorAdvantage:
-      'Hardcoded with Georgia-specific statutes, Georgia Department of Driver Services (DDS) processes, MARTA transit reduced fare programs, and HOPE Career Grant trade colleges.',
+      'Built on Georgia rules and offices: Georgia DDS processes for state ID and licenses, MARTA reduced-fare programs, and HOPE Career Grant trade programs.',
   },
 };
 
@@ -133,7 +133,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
       <div className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-gradient-to-r from-[#0B0F0E] via-[#1C2621]/40 to-[#0B0F0E]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#C99A44]/15 text-[#C99A44] border border-[#C99A44]/30">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#C99A44]/15 text-[#C99A44] border border-[#C99A44]/30 whitespace-nowrap shrink-0">
               {data.modeNumber}
             </span>
             <h2 className="text-base sm:text-lg font-bold text-[#F4EDE1] font-serif tracking-wide">
@@ -152,7 +152,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-[#C99A44] bg-black/50 hover:bg-black/80 border border-[#2B2B2B] hover:border-[#C99A44]/50 transition-colors cursor-pointer"
           >
             <Info className="w-3.5 h-3.5 text-[#C99A44]" />
-            <span>{isExpanded ? 'Hide Mode Details' : 'View Mode Blueprint & Scope'}</span>
+            <span>{isExpanded ? 'Hide details' : 'See what this tool does'}</span>
             {isExpanded ? (
               <ChevronUp className="w-3.5 h-3.5 text-[#C99A44]" />
             ) : (
@@ -169,7 +169,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
           <div className="space-y-1.5">
             <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#C99A44] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#C99A44]" />
-              <span>Operational Purpose & Mission</span>
+              <span>What this tool does</span>
             </div>
             <p className="text-xs sm:text-sm text-[#F4EDE1]/90 leading-relaxed font-sans">
               {data.detailedMission}
@@ -182,7 +182,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
             <div className="p-3.5 rounded-lg bg-[#0B0F0E] border border-[#2B2B2B] space-y-2">
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-sky-400" />
-                <span>Inputs Accepted:</span>
+                <span>What you give it:</span>
               </div>
               <ul className="space-y-1.5 text-xs text-[#F4EDE1]/80 font-sans">
                 {data.inputsAccepted.map((inp, idx) => (
@@ -198,7 +198,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
             <div className="p-3.5 rounded-lg bg-[#0B0F0E] border border-[#2B2B2B] space-y-2">
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Outputs Produced:</span>
+                <span>What you get:</span>
               </div>
               <ul className="space-y-1.5 text-xs text-[#F4EDE1]/80 font-sans">
                 {data.outputsProduced.map((out, idx) => (
@@ -216,7 +216,7 @@ export const ModeDescriptionBanner: React.FC<ModeDescriptionBannerProps> = ({
             <MapPin className="w-4 h-4 text-[#C99A44] shrink-0 mt-0.5" />
             <div className="space-y-0.5">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#C99A44]">
-                Georgia Corridor & Fair-Chance Advantage:
+                Georgia help built in:
               </span>
               <p className="text-xs text-[#F4EDE1]/90 leading-relaxed font-sans">
                 {data.georgiaCorridorAdvantage}

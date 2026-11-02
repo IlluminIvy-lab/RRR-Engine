@@ -77,14 +77,14 @@ export const GeorgiaResourceVault: React.FC = () => {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                CORRIDOR DIRECTORY
+                RESOURCE DIRECTORY
               </span>
               <h2 className="text-lg font-bold text-stone-100">
                 Georgia / Atlanta / Macon Resource Vault
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-stone-400 max-w-3xl">
-              Verified physical addresses, fee-waiver contact points, and direct intake channels across the I-75 / I-85 / I-20 Georgia logistics and trade corridors.
+              Street addresses, phone numbers, and websites for places that help with IDs and records, rides, housing, banking, job training, legal aid, jobs, health care, and food — in Atlanta, Macon, and across Georgia. Each listing is checked before it goes in.
             </p>
           </div>
           <div className="flex items-center gap-2">

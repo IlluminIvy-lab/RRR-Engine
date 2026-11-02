@@ -4,7 +4,6 @@ import {
   User, 
   Send, 
   Sparkles, 
-  HelpCircle, 
   Briefcase, 
   FileText, 
   Layers, 
@@ -73,9 +72,9 @@ interface AIAdvisorChatProps {
 }
 
 const DEFAULT_SUGGESTED_QUESTIONS = [
-  "What does my first resume bullet mean in simple commercial terms?",
-  "Why did the engine suggest this specific commercial job title?",
-  "How should I explain my institutional duties in an interview without over-sharing?",
+  "What does my first resume bullet mean in plain words?",
+  "Why did you pick this job title for me?",
+  "How should I explain the work I did inside during an interview, without saying too much?",
   "What questions might Georgia employers like Grady or Local 613 ask me?",
   "How can I use the HOPE Career Grant for free trade certifications in Georgia?",
 ];
@@ -92,11 +91,11 @@ export const AIAdvisorChat: React.FC<AIAdvisorChatProps> = ({
     {
       id: 'welcome-advisor',
       sender: 'assistant',
-      content: `Hello! I am your **Reentry Career Advisor & Output Explainer**. 
+      content: `Hello! I'm your **Reentry Career Advisor**. I explain what this tool produces, in plain words.
 
-I have full visibility into your current active session assets (your translated commercial title, resume bullets, job application tracker, and decision milestones). 
+I can see what you've done in this session so far — the job title the Translator picked for you, your resume bullet points, the jobs in your tracker, and your decision-tree answers.
 
-Ask me any questions about what your generated bullets mean, how to frame your trade skills for hiring managers, or how to navigate Georgia Fair-Chance policies!`,
+Ask me what your bullet points mean, how to talk about your skills with a hiring manager, or how Georgia's fair-chance hiring rules work.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       suggestedQuestions: DEFAULT_SUGGESTED_QUESTIONS,
     },
@@ -369,26 +368,6 @@ Ask me any questions about what your generated bullets mean, how to frame your t
         )}
 
         <div ref={chatBottomRef} />
-      </div>
-
-      {/* Suggested Questions Bar (Initial Prompts) */}
-      <div className="space-y-1.5">
-        <div className="text-[11px] font-mono text-[#F4EDE1]/50 flex items-center gap-1 px-1">
-          <HelpCircle className="w-3 h-3 text-[#C99A44]" />
-          <span>Suggested Questions about your output:</span>
-        </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {DEFAULT_SUGGESTED_QUESTIONS.map((q, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleSendMessage(q)}
-              className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-sans bg-black/40 hover:bg-black/70 text-[#F4EDE1]/80 hover:text-[#F4EDE1] border border-[#2B2B2B] hover:border-sky-500/50 transition-colors whitespace-nowrap"
-            >
-              {q}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Input Textarea with Voice Dictation (Change 1 & Change 4) */}
