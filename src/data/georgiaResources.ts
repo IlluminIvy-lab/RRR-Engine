@@ -92,7 +92,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201',
     contact: '(478) 803-2500',
-    directUrl: 'https://mbcta.org/',
+    directUrl: 'http://www.mbcta.net/',
     notes: 'Central Georgia transfer terminal connecting Macon industrial parks, Ocmulgee corridors, Robins logistics hubs, and Mercer employment centers.',
     badge: 'Macon Transit'
   },
@@ -103,7 +103,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '275 Pryor St SW, Atlanta, GA 30303',
     contact: '(404) 215-6600',
-    directUrl: 'https://gatewayctr.com/',
+    directUrl: 'http://www.gatewayctr.org/',
     notes: '24/7 intake, residential beds, lockers, mail services, case management, and transit vouchers.',
     badge: 'Rapid Intake',
     hoursOfOperation: '24/7 intake',
@@ -198,7 +198,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Statewide GA',
     address: '818 Pollard Blvd SW, Atlanta, GA 30315 | Middle GA: 3090 Mercer Univ Dr / 175 Emery Hwy, Macon',
     contact: '(404) 546-3000',
-    directUrl: 'https://worksourcegaportal.com/',
+    directUrl: 'https://www.worksourceatlanta.org/',
     notes: 'Federal WIOA training grants (typically $5,000–$10,000, varies by local workforce board) covering 100% of CDL, forklift certification, and skilled industrial trade training. Note: WorkSource Atlanta is now part of the City of Atlanta’s Department of Labor & Employment Services — branding may be in transition.',
     dateLastVerified: '2026-10-13',
     badge: 'WIOA Grants',
@@ -267,6 +267,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '148 Andrew Young Int’l Blvd NE, Suite 700, Atlanta, GA 30303',
     contact: '(404) 232-7305',
+    directUrl: 'https://dol.georgia.gov/walking-last-mile-reentry-program',
     notes: 'State reentry-to-work program: skills assessments, resume building, mock interviews, job placement, and employer connections for justice-involved people. Serves Fulton, Gwinnett, and DeKalb counties.',
     badge: 'Reentry Job Placement',
     dateLastVerified: '2026-10-13'
@@ -380,7 +381,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     corridor: 'Atlanta Metro',
     address: '469 Marietta St NW, Atlanta, GA 30313',
     contact: '(404) 486-2700',
-    directUrl: 'https://atlanta.salvationarmy.org/',
+    directUrl: 'https://salvationarmyatlanta.org/',
     notes: 'Emergency and transitional shelter for men, women, and families. Cold-weather program opens to anyone when temperatures drop below 40°F; family transitional program up to one year.',
     badge: 'Emergency Shelter',
     dateLastVerified: '2026-10-13'
