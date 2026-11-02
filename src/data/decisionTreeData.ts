@@ -53,7 +53,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         key: 'B',
         label: 'I am located in Macon / Central Georgia and need municipal transit or regional shuttle.',
         actionGuidance: 'Enroll in the Macon-Bibb Transit Authority (MTA) Reentry Mobility Pass and schedule regional vanpools connecting to industrial employment hubs.',
-        gaSpecificResource: 'MTA Transfer Station (200 Cherry St, Macon, GA - (478) 803-2500) & Goodwill Central Georgia Career Center Transportation Subsidy (5171 Eisenhower Pkwy, Macon).',
+        gaSpecificResource: 'MTA Transfer Station (200 Cherry St, Macon, GA - (478) 803-2521) & Goodwill Central Georgia Career Center Transportation Subsidy (5171 Eisenhower Pkwy, Macon).',
         nextNodeId: 'node-3-housing',
         targetPhase: 'Day 1-3'
       },
@@ -193,7 +193,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         key: 'C',
         label: 'Immediate W-2 Commercial Placement: High-Volume Production, Facilities, or Culinary Leadership.',
         actionGuidance: 'Begin immediate same-week paid W-2 commercial employment with fair-chance employers in manufacturing, logistics hubs, or commercial food service.',
-        gaSpecificResource: 'First Step Staffing (Atlanta: 236 Auburn Ave NE - Daily transportation to job sites provided) | Goodwill Career Centers Macon & Atlanta | Georgia Quick Start Training.',
+        gaSpecificResource: 'First Step Staffing (Atlanta: 302 Decatur St SE, Suite 103 - Daily transportation to job sites provided) | Goodwill Career Centers Macon & Atlanta | Georgia Quick Start Training.',
         nextNodeId: 'node-7-complete',
         targetPhase: 'Day 10-30'
       }
