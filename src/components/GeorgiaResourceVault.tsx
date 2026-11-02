@@ -13,6 +13,13 @@ import {
 import { GEORGIA_CORRIDOR_RESOURCES } from '../data/georgiaResources';
 import { GeorgiaResourceItem } from '../types';
 
+// Build a tap-to-call href from a display phone number, e.g. "(404) 555-1234" -> "tel:+14045551234"
+const telHref = (contact: string) => {
+  const digits = contact.replace(/\D/g, '');
+  const national = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+  return `tel:+1${national}`;
+};
+
 export const GeorgiaResourceVault: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -183,7 +190,13 @@ export const GeorgiaResourceVault: React.FC = () => {
               {item.contact && (
                 <div className="flex items-center gap-1.5 text-[11px]">
                   <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span className="text-stone-300">{item.contact}</span>
+                  <a
+                    href={telHref(item.contact)}
+                    className="text-stone-300 hover:text-amber-200 underline-offset-2 hover:underline"
+                    aria-label={`Call ${item.name} at ${item.contact}`}
+                  >
+                    {item.contact}
+                  </a>
                 </div>
               )}
               {item.directUrl && (
