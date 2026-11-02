@@ -91,7 +91,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     category: 'Transit & Mobility',
     corridor: 'Macon / Central GA',
     address: '200 Cherry St, Macon, GA 31201',
-    contact: '(478) 803-2500',
+    contact: '(478) 803-2521',
     directUrl: 'http://www.mbcta.net/',
     notes: 'Central Georgia transfer terminal connecting Macon industrial parks, Ocmulgee corridors, Robins logistics hubs, and Mercer employment centers.',
     badge: 'Macon Transit'
@@ -184,7 +184,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     name: 'First Step Staffing (Atlanta Corridor)',
     category: 'Apprenticeships & Trades',
     corridor: 'Atlanta Metro',
-    address: '236 Auburn Ave NE #203, Atlanta, GA 30303',
+    address: '302 Decatur Street Southeast, Suite 103, Atlanta, GA 30312',
     contact: '(404) 577-3395',
     directUrl: 'https://firststepstaffing.com/',
     notes: 'Fast-track W-2 commercial employment with daily provided transit van transportation to warehouse/manufacturing sites.',
@@ -276,12 +276,12 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     name: 'Center for Employment Opportunities (CEO) — Atlanta',
     category: 'Employment & Job Placement',
     corridor: 'Atlanta Metro',
-    address: '938 Peachtree St NE, Atlanta, GA 30309',
+    address: '261 Joseph E. Lowery Blvd, Atlanta, GA 30314',
     contact: '(404) 689-6579',
     directUrl: 'https://ceoworks.org/',
     notes: 'Immediate paid transitional employment, job coaching, and full-time placement for people with recent convictions.',
     badge: 'Paid Transitional Work',
-    dateLastVerified: '2026-10-13'
+    dateLastVerified: '2026-11-02'
   },
   // Healthcare
   {
@@ -376,7 +376,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     dateLastVerified: '2026-10-13'
   },
   {
-    name: 'The Salvation Army — Red Shield Services (Metro Atlanta)',
+    name: 'The Salvation Army — Center of Hope (Metro Atlanta)',
     category: 'Housing & Support',
     corridor: 'Atlanta Metro',
     address: '469 Marietta St NW, Atlanta, GA 30313',
@@ -384,7 +384,7 @@ export const GEORGIA_CORRIDOR_RESOURCES: GeorgiaResourceItem[] = [
     directUrl: 'https://salvationarmyatlanta.org/',
     notes: 'Emergency and transitional shelter for men, women, and families. Cold-weather program opens to anyone when temperatures drop below 40°F; family transitional program up to one year.',
     badge: 'Emergency Shelter',
-    dateLastVerified: '2026-10-13'
+    dateLastVerified: '2026-11-02'
   }
 ];
 
