@@ -88,7 +88,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         actionGuidance: 'Register your residential address with your supervising officer (if applicable) and advance immediately to Phase 2 (Day 3-10: Banking & Mobile Communications).',
         gaSpecificResource: 'Georgia Department of Community Supervision (DCS) Field Office locator and address verification protocols.',
         nextNodeId: 'node-3b-supervision',
-        targetPhase: 'Day 3-10'
+        targetPhase: 'Day 1-3'
       },
       {
         key: 'B',
@@ -96,7 +96,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         actionGuidance: 'Execute emergency intake at accredited transitional housing facilities providing case management, curfew compliance, and employment staging.',
         gaSpecificResource: 'City of Refuge Reentry Housing (1300 Joseph E Boone Blvd NW, Atlanta) | Gateway Center Reentry Division (275 Pryor St SW) | Atlanta Mission (The Potter\'s House).',
         nextNodeId: 'node-3b-supervision',
-        targetPhase: 'Day 3-10'
+        targetPhase: 'Day 1-3'
       },
       {
         key: 'C',
@@ -104,7 +104,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         actionGuidance: 'Complete same-day intake with licensed Central Georgia reentry residences equipped with workforce development partnerships.',
         gaSpecificResource: 'Macon Rescue Mission (661 Broadway, Macon, GA) | Daybreak Resource Center (174 Walnut St, Macon) | Salvation Army Central GA Reentry Housing.',
         nextNodeId: 'node-3b-supervision',
-        targetPhase: 'Day 3-10'
+        targetPhase: 'Day 1-3'
       }
     ]
   },
