@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Compass, 
   ArrowRight, 
@@ -36,6 +36,16 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
   const [selectedOption, setSelectedOption] = useState<DecisionOption | null>(null);
   const [manualInput, setManualInput] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const questionRef = useRef<HTMLHeadingElement>(null);
+
+  // Focus management on step change: confirming a step swaps the question
+  // panel, and the previously focused control unmounts — keyboard focus
+  // dropped to <body> and keyboard/screen-reader users stalled (mouse-only
+  // stall risk). Move focus to the new step's question heading on every
+  // step change so the flow stays keyboard-driven end to end.
+  useEffect(() => {
+    questionRef.current?.focus();
+  }, [currentNodeId]);
 
   const currentNode: DecisionNode = DECISION_TREE_NODES[currentNodeId] || DECISION_TREE_NODES['node-1-id'];
 
@@ -250,7 +260,11 @@ ${history.map((h) => `
               {currentNode.contextBanner}
             </div>
           )}
-          <h3 className="text-lg sm:text-xl font-bold text-stone-100 font-sans leading-snug">
+          <h3
+            ref={questionRef}
+            tabIndex={-1}
+            className="text-lg sm:text-xl font-bold text-stone-100 font-sans leading-snug focus:outline-none"
+          >
             {currentNode.question}
           </h3>
         </div>
