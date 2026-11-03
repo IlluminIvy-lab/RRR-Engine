@@ -276,6 +276,9 @@ export const ShareModal: React.FC<ShareModalProps> = ({
                     <span>{copiedLink ? 'Copied' : 'Copy Link'}</span>
                   </button>
                 </div>
+                <p className="text-[11px] text-stone-500 leading-relaxed">
+                  Note: this link contains a summary of your current session — your translated job title, whether you have a resume package, and how many employers you are tracking — encoded in the link itself. Anyone you send it to can see that summary.
+                </p>
               </div>
 
               {/* Summary of Active Session */}
