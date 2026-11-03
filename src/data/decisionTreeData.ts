@@ -31,6 +31,14 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         gaSpecificResource: 'Order online (dph.georgia.gov) or walk-in at Fulton County Board of Health (10 Park Pl S) / Bibb County Health Dept (171 Emery Hwy, Macon). SSA Office: 61 Forsyth St SW, Atlanta.',
         nextNodeId: 'node-2-transit',
         targetPhase: 'Day 1-3'
+      },
+      {
+        key: 'D',
+        label: 'I have a Georgia state ID and my Social Security card, but I am missing my birth certificate.',
+        actionGuidance: 'Order your certified Georgia birth certificate: submit GA Form 3918 online via ROVER/VitalChek, or in person at a County Health Department (State Office of Vital Records walk-in service is suspended). Your state ID and Social Security card cover your other Day 1-3 needs while it is processed — continue to transit planning now and keep the order confirmation with your release documents.',
+        gaSpecificResource: 'Order online (dph.georgia.gov) or walk-in at Fulton County Board of Health (10 Park Pl S) / Bibb County Health Dept (171 Emery Hwy, Macon).',
+        nextNodeId: 'node-2-transit',
+        targetPhase: 'Day 1-3'
       }
     ]
   },

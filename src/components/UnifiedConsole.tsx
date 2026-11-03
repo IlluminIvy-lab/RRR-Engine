@@ -45,7 +45,7 @@ interface ConsoleMessage {
   };
   decisionNode?: DecisionNode;
   decisionResolution?: {
-    choiceKey: 'A' | 'B' | 'C';
+    choiceKey: 'A' | 'B' | 'C' | 'D';
     choiceLabel: string;
     actionGuidance: string;
     gaResource: string;
@@ -129,9 +129,9 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
     const lower = textToSend.toLowerCase();
 
-    // 1. Check if responding to Decision Tree (A, B, C)
-    if (activeDecisionNodeId && (cleanLetter(textToSend) === 'A' || cleanLetter(textToSend) === 'B' || cleanLetter(textToSend) === 'C')) {
-      const letter = cleanLetter(textToSend) as 'A' | 'B' | 'C';
+    // 1. Check if responding to Decision Tree (A, B, C, or D on Step 1)
+    if (activeDecisionNodeId && (cleanLetter(textToSend) === 'A' || cleanLetter(textToSend) === 'B' || cleanLetter(textToSend) === 'C' || cleanLetter(textToSend) === 'D')) {
+      const letter = cleanLetter(textToSend) as 'A' | 'B' | 'C' | 'D';
       const node = DECISION_TREE_NODES[activeDecisionNodeId];
       if (node) {
         const option = node.options.find((o) => o.key === letter);
@@ -287,6 +287,7 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
     if (s.startsWith('A') && s.length <= 2) return 'A';
     if (s.startsWith('B') && s.length <= 2) return 'B';
     if (s.startsWith('C') && s.length <= 2) return 'C';
+    if (s.startsWith('D') && s.length <= 2) return 'D';
     return s;
   };
 

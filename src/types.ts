@@ -147,7 +147,7 @@ export interface TrackerItem {
 
 // MODE 4: Interactive Decision Tree
 export interface DecisionOption {
-  key: 'A' | 'B' | 'C';
+  key: 'A' | 'B' | 'C' | 'D';
   label: string;
   actionGuidance: string;
   gaSpecificResource: string;
@@ -161,7 +161,9 @@ export interface DecisionNode {
   domain: 'IDs & Vital Records' | 'Transit & Mobility' | 'Transitional Housing' | 'Banking & Financial Setup' | 'GA Trade Pathways' | 'Community Supervision & Compliance' | 'Employment Retention & Advancement' | 'Long-Term Financial Stability';
   question: string;
   contextBanner?: string;
-  options: [DecisionOption, DecisionOption, DecisionOption];
+  // Most nodes offer 3 options; node-1-id offers 4 (option D added for the
+  // ID + SS card / missing birth certificate case).
+  options: [DecisionOption, DecisionOption, DecisionOption] | [DecisionOption, DecisionOption, DecisionOption, DecisionOption];
 }
 
 export interface DecisionHistoryEntry {
@@ -171,7 +173,7 @@ export interface DecisionHistoryEntry {
   phase: ReentryPhase;
   domain: string;
   question: string;
-  selectedKey: 'A' | 'B' | 'C';
+  selectedKey: 'A' | 'B' | 'C' | 'D';
   selectedOptionLabel: string;
   actionGuidance: string;
   gaSpecificResource: string;

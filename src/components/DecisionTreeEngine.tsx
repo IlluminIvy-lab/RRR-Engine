@@ -39,7 +39,15 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
 
   const currentNode: DecisionNode = DECISION_TREE_NODES[currentNodeId] || DECISION_TREE_NODES['node-1-id'];
 
-  // Listen for keyboard input (A, B, C)
+  // Key hints follow the current node's actual options (node-1 offers A–D,
+  // every other node A–C).
+  const optionKeys = currentNode.options.map(o => o.key);
+  const optionKeyList = optionKeys.join(', ');
+  const optionKeyHint = optionKeys.length > 1
+    ? `${optionKeys.slice(0, -1).join(', ')}, or ${optionKeys[optionKeys.length - 1]}`
+    : optionKeys[0];
+
+  // Listen for keyboard input (A, B, C — plus D on node-1, which has 4 options)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't trigger if user is typing in an input or textarea
@@ -47,7 +55,7 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
         return;
       }
       const key = e.key.toUpperCase();
-      if (key === 'A' || key === 'B' || key === 'C') {
+      if (key === 'A' || key === 'B' || key === 'C' || key === 'D') {
         const matched = currentNode.options.find(opt => opt.key === key);
         if (matched) {
           handleSelectOption(matched);
@@ -94,7 +102,7 @@ export const DecisionTreeEngine: React.FC<DecisionTreeEngineProps> = ({
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const clean = manualInput.trim().toUpperCase();
-    if (clean === 'A' || clean === 'B' || clean === 'C') {
+    if (clean === 'A' || clean === 'B' || clean === 'C' || clean === 'D') {
       const matched = currentNode.options.find(opt => opt.key === clean);
       if (matched) {
         setSelectedOption(matched);
@@ -231,7 +239,7 @@ ${history.map((h) => `
           <div className="flex items-center gap-2 text-xs font-mono text-stone-400">
             <span>Step {history.length + 1}</span>
             <span className="text-stone-600">•</span>
-            <span className="text-amber-400/90 font-semibold">Press A, B, or C to select</span>
+            <span className="text-amber-400/90 font-semibold">Press {optionKeyHint} to select</span>
           </div>
         </div>
 
@@ -247,7 +255,7 @@ ${history.map((h) => `
           </h3>
         </div>
 
-        {/* Multiple Choice Options (A, B, C) */}
+        {/* Multiple Choice Options (A, B, C — D on Step 1) */}
         <div className="space-y-3">
           {currentNode.options.map((option) => {
             const isSelected = selectedOption?.key === option.key;
@@ -318,12 +326,12 @@ ${history.map((h) => `
               onChange={(e) => {
                 const val = e.target.value.toUpperCase();
                 setManualInput(val);
-                if (val === 'A' || val === 'B' || val === 'C') {
+                if (val === 'A' || val === 'B' || val === 'C' || val === 'D') {
                   const opt = currentNode.options.find(o => o.key === val);
                   if (opt) setSelectedOption(opt);
                 }
               }}
-              placeholder="A, B, or C"
+              placeholder={optionKeyList}
               className="w-20 bg-stone-950 border border-stone-700 rounded px-2.5 py-1.5 text-center font-mono font-bold text-amber-400 uppercase text-sm focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </form>
