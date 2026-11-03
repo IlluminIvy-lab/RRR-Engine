@@ -349,6 +349,58 @@ Generate a complete ATS-ready Application Package:
   });
 
   // -------------------------------------------------------------
+  // STANDALONE ADVISOR CHAT (Reentry Career Advisor & Output Explainer)
+  //
+  // The advisor component posts { question, sessionContext } and renders
+  // data.answer (Markdown). When no AI client is available — or generation
+  // fails — this route returns an error status ON PURPOSE: the component's
+  // catch block then serves its offline template guidance rather than an
+  // empty or invented answer.
+  // -------------------------------------------------------------
+  app.post('/api/chat-advisor', async (req, res) => {
+    const { question, sessionContext } = req.body;
+    if (!question || typeof question !== 'string') {
+      return res.status(400).json({ error: 'Question is required' });
+    }
+
+    const ai = getGeminiClient();
+
+    if (!ai) {
+      return res.status(503).json({ error: 'Advisor AI unavailable' });
+    }
+
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `You are the RRR Reentry Career Advisor & Output Explainer.
+Your task is to answer the user's question about their resume output, job search, interview strategy, or Georgia reentry process, in plain, direct language.
+
+ANTI-FABRICATION CONTRACT (hard rules — violating any of them fails the task):
+1. Use ONLY facts from the SESSION CONTEXT below (the user's own in-app work) for anything about the user. Never invent employers, job titles the user did not hold, dates, locations, metrics, wages, fees, deadlines, certifications, or credentials.
+2. General procedural knowledge about Georgia reentry is allowed at the general level only (e.g., how Form I-9 document lists work, that Georgia DPH issues birth certificates, that the Department of Community Supervision supervises probation and parole). Never present a specific program, office detail, statistic, or eligibility rule as fact unless it appears in the session context — point the user to the Georgia Vault listings or the relevant mode instead.
+3. If the session context does not contain a fact the answer needs, say so plainly and say where in the app to find or build it (Mode 1 Translator, Mode 2 Resume Builder, Mode 3 Application Tracker, Mode 4 Decision Tree, Georgia Vault).
+4. General information only — never legal advice about the user's own case or conditions.
+5. Plain, direct language. Zero buzzwords, zero patronizing language. Markdown formatting is welcome.
+
+SESSION CONTEXT:
+${typeof sessionContext === 'string' && sessionContext.trim() ? sessionContext : 'No session context supplied.'}
+
+USER QUESTION:
+"${question}"`,
+      });
+
+      const answer = (response.text || '').trim();
+      if (!answer) {
+        return res.status(502).json({ error: 'Advisor returned an empty answer' });
+      }
+      return res.json({ answer });
+    } catch (error) {
+      console.error('Gemini API advisor error, client will use offline template fallback:', error);
+      return res.status(502).json({ error: 'Advisor generation failed' });
+    }
+  });
+
+  // -------------------------------------------------------------
   // UNIFIED TERMINAL ROUTING ENDPOINT
   // -------------------------------------------------------------
   app.post('/api/unified-chat', async (req, res) => {
