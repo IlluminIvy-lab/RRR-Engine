@@ -79,7 +79,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         label: 'I have confirmed stable housing with family or an approved residence for 30+ days.',
         actionGuidance: 'Register your residential address with your supervising officer (if applicable) and advance immediately to Phase 2 (Day 3-10: Banking & Mobile Communications).',
         gaSpecificResource: 'Georgia Department of Community Supervision (DCS) Field Office locator and address verification protocols.',
-        nextNodeId: 'node-4-banking',
+        nextNodeId: 'node-3b-supervision',
         targetPhase: 'Day 3-10'
       },
       {
@@ -87,7 +87,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         label: 'I need immediate transitional housing or structured reentry bed in Atlanta Metro.',
         actionGuidance: 'Execute emergency intake at accredited transitional housing facilities providing case management, curfew compliance, and employment staging.',
         gaSpecificResource: 'City of Refuge Reentry Housing (1300 Joseph E Boone Blvd NW, Atlanta) | Gateway Center Reentry Division (275 Pryor St SW) | Atlanta Mission (The Potter\'s House).',
-        nextNodeId: 'node-4-banking',
+        nextNodeId: 'node-3b-supervision',
         targetPhase: 'Day 3-10'
       },
       {
@@ -95,6 +95,39 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         label: 'I need transitional housing or emergency lodging in Macon / Central Georgia.',
         actionGuidance: 'Complete same-day intake with licensed Central Georgia reentry residences equipped with workforce development partnerships.',
         gaSpecificResource: 'Macon Rescue Mission (661 Broadway, Macon, GA) | Daybreak Resource Center (174 Walnut St, Macon) | Salvation Army Central GA Reentry Housing.',
+        nextNodeId: 'node-3b-supervision',
+        targetPhase: 'Day 3-10'
+      }
+    ]
+  },
+  'node-3b-supervision': {
+    id: 'node-3b-supervision',
+    phase: 'Day 1-3',
+    domain: 'Community Supervision & Compliance',
+    contextBanner: 'Day 1-3 Critical Priority: Supervision Status & Reporting Obligations',
+    question: 'Are you currently under any court or state supervision — probation or parole?',
+    options: [
+      {
+        key: 'A',
+        label: 'Yes — probation.',
+        actionGuidance: 'Register or confirm your residential address with your DCS supervising officer, keep your reporting schedule, and treat documented employment as a supervision condition: log every application and shift in the Application Tracker (Mode 3) so your officer sees a record, not a claim.',
+        gaSpecificResource: 'Georgia Department of Community Supervision (DCS) — Field Office locator for your assigned office and reporting instructions.',
+        nextNodeId: 'node-4-banking',
+        targetPhase: 'Day 3-10'
+      },
+      {
+        key: 'B',
+        label: 'Yes — parole.',
+        actionGuidance: 'Register or confirm your residential address with your DCS parole officer, keep your reporting schedule, and confirm your travel and employment conditions before accepting work outside your county. Log every application and shift in the Application Tracker (Mode 3) so your record is documented at every check-in.',
+        gaSpecificResource: 'Georgia Department of Community Supervision (DCS) — Field Office locator for your assigned office and reporting instructions.',
+        nextNodeId: 'node-4-banking',
+        targetPhase: 'Day 3-10'
+      },
+      {
+        key: 'C',
+        label: 'No — my sentence is complete, with no supervision.',
+        actionGuidance: 'No reporting obligations and no officer in the loop — the structure has to be self-built. This plan (Mode 4), the Application Tracker (Mode 3), and fixed weekly check-in points substitute for imposed structure.',
+        gaSpecificResource: 'No DCS involvement. RRR Mode 4 plan + Mode 3 tracker as your self-directed structure.',
         nextNodeId: 'node-4-banking',
         targetPhase: 'Day 3-10'
       }
@@ -175,9 +208,9 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
     options: [
       {
         key: 'A',
-        label: 'Skilled Trades: Commercial Electrical, Welding, HVAC, or Structural Fabrication (Union / TCSG).',
+        label: 'Skilled Trades: Commercial Electrical, Welding, HVAC, Plumbing, or Structural Fabrication (Union / TCSG).',
         actionGuidance: 'Enroll in tuition-free HOPE Career Grant certification at Technical College System of Georgia (TCSG) or apply to union apprenticeships with paid day-one training.',
-        gaSpecificResource: 'IBEW Local 613 Electrical Training Center (Atlanta) | Central Georgia Technical College Welding/HVAC (Macon Campus - Tuition 100% covered by HOPE Career Grant).',
+        gaSpecificResource: 'IBEW Local 613 Electrical Training Center (Atlanta) | UA Local 72 Plumbers, Pipefitters & HVACR Technicians (Atlanta) | Central Georgia Technical College Welding/HVAC (Macon Campus - Tuition 100% covered by HOPE Career Grant).',
         nextNodeId: 'node-7-complete',
         targetPhase: 'Day 10-30'
       },
@@ -211,7 +244,7 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         label: 'Run MODE 1: Translate my institutional work history and duties into commercial resume bullets.',
         actionGuidance: 'Switch to Capability Translator to convert your facility duties, shop experience, or trade work into industry-standard job titles and Georgia career pathways.',
         gaSpecificResource: 'RRR Capability Translator Engine (Mode 1).',
-        nextNodeId: 'node-1-id',
+        nextNodeId: null,
         targetPhase: 'Day 10-30'
       },
       {
