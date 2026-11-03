@@ -326,16 +326,16 @@ export const DECISION_TREE_NODES: Record<string, DecisionNode> = {
         label: 'Housing or income is still shaky and I need to re-stabilize before moving forward.',
         actionGuidance: 'Re-stabilizing at Month 6 is not a failure of the plan \u2014 go back through the Day 1-3 housing and Day 3-10 banking checkpoints with your current, updated information rather than starting completely from scratch.',
         gaSpecificResource: 'Gateway Center (275 Pryor St SW, Atlanta) or Daybreak Resource Center (174 Walnut St, Macon) for a re-stabilization intake.',
-        nextNodeId: 'node-3-housing',
-        targetPhase: 'Day 1-3'
+        nextNodeId: null,
+        targetPhase: 'Month 6'
       },
       {
         key: 'C',
         label: 'Export my complete 6-month journey as a full record, or start a fresh plan from Day 1-3.',
         actionGuidance: 'Download or copy your complete sequential decision record with every milestone, address, and resource from Day 1 through Month 6.',
         gaSpecificResource: 'RRR Reentry Action Dossier Generator.',
-        nextNodeId: 'node-1-id',
-        targetPhase: 'Day 1-3'
+        nextNodeId: null,
+        targetPhase: 'Month 6'
       }
     ]
   }
