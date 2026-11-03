@@ -19,6 +19,45 @@ import { makeLine } from './provenance';
  * user to verify and edit them before they flow into any resume or export.
  * Georgia pathways are research leads, not verified placements.
  */
+const TRADE_CERT_NAMES: Record<string, string> = {
+  plumbing: "Plumbing Certificate",
+  electrical: "Electrical Certificate",
+  welding: "Welding Certificate",
+  hvac: "HVAC Certificate",
+};
+
+/**
+ * Stated-certification detection (2026-11-02 Wave 1 fix).
+ *
+ * Returns the credentials the user EXPLICITLY states they hold, in the
+ * order stated. Deliberately high-precision: a credential is named only
+ * when the user's own words claim it — earning/possession language plus
+ * the credential ("got my plumbing certificate", "hold a welding
+ * certificate", "my HVAC certification"), or a ServSafe mention.
+ * Mere program enrollment ("enrolled in a plumbing certificate
+ * program") does NOT count, and nothing is ever inferred from duties:
+ * an uncertified duty ("I helped in the motor pool but never got
+ * certified") yields nothing. Naming a stated credential — instead of
+ * dissolving it into a generic skill line — keeps the one verifiable
+ * fact the user offered visible on the translation and the resume.
+ */
+export function detectStatedCertifications(experience: string): string[] {
+  const found: { name: string; index: number }[] = [];
+  const servsafe = /\bservsafe\b/i.exec(experience);
+  if (servsafe) {
+    found.push({ name: "ServSafe Food Protection Manager Certification", index: servsafe.index });
+  }
+  const tradeCert =
+    /\b(?:got|earned|earn|earning|hold|holds|holding|have|has|received|obtained)\s+(?:my\s+|a\s+|an\s+|the\s+)?(plumbing|electrical|welding|hvac)\s+certificat(?:e|ion)\b|\bmy\s+(plumbing|electrical|welding|hvac)\s+certificat(?:e|ion)\b/gi;
+  let m: RegExpExecArray | null;
+  while ((m = tradeCert.exec(experience)) !== null) {
+    const trade = (m[1] || m[2]).toLowerCase();
+    found.push({ name: TRADE_CERT_NAMES[trade], index: m.index });
+  }
+  found.sort((a, b) => a.index - b.index);
+  return [...new Set(found.map((f) => f.name))];
+}
+
 export function translateCapabilityOffline(experience: string): TranslationResult {
   const expLower = experience.toLowerCase();
 
@@ -51,11 +90,35 @@ export function translateCapabilityOffline(experience: string): TranslationResul
   // (e.g. "basic electrical repairs" inside a warehouse profile) can no
   // longer hijack the whole classification. Ties keep the original chain
   // priority (earliest wins); with zero hits the defaults above stand.
+  //
+  // Whole-word matching (2026-11-02 Wave 1 fix): the substring includes()
+  // used before let short keywords fire inside unrelated words — the
+  // health keyword "care" matched inside "career" and rerouted a
+  // certified plumber's profile to the clinical domain. The input is now
+  // tokenized on non-alphanumeric boundaries, and a keyword scores only
+  // when it equals a whole token or that token's inflection-stripped
+  // variant (cooking -> cook, fabricated -> fabricat, electrical ->
+  // electric, nurses -> nurse). Standalone "care" still matches;
+  // "career" does not.
+  const wordForms = new Set<string>();
+  for (const token of expLower.split(/[^a-z0-9]+/)) {
+    if (!token) continue;
+    wordForms.add(token);
+    for (const suffix of ["ing", "ed", "es", "ion", "al", "s"]) {
+      if (token.length - suffix.length >= 3 && token.endsWith(suffix)) {
+        wordForms.add(token.slice(0, -suffix.length));
+      }
+    }
+  }
   const domainKeywords: string[][] = [
     ["cook", "kitchen", "food", "culinary", "baker", "dining"],
     ["mechanic", "auto", "diesel", "vehicle", "engine", "transmission"],
     ["weld", "fabricat", "metal", "machin", "cutting", "iron"],
     ["electric", "wire", "power", "voltage", "conduit", "panel"],
+    // Plumbing / trades (2026-11-02 Wave 1): previously absent entirely.
+    // Sits ahead of health so a trades profile wins ties over the
+    // clinical domain.
+    ["plumbing", "plumber", "drain", "drains", "fixture", "fixtures", "piping", "pipe", "pipes", "sewer", "faucet", "faucets", "leak", "leaks"],
     ["health", "care", "nurse", "medical", "orderly", "patient", "hospital"],
     ["warehouse", "forklift", "shipping", "inventory", "stock", "dock"],
     ["clerk", "admin", "office", "records", "computer", "data"]
@@ -65,7 +128,7 @@ export function translateCapabilityOffline(experience: string): TranslationResul
   domainKeywords.forEach((keywords, domainIndex) => {
     let score = 0;
     for (const kw of keywords) {
-      if (expLower.includes(kw)) score += 1;
+      if (wordForms.has(kw)) score += 1;
     }
     if (score > bestScore) {
       bestScore = score;
@@ -179,6 +242,32 @@ export function translateCapabilityOffline(experience: string): TranslationResul
       break;
     }
     case 4: {
+      commercialTitle = "Plumbing Technician / Maintenance Plumber";
+      hardSkills = [
+        "Plumbing System Installation & Repair",
+        "Drain Cleaning & Line Maintenance",
+        "Fixture Installation & Replacement",
+        "Leak Detection & Pipe Repair"
+      ];
+      softSkills = [
+        "Detail-Oriented Troubleshooting",
+        "Independent Work Execution",
+        "Safety-Conscious Operations",
+        "Deadline-Driven Task Completion"
+      ];
+      bullets = [
+        "Repaired and maintained plumbing systems — clearing drain lines, fixing leaks, and replacing worn fixtures [add facility type / scale].",
+        "Installed and replaced plumbing fixtures and piping to work-order specifications [add fixture types / setting].",
+        "Responded to maintenance work orders, diagnosing line blockages and fitting failures [add volume / response context]."
+      ];
+      gaPathways = [
+        "Licensed plumbing & mechanical contractors in the Atlanta metro corridor — verify each employer's hiring policies directly; the app does not verify fair-chance status.",
+        "UA Plumbers Local 72 (Atlanta) apprenticeship intake — confirm current application windows and requirements with the local directly.",
+        "HOPE Career Grant plumbing programs at TCSG colleges (e.g. Atlanta Technical College) — confirm eligibility and program availability."
+      ];
+      break;
+    }
+    case 5: {
       commercialTitle = "Clinical Support Operations Specialist";
       hardSkills = [
         "Infection Control Practices",
@@ -204,7 +293,7 @@ export function translateCapabilityOffline(experience: string): TranslationResul
       ];
       break;
     }
-    case 5: {
+    case 6: {
       commercialTitle = "Logistics & Distribution Operations Associate";
       hardSkills = [
         "Forklift & Powered Industrial Truck Operation",
@@ -230,7 +319,7 @@ export function translateCapabilityOffline(experience: string): TranslationResul
       ];
       break;
     }
-    case 6: {
+    case 7: {
       commercialTitle = "Administrative Operations & Records Specialist";
       hardSkills = [
         "Records Management & Filing",
@@ -256,6 +345,16 @@ export function translateCapabilityOffline(experience: string): TranslationResul
       ];
       break;
     }
+  }
+
+  // Stated certifications (2026-11-02 Wave 1 fix): a credential the user
+  // explicitly says they hold is named FIRST among the hard skills, in
+  // any domain — never dissolved into a generic skill line. Only
+  // user-stated credentials appear (see detectStatedCertifications);
+  // nothing is inferred from duties.
+  const statedCerts = detectStatedCertifications(experience);
+  if (statedCerts.length > 0) {
+    hardSkills = [...statedCerts, ...hardSkills.filter((s) => !statedCerts.includes(s))];
   }
 
   return {
@@ -336,6 +435,15 @@ export function generateFullPackageOffline(
         ["Team Communication", "Task Prioritization", "Documentation & Reporting"],
       ];
 
+  // Certifications (2026-11-02 Wave 1 fix): ONLY credentials the user
+  // explicitly stated in their Mode 1 words — detected from the
+  // translation's rawExperience and labeled user_provided — are carried
+  // into the package. Nothing is inferred from duties; when the user
+  // stated none, the list stays empty.
+  const statedCertLines: ResumeLine[] = translation?.rawExperience
+    ? detectStatedCertifications(translation.rawExperience).map((c) => makeLine(c, 'user_provided'))
+    : [];
+
   const summary = hasTranslation
     ? `Operations professional targeting ${cleanTitle} roles in the ${loc} corridor. Capability Translator assessment highlights ${translation!.commercialTitle} strengths, including ${translation!.competencies.hardSkills.slice(0, 2).join(" and ")}. Focused on procedure-driven execution, workflow coordination, and safety-conscious operations. Complete the review checklist to verify every line before sending.`
     : `Candidate targeting ${cleanTitle} roles in the ${loc} corridor. Run the Capability Translator (Mode 1) on your experience, then work through the review checklist — every line on this resume must be confirmed by you before it goes to an employer.`;
@@ -374,9 +482,11 @@ export function generateFullPackageOffline(
           bullets,
         },
       ],
-      // NEVER pre-filled: listing a certification the user hasn't confirmed
-      // they hold is fabrication. The review checkpoint offers one-tap adds.
-      certificationsAndTraining: [],
+      // NEVER invented: only user-stated certifications (statedCertLines,
+      // from the user's own Mode 1 words) appear here — listing a
+      // certification the user hasn't stated they hold is fabrication.
+      // The review checkpoint offers one-tap adds.
+      certificationsAndTraining: statedCertLines,
       educationAndHopeGrants: [],
     },
     coverLetter: {
