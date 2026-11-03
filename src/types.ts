@@ -43,6 +43,14 @@ export interface TranslationResult {
   summary?: string; // AI-drafted professional summary — user-editable, never asserted as fact
   gaPathway?: string;
   gaPathways?: string[]; // 2-3 verified Fair-Chance / Second-Chance employers, hospital networks, or union apprenticeship locals
+  // Second trade domain when the work history supports two (e.g. kitchen +
+  // maintenance): the primary domain above stays the headline translation;
+  // this carries the other trade instead of collapsing the history to one.
+  secondaryDomain?: {
+    commercialTitle: string;
+    hardSkills: string[];
+    gaPathways: string[];
+  };
   rawExperience?: string;
   timestamp?: string;
 }
