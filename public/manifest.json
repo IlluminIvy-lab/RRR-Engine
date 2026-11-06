@@ -15,40 +15,60 @@
       "purpose": "any"
     },
     {
-      "src": "/pwa-192x192.svg",
+      "src": "/pwa-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/pwa-512x512.svg",
+      "src": "/pwa-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["productivity", "utilities", "business", "education"],
+  "categories": [
+    "productivity",
+    "utilities",
+    "business",
+    "education"
+  ],
   "shortcuts": [
     {
       "name": "Capability Translator",
       "short_name": "Translator",
       "description": "Convert institutional duties into commercial resume credentials",
       "url": "/?mode=translator",
-      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any"
+        }
+      ]
     },
     {
       "name": "Decision Tree",
       "short_name": "Decision Tree",
       "description": "Interactive Day 1-30 Georgia Reentry Decision Protocol",
       "url": "/?mode=decision_tree",
-      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any"
+        }
+      ]
     },
     {
       "name": "Georgia Resource Vault",
       "short_name": "Resource Vault",
       "description": "Directory of verified agencies and intake channels",
       "url": "/?mode=georgia_vault",
-      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+      "icons": [
+        {
+          "src": "/icon.svg",
+          "sizes": "any"
+        }
+      ]
     }
   ]
 }

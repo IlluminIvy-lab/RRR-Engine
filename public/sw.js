@@ -1,11 +1,11 @@
-const CACHE_NAME = 'rrr-engine-cache-v1';
+const CACHE_NAME = 'rrr-engine-cache-v2';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icon.svg',
-  '/pwa-192x192.svg',
-  '/pwa-512x512.svg'
+  '/pwa-192x192.png',
+  '/pwa-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
