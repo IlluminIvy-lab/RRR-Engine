@@ -92,12 +92,12 @@ const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
   decision_tree: {
     modeNumber: 'MODE 4',
     title: 'Interactive Reentry Decision Tree',
-    tagline: 'Answers one question at a time and walks you through your first days and weeks home.',
+    tagline: 'Answers one question at a time and walks you through your first days home, through Day 90 and Month 6.',
     detailedMission:
-      'Mode 4 walks you through the first month home one question at a time — Day 1–3, Day 3–10, Day 10–30 — covering state ID, vital records, rides, housing, banking, and any supervision requirements, without dumping everything on you at once.',
+      'Mode 4 walks you through coming home one question at a time — Day 1–3, Day 3–10, Day 10–30, Day 90, and Month 6 — covering state ID, vital records, rides, housing, banking, and any supervision requirements, without dumping everything on you at once.',
     inputsAccepted: [
       'One tap per question — pick option A, B, or C',
-      'Which stage you are in: Day 1–3, Day 3–10, or Day 10–30',
+      'Which stage you are in: Day 1–3, Day 3–10, Day 10–30, Day 90, or Month 6',
       'Where you stand right now on ID, housing, and rides',
     ],
     outputsProduced: [
