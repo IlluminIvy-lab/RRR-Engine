@@ -37,6 +37,10 @@ export interface TranslationCompetencies {
 }
 
 export interface TranslationResult {
+  /** Which engine produced this result: the AI model ('ai') or the
+   *  keyword/template fallback ('template'). Surfaced in the UI so a
+   *  template answer is never mistaken for the full AI translation. */
+  engineSource?: 'ai' | 'template';
   commercialTitle: string;
   competencies: TranslationCompetencies;
   resumeBullets: string[];
@@ -112,6 +116,9 @@ export interface FullCoverLetterData {
 }
 
 export interface FullApplicationPackage {
+  /** Which engine produced this package: the AI model ('ai') or the
+   *  keyword/template fallback ('template'). Surfaced in the UI. */
+  engineSource?: 'ai' | 'template';
   id: string;
   targetJobTitle: string;
   industryOrSector: 'Logistics & Supply Chain' | 'Healthcare & Hospital Systems' | 'Commercial Trades & Electrical' | 'Culinary & Facilities' | 'General Operations';

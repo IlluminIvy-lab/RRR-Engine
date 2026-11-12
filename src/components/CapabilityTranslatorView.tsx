@@ -634,6 +634,17 @@ ${secondarySection}
             </div>
           </div>
 
+          {activeResult.engineSource === 'template' && (
+            <div className="mb-5 rounded-xl border border-amber-500/50 bg-amber-500/10 p-4 text-left">
+              <p className="text-sm font-bold text-amber-200">Basic mode — pattern-matched result</p>
+              <p className="mt-1 text-xs leading-relaxed text-amber-100/80">
+                This dossier was built by the engine's built-in pattern matcher, not the full AI translation.
+                It matches keywords to set templates, so the title, skills, and wording are generic and the
+                match can be off. Treat it as a rough starting point and check every line.
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {/* Section 1: Commercial Alignment */}
             <div className="lg:col-span-12 bg-[#0B0F0E] border border-[#C99A44]/30 rounded-xl p-5 relative overflow-hidden">

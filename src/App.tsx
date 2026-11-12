@@ -180,7 +180,7 @@ export default function App() {
     setIsLoading(true);
     // If browser is offline, use offline engine immediately
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      const offlineData = translateCapabilityOffline(experienceText);
+      const offlineData: TranslationResult = { ...translateCapabilityOffline(experienceText), engineSource: 'template' };
       setCurrentTranslation(offlineData);
       showToast('Offline Mode: Capability alignment generated locally (Saved)');
       setIsLoading(false);
@@ -206,7 +206,7 @@ export default function App() {
       return data;
     } catch (err) {
       console.warn('Live API unreachable, using verified offline engine:', err);
-      const fallbackData = translateCapabilityOffline(experienceText);
+      const fallbackData: TranslationResult = { ...translateCapabilityOffline(experienceText), engineSource: 'template' };
       setCurrentTranslation(fallbackData);
       showToast('Offline Engine: Capability alignment generated locally');
       return fallbackData;
@@ -226,7 +226,7 @@ export default function App() {
 
     // If browser is offline, use offline engine immediately
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      const offlinePkg = generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation);
+      const offlinePkg: FullApplicationPackage = { ...generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation), engineSource: 'template' };
       setApplicationPackages((prev) => [offlinePkg, ...prev.filter((p) => p.targetJobTitle !== offlinePkg.targetJobTitle)]);
       showToast(`Offline Mode: Application Package generated for "${targetTitle}"`);
       setIsLoading(false);
@@ -254,7 +254,7 @@ export default function App() {
       return data;
     } catch (err) {
       console.warn('Live API generation failed, using offline engine templates:', err);
-      const fallbackPkg = generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation);
+      const fallbackPkg: FullApplicationPackage = { ...generateFullPackageOffline(targetTitle, candidateName, location, industry, currentTranslation), engineSource: 'template' };
       setApplicationPackages((prev) => [fallbackPkg, ...prev.filter((p) => p.targetJobTitle !== fallbackPkg.targetJobTitle)]);
       showToast(`Offline Engine: Application package generated for "${targetTitle}"`);
       return fallbackPkg;

@@ -99,17 +99,17 @@ INPUT EXPERIENCE:
         });
 
         const parsed = JSON.parse(response.text || '{}');
-        return res.json(parsed);
+        return res.json({ ...parsed, engineSource: 'ai' });
       } catch (error) {
         console.error('Gemini API translation error, using offline engine fallback:', error);
         const fallback = translateCapabilityOffline(experience);
-        return res.json(fallback);
+        return res.json({ ...fallback, engineSource: 'template' });
       }
     }
 
     // Fallback when API key is missing
     const fallback = translateCapabilityOffline(experience);
-    return res.json(fallback);
+    return res.json({ ...fallback, engineSource: 'template' });
   });
 
   // -------------------------------------------------------------
@@ -330,22 +330,23 @@ Generate a complete ATS-ready Application Package:
         // Normalize: guarantees id/createdAt and provenance fields even if the
         // model omits them; blanks become "missing", unlabeled lines default
         // to "ai_inferred" so nothing silently ships as user-verified.
-        return res.json(
-          normalizePackage({
+        return res.json({
+          ...normalizePackage({
             id: `pkg-live-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
             createdAt: new Date().toISOString(),
             ...parsed,
-          })
-        );
+          }),
+          engineSource: 'ai',
+        });
       } catch (error) {
         console.error('Gemini API package generation error, using offline engine fallback:', error);
         const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector, translatedData);
-        return res.json(fallback);
+        return res.json({ ...fallback, engineSource: 'template' });
       }
     }
 
     const fallback = generateFullPackageOffline(targetJobTitle, candidateName, cityStateZip, industrySector, translatedData);
-    return res.json(fallback);
+    return res.json({ ...fallback, engineSource: 'template' });
   });
 
   // -------------------------------------------------------------

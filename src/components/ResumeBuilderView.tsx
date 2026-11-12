@@ -463,6 +463,16 @@ ${candidate.fullName}
           </p>
         </div>
 
+        {editedPackage?.engineSource === 'template' && (
+          <div className="rounded-xl border border-amber-500/50 bg-amber-500/10 p-4 text-left">
+            <p className="text-sm font-bold text-amber-200">Basic mode — pattern-matched package</p>
+            <p className="mt-1 text-xs leading-relaxed text-amber-100/80">
+              This package was built by the engine's built-in pattern matcher, not the full AI writer.
+              Wording is generic template text — check every line before use.
+            </p>
+          </div>
+        )}
+
         {editedPackage && (
           <div className="flex items-center gap-2 flex-wrap">
             {unresolvedCount > 0 && (
