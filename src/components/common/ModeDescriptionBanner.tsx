@@ -57,7 +57,7 @@ const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
       'The job title or kind of work you are applying for',
       'Your contact details (name, city and state, phone, email)',
       'Your Mode 1 Translator results — pulled in automatically',
-      'The kind of work you want: logistics, health care, trades, kitchen, facilities',
+      'The kind of work you want: logistics, health care, trades, kitchen, facilities, general operations',
     ],
     outputsProduced: [
       'A finished resume you can download as a PDF or an editable Word document.',
