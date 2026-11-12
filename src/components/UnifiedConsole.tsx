@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Terminal, 
-  Send, 
-  Sparkles, 
-  Compass, 
-  RotateCcw, 
-  Copy, 
-  Check, 
-  ArrowRight, 
-  MapPin, 
-  FileDown, 
+import {
+  Send,
+  Sparkles,
+  Compass,
+  RotateCcw,
+  Copy,
+  Check,
+  ArrowRight,
+  MapPin,
+  FileDown,
   FileText,
   ListTodo,
   Layers,
+  Landmark,
   Printer
 } from 'lucide-react';
 import { 
@@ -107,6 +107,11 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Skip the auto-scroll while only the initial welcome message exists
+    // (2026-11-12): on first load it scrolled the message box to the bottom,
+    // hiding the first task cards — the opposite of what a first screen is for.
+    // Once a conversation starts (2+ messages), scrolling works as before.
+    if (messages.length <= 1) return;
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
@@ -257,22 +262,6 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
     }
   };
 
-  const handleTriggerModeCard = (modeNum: 1 | 2 | 3 | 4) => {
-    if (modeNum === 1) {
-      setInputVal("Managed institutional food service staging, dietary inventory, and sanitation for 1,200 individuals daily under strict HACCP compliance.");
-      const inputEl = document.getElementById('console-prompt-input');
-      if (inputEl) {
-        inputEl.focus();
-      }
-    } else if (modeNum === 2) {
-      handleSendMessage('Generate Full Package for Logistics Supervisor');
-    } else if (modeNum === 3) {
-      onNavigateMode('tracker');
-    } else if (modeNum === 4) {
-      startDecisionTreeFlow();
-    }
-  };
-
   const handleChipClick = (preset: { label: string; prompt: string }) => {
     setInputVal(preset.prompt);
     setActiveChip(preset.label);
@@ -364,13 +353,70 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
   return (
     <div className="space-y-4 max-w-5xl mx-auto">
-      {/* Console Subheader Bar */}
+      {/* First-screen start block (2026-11-12 spec): one plain prompt, with the
+          console's existing free-text routing box and role presets moved to the TOP
+          of the first screen instead of sitting under the message list. Same
+          PromptTextarea, same handleSendMessage routing — presentation only. */}
+      <div className="space-y-3">
+        <div className="px-1 space-y-1">
+          <h2 className="text-xl sm:text-2xl font-bold font-serif text-[#F4EDE1] tracking-tight">
+            What do you need help with?
+          </h2>
+          <p className="text-xs sm:text-sm text-[#F4EDE1]/75 font-sans leading-relaxed">
+            Type the work you did — kitchen, maintenance, warehouse, any job — plus the kind of work you want next, and the console will take you to the right tool. Or pick a tool below.
+          </p>
+        </div>
+
+      {/* ONE-TAP CAPABILITY & ROLE PRESETS (Quick-Fill Chips) */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C99A44] flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-[#C99A44]" />
+            <span>Quick-Fill Role Presets</span>
+          </span>
+          <span className="text-[10px] font-mono text-[#F4EDE1]/50">
+            Tap to load verified operational duties
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          {ROLE_PRESETS.map((preset, idx) => (
+            <button
+              key={idx}
+              id={`preset-chip-${idx}`}
+              type="button"
+              onClick={() => handleChipClick(preset)}
+              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium font-sans transition-all cursor-pointer whitespace-nowrap ${
+                activeChip === preset.label
+                  ? 'bg-[#2F4A3E] text-[#C99A44] border-2 border-[#C99A44] shadow-md font-semibold'
+                  : 'bg-[#2F4A3E]/60 hover:bg-[#2F4A3E] text-[#F4EDE1]/90 hover:text-[#F4EDE1] border border-[#F4EDE1]/15 hover:border-[#C99A44]/60'
+              }`}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Input Field with 2-4 lines auto-expand & Voice Dictation (Change 1 & Change 4) */}
+      <div className="w-full">
+        <PromptTextarea
+          id="console-prompt-input"
+          value={inputVal}
+          onChange={setInputVal}
+          onSubmit={handleSendMessage}
+          placeholder="Type the work you did — or say 'build resume', 'show tracker', or 'start decision tree'. Tap the mic to speak instead..."
+          isLoading={isLoading}
+          submitButtonText="Run"
+        />
+      </div>
+      </div>
+      {/* Console Subheader Bar — the visitor-facing "Terminal" label was removed
+          in the 2026-11-12 first-screen simplification (the console is the terminal;
+          the word was system jargon for a new user). */}
       <div className="flex items-center justify-between px-2 text-xs font-mono text-[#F4EDE1]/70">
         <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-[#C99A44]" />
-          <span className="font-semibold text-[#F4EDE1]">RealReentryRegister — All Four Tools</span>
-          <span className="text-[#F4EDE1]/40">•</span>
-          <span className="text-[#C99A44]">4 tools, ready to use</span>
+          <span className="font-semibold text-[#F4EDE1]">RealReentryRegister — Reentry Tools, All in One Place</span>
         </div>
 
         <button
@@ -397,144 +443,132 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
             {/* INITIAL 4 MODES CARDS GRID */}
             {msg.type === 'initial_modes' && (
               <div className="w-full space-y-4 pt-1 pb-2">
-                <div className="p-4 rounded-xl bg-[#2F4A3E]/40 border border-[#F4EDE1]/15 text-[#F4EDE1] space-y-1">
-                  <div className="font-serif font-bold text-sm text-[#C99A44]">
-                    RealReentryRegister™ — Reentry Tools, All in One Place
-                  </div>
-                  <p className="text-xs text-[#F4EDE1]/80 font-sans">
-                    Choose a tool below to get started. Or type the work you did — kitchen, maintenance, warehouse, any job — plus the kind of work you want next, and the console will take you to the right tool.
-                  </p>
-                </div>
+                <p className="text-xs text-[#F4EDE1]/70 font-sans px-1">
+                  Or pick a tool below:
+                </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* MODE 1 CARD */}
+                  {/* CARD 1 — Mode 1 Translator */}
                   <div
-                    id="mode-card-1"
-                    onClick={() => handleTriggerModeCard(1)}
+                    id="tool-card-translator"
+                    onClick={() => onNavigateMode('translator')}
                     className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
                   >
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
-                          Mode 1
-                        </span>
-                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
-                          <Sparkles className="w-4 h-4" />
-                        </div>
+                      <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                        <Sparkles className="w-4 h-4" />
                       </div>
-
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Translator: Your Experience, in Employer Language
+                          Turn my work into words employers use
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Takes the work you did inside — kitchen, maintenance, warehouse, trades — and restates it the way employers write it: a job title, 4 skills, and 3 resume bullet points with numbers. Links to Georgia fair-chance hiring resources.
+                          Jobs you did inside, translated for a job application.
                         </p>
                       </div>
                     </div>
-
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to see a sample</span>
+                      <span>Tap to open the Translator</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
 
-                  {/* MODE 2 CARD */}
+                  {/* CARD 2 — Mode 2 Resume & Letter */}
                   <div
-                    id="mode-card-2"
-                    onClick={() => handleTriggerModeCard(2)}
+                    id="tool-card-resume"
+                    onClick={() => onNavigateMode('resume_builder')}
                     className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
                   >
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
-                          Mode 2
-                        </span>
-                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
-                          <Layers className="w-4 h-4" />
-                        </div>
+                      <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                        <Layers className="w-4 h-4" />
                       </div>
-
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Complete Resume & Cover Letter Builder
+                          Build a resume or cover letter
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Builds a complete resume and cover letter you can send to employers, formatted so employer screening software can read it. Four resume styles to choose from, including ones built for trades, logistics, and kitchen work. Download as PDF or Word.
+                          Start from your experience, step by step.
                         </p>
                       </div>
                     </div>
-
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to build your resume package</span>
+                      <span>Tap to open the Resume Builder</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
 
-                  {/* MODE 3 CARD */}
+                  {/* CARD 3 — GA Vault */}
                   <div
-                    id="mode-card-3"
-                    onClick={() => handleTriggerModeCard(3)}
+                    id="tool-card-vault"
+                    onClick={() => onNavigateMode('georgia_vault')}
                     className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
                   >
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
-                          Mode 3
-                        </span>
-                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
-                          <ListTodo className="w-4 h-4" />
-                        </div>
+                      <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                        <Landmark className="w-4 h-4" />
                       </div>
-
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Job Application Tracker
+                          Find Georgia help
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Keeps every job you are pursuing in one list, in four stages: finding jobs, applying, interviewing, and starting work. Each job gets one clear next step, so you always know what to do next.
+                          Housing, ID, transportation, and more, with phone numbers.
                         </p>
                       </div>
                     </div>
-
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to open application tracker</span>
+                      <span>Tap to browse Georgia resources</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
 
-                  {/* MODE 4 CARD */}
+                  {/* CARD 4 — Mode 3 Tracker */}
                   <div
-                    id="mode-card-4"
-                    onClick={() => handleTriggerModeCard(4)}
+                    id="tool-card-tracker"
+                    onClick={() => onNavigateMode('tracker')}
                     className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
                   >
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold bg-[#C99A44]/20 text-[#C99A44] border border-[#C99A44]/40">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C99A44]"></span>
-                          Mode 4
-                        </span>
-                        <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
-                          <Compass className="w-4 h-4" />
-                        </div>
+                      <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                        <ListTodo className="w-4 h-4" />
                       </div>
-
                       <div>
                         <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
-                          Interactive Reentry Decision Tree
+                          Track what I still need
                         </h3>
                         <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
-                          Answers one question at a time and walks you through your first days and weeks home — Day 1–3, Day 3–10, Day 10–30. Connects you to Georgia ID and driver's license offices, vital records, housing, and rides.
+                          Employment, housing, ID, support — in one list.
                         </p>
                       </div>
                     </div>
-
                     <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
-                      <span>Tap to start with Day 1–3</span>
+                      <span>Tap to open the Tracker</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* CARD 5 — Mode 4 Decision Tree */}
+                  <div
+                    id="tool-card-decision-tree"
+                    onClick={() => onNavigateMode('decision_tree')}
+                    className="group relative rounded-2xl bg-[#2F4A3E] hover:bg-[#2F4A3E]/95 border border-[#F4EDE1]/15 hover:border-[#C99A44]/80 p-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="w-8 h-8 rounded-xl bg-[#0B0F0E]/40 border border-[#C99A44]/30 flex items-center justify-center text-[#C99A44] group-hover:scale-110 transition-transform">
+                        <Compass className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-[#F4EDE1] font-serif tracking-tight group-hover:text-[#C99A44] transition-colors">
+                          Figure out my next step
+                        </h3>
+                        <p className="text-xs text-[#F4EDE1]/80 mt-1.5 leading-relaxed font-sans">
+                          Not sure where to start? Answer a few questions.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-[#F4EDE1]/15 flex items-center justify-between text-[11px] font-mono text-[#C99A44] group-hover:underline">
+                      <span>Tap to start the Decision Tree</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                   </div>
@@ -826,50 +860,6 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
         )}
 
         <div ref={chatBottomRef} />
-      </div>
-
-      {/* ONE-TAP CAPABILITY & ROLE PRESETS (Quick-Fill Chips) */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#C99A44] flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-[#C99A44]" />
-            <span>Quick-Fill Role Presets</span>
-          </span>
-          <span className="text-[10px] font-mono text-[#F4EDE1]/50">
-            Tap to load verified operational duties
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {ROLE_PRESETS.map((preset, idx) => (
-            <button
-              key={idx}
-              id={`preset-chip-${idx}`}
-              type="button"
-              onClick={() => handleChipClick(preset)}
-              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium font-sans transition-all cursor-pointer whitespace-nowrap ${
-                activeChip === preset.label
-                  ? 'bg-[#2F4A3E] text-[#C99A44] border-2 border-[#C99A44] shadow-md font-semibold'
-                  : 'bg-[#2F4A3E]/60 hover:bg-[#2F4A3E] text-[#F4EDE1]/90 hover:text-[#F4EDE1] border border-[#F4EDE1]/15 hover:border-[#C99A44]/60'
-              }`}
-            >
-              {preset.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Input Field with 2-4 lines auto-expand & Voice Dictation (Change 1 & Change 4) */}
-      <div className="w-full">
-        <PromptTextarea
-          id="console-prompt-input"
-          value={inputVal}
-          onChange={setInputVal}
-          onSubmit={handleSendMessage}
-          placeholder="Type the work you did — or say 'build resume', 'show tracker', or 'start decision tree'. Tap the mic to speak instead..."
-          isLoading={isLoading}
-          submitButtonText="Run"
-        />
       </div>
     </div>
   );

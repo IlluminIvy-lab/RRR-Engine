@@ -39,7 +39,7 @@ import { ConversationalIntakeCoach } from './ConversationalIntakeCoach';
 
 interface CapabilityTranslatorViewProps {
   onTranslate: (text: string) => Promise<TranslationResult | null>;
-  activeResult: TranslationResult | null;
+  currentResult: TranslationResult | null;
   isLoading: boolean;
   onSendToDecisionTree?: () => void;
   onClearTranslation?: () => void;

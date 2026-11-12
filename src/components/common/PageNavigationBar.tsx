@@ -1,12 +1,13 @@
 import React from 'react';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Terminal, 
-  Bot, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Terminal,
+  Bot,
   Landmark,
   BookmarkCheck,
-  FolderOpen
+  FolderOpen,
+  Home
 } from 'lucide-react';
 import { AppMode, TranslationResult, FullApplicationPackage, TrackerItem, DecisionHistoryEntry } from '../../types';
 
@@ -73,7 +74,7 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
             ) : currentMode === 'unified' ? (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-stone-800 text-[#F4EDE1] border border-[#2B2B2B]">
                 <Terminal className="w-3.5 h-3.5 text-[#C99A44]" />
-                <span>Unified Generation Console</span>
+                <span>Start — All Tools</span>
               </span>
             ) : currentMode === 'advisor' ? (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-stone-800 text-sky-400 border border-sky-800/40">
@@ -93,8 +94,23 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
           </span>
         </div>
 
-        {/* Action Buttons: Saved Sessions, Prev, Next */}
+        {/* Action Buttons: Back to Start, Saved on this device, Prev, Next */}
         <div className="flex items-center gap-2 self-end sm:self-center">
+          {/* Back to the first screen. The old header navigation grid used to be the
+              only way back from the Vault / Advisor screens (Prev does nothing there);
+              this small link replaces it (2026-11-12). */}
+          {currentMode !== 'unified' && (
+            <button
+              id="page-nav-back-to-start-btn"
+              type="button"
+              onClick={() => onSelectMode('unified')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#F4EDE1]/85 hover:text-[#F4EDE1] bg-stone-800 hover:bg-stone-700 border border-[#2B2B2B] transition-colors"
+            >
+              <Home className="w-3.5 h-3.5 text-[#C99A44]" />
+              <span>Start</span>
+            </button>
+          )}
+
           <button
             id="bottom-saved-sessions-btn"
             type="button"
@@ -102,7 +118,7 @@ export const PageNavigationBar: React.FC<PageNavigationBarProps> = ({
             className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-lg text-xs font-medium text-[#C99A44] bg-black/60 hover:bg-black/90 border border-[#2B2B2B] hover:border-[#C99A44]/50 transition-colors"
           >
             <FolderOpen className="w-3.5 h-3.5 text-[#C99A44]" />
-            <span>My Saved Sessions</span>
+            <span>Saved on this device</span>
           </button>
 
           {/* Previous Step */}

@@ -566,7 +566,7 @@ ${candidate.fullName}
             <label className="block text-stone-300 font-semibold mb-1">Target Industry / Sector:</label>
             <select
               value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
+              onChange={(e) => setIndustry(e.target.value as typeof industry)}
               className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
             >
               <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>

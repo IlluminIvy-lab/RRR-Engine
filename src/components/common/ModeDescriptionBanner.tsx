@@ -112,7 +112,11 @@ const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
 };
 
 interface ModeDescriptionBannerProps {
-  mode: AppMode;
+  // 'resume' and 'tree' are legacy caller values (ResumeBuilderView, DecisionTreeEngine).
+  // They have no MODE_DESCRIPTIONS entry, so the banner renders nothing for them —
+  // pre-existing behavior, preserved as-is; the matching keys are 'resume_builder'
+  // and 'decision_tree'. Flagged 2026-11-12; fixing the callers is a separate decision.
+  mode: AppMode | 'resume' | 'tree';
   className?: string;
 }
 

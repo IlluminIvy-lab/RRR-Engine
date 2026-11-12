@@ -416,44 +416,69 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0B0F0E] text-[#F4EDE1] flex flex-col font-sans selection:bg-[#C99A44] selection:text-[#0B0F0E]">
-      {/* Header Bar */}
-      <Header
-        currentMode={currentMode}
-        onSelectMode={(mode) => setCurrentMode(mode)}
-        onQuickStartDecisionTree={() => {
-          setCurrentMode('decision_tree');
-          showToast('Launched Mode 4: Reentry Decision Tree (Day 1-3)');
-        }}
-        onOpenShareModal={() => setIsShareModalOpen(true)}
-        onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
-        onWipeSession={handleWipeSession}
-        isOffline={isOffline}
-      />
+      {/* Header Bar — slim brand-only header (2026-11-12 first-screen simplification) */}
+      <Header isOffline={isOffline} />
 
-      {/* Mode Navigation Bar (Change 2: Tabbed/Paginated Navigation) */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <PageNavigationBar
-          currentMode={currentMode}
-          onSelectMode={(mode) => setCurrentMode(mode)}
-          currentTranslation={currentTranslation}
-          applicationPackages={applicationPackages}
-          trackerItems={trackerItems}
-          decisionHistory={decisionHistory}
-          isOffline={isOffline}
-          onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
-        />
-      </div>
+      {/* Mode Navigation Bar (Change 2: Tabbed/Paginated Navigation).
+          Hidden on the first screen ('unified'): the bar's "Unified Generation Console"
+          chip, Prev/Next, and sessions button were half of the clutter Ivy flagged in
+          her 2026-11-12 screenshot. The first screen now carries its own plain-language
+          task cards and a small secondary text row instead. */}
+      {currentMode !== 'unified' && (
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <PageNavigationBar
+            currentMode={currentMode}
+            onSelectMode={(mode) => setCurrentMode(mode)}
+            currentTranslation={currentTranslation}
+            applicationPackages={applicationPackages}
+            trackerItems={trackerItems}
+            decisionHistory={decisionHistory}
+            isOffline={isOffline}
+            onOpenSavedSessions={() => setIsSavedSessionsOpen(true)}
+          />
+        </div>
+      )}
 
       {/* Main Workspace Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {currentMode === 'unified' && (
-          <UnifiedConsole
-            onTranslate={handleTranslate}
-            onGeneratePackage={handleGeneratePackage}
-            onAddItemToTracker={handleAddTrackerItem}
-            isLoading={isLoading}
-            onNavigateMode={(mode) => setCurrentMode(mode)}
-          />
+          <>
+            <UnifiedConsole
+              onTranslate={handleTranslate}
+              onGeneratePackage={handleGeneratePackage}
+              onAddItemToTracker={handleAddTrackerItem}
+              isLoading={isLoading}
+              onNavigateMode={(mode) => setCurrentMode(mode)}
+            />
+
+            {/* Secondary actions — small text links at the bottom of the first screen,
+                not buttons (2026-11-12 spec). */}
+            <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-5 pb-1 text-xs text-[#F4EDE1]/70">
+              <button
+                type="button"
+                onClick={() => setCurrentMode('advisor')}
+                className="underline decoration-[#C99A44]/50 underline-offset-4 hover:text-[#F4EDE1] transition-colors py-1"
+              >
+                AI Advisor
+              </button>
+              <span aria-hidden="true" className="text-[#C99A44]">·</span>
+              <button
+                type="button"
+                onClick={() => setIsSavedSessionsOpen(true)}
+                className="underline decoration-[#C99A44]/50 underline-offset-4 hover:text-[#F4EDE1] transition-colors py-1"
+              >
+                Saved on this device
+              </button>
+              <span aria-hidden="true" className="text-[#C99A44]">·</span>
+              <button
+                type="button"
+                onClick={() => setIsShareModalOpen(true)}
+                className="underline decoration-[#C99A44]/50 underline-offset-4 hover:text-[#F4EDE1] transition-colors py-1"
+              >
+                Share
+              </button>
+            </div>
+          </>
         )}
 
         {currentMode === 'translator' && (
@@ -542,6 +567,7 @@ export default function App() {
         onDeleteSession={handleDeleteSession}
         onRenameSession={handleRenameSession}
         onDuplicateSession={handleDuplicateSession}
+        onWipeSession={handleWipeSession}
         currentTranslation={currentTranslation}
         applicationPackages={applicationPackages}
         trackerItems={trackerItems}

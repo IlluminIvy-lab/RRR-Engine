@@ -12,9 +12,10 @@ import {
   Clock, 
   FileText, 
   Layers, 
-  CheckSquare, 
+  CheckSquare,
   Compass,
-  AlertCircle
+  AlertCircle,
+  ShieldAlert
 } from 'lucide-react';
 import { 
   SavedSession, 
@@ -35,6 +36,7 @@ interface SavedSessionsModalProps {
   onDeleteSession: (sessionId: string) => void;
   onRenameSession: (sessionId: string, newName: string) => void;
   onDuplicateSession: (session: SavedSession) => void;
+  onWipeSession?: () => void;
   currentTranslation: TranslationResult | null;
   applicationPackages: FullApplicationPackage[];
   trackerItems: TrackerItem[];
@@ -52,6 +54,7 @@ export const SavedSessionsModal: React.FC<SavedSessionsModalProps> = ({
   onDeleteSession,
   onRenameSession,
   onDuplicateSession,
+  onWipeSession,
   currentTranslation,
   applicationPackages,
   trackerItems,
@@ -62,6 +65,7 @@ export const SavedSessionsModal: React.FC<SavedSessionsModalProps> = ({
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [showWipeConfirm, setShowWipeConfirm] = useState(false);
 
   if (!isOpen) return null;
 
@@ -105,11 +109,14 @@ export const SavedSessionsModal: React.FC<SavedSessionsModalProps> = ({
                 LOCAL SESSION VAULT
               </span>
               <h3 className="text-lg font-bold text-[#F4EDE1] font-serif">
-                My Saved Career Sessions
+                Saved on this device
               </h3>
             </div>
+            <p className="text-xs text-[#F4EDE1] leading-relaxed font-sans font-medium">
+              Saved only on this phone, in this browser. It is not backed up, and it will not show up on another phone or computer.
+            </p>
             <p className="text-xs text-[#F4EDE1]/70 leading-relaxed font-sans">
-              Maintain separate working drafts (e.g., Logistics application vs. Healthcare application) with complete auto-save and instant switching. Stored locally on your device.
+              Keep separate working drafts (e.g., a logistics application and a health care application) and switch between them here.
             </p>
           </div>
           <button
@@ -347,6 +354,58 @@ export const SavedSessionsModal: React.FC<SavedSessionsModalProps> = ({
             })
           )}
         </div>
+
+        {/* Privacy Quick-Wipe — moved here from the old header shield button
+            (2026-11-12). Same wipe, same two-step confirm; it now sits next to the
+            local-storage disclosure it belongs with. */}
+        {onWipeSession && (
+          <div className="pt-3 border-t border-[#2B2B2B]">
+            {showWipeConfirm ? (
+              <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-800/50 space-y-2.5">
+                <div className="flex items-center gap-2 text-rose-400 font-mono font-bold text-xs">
+                  <ShieldAlert className="w-4 h-4" />
+                  <span>PRIVACY QUICK-WIPE</span>
+                </div>
+                <p className="text-xs text-[#F4EDE1] leading-relaxed font-sans">
+                  This will immediately purge all stored translations, generated resumes, active job applications, and decision histories from your browser's local storage for total privacy.
+                </p>
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowWipeConfirm(false)}
+                    className="px-3.5 py-2 rounded-xl text-xs text-[#F4EDE1]/80 hover:bg-[#0B0F0E]/40 border border-[#F4EDE1]/20 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    id="confirm-wipe-session-btn"
+                    type="button"
+                    onClick={() => {
+                      onWipeSession();
+                      setShowWipeConfirm(false);
+                      onClose();
+                    }}
+                    className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white flex items-center gap-1.5 transition-colors shadow-lg"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Confirm Full Wipe</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                id="privacy-quick-wipe-btn"
+                type="button"
+                onClick={() => setShowWipeConfirm(true)}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-400 hover:text-rose-300 underline decoration-rose-400/40 underline-offset-4 transition-colors py-1"
+                title="Privacy Quick-Wipe: Clear all local history, resumes, and cache"
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Wipe all data on this device</span>
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Footer */}
         <div className="pt-3 border-t border-[#2B2B2B] flex items-center justify-between text-xs text-[#F4EDE1]/60">
