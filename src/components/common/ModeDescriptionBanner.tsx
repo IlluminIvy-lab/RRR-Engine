@@ -52,7 +52,7 @@ const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
     title: 'Complete Resume & Cover Letter Builder',
     tagline: 'Builds a finished resume and cover letter you can send to employers.',
     detailedMission:
-      'Mode 2 turns your translated experience into a complete application package: a resume and a cover letter, ready to send. Pick from 4 resume styles — including ones built for trades, logistics, and kitchen and health care work — formatted so employer screening software can read them, with your strongest experience first.',
+      'Mode 2 turns your translated experience into a complete application package: a resume and a cover letter, ready to send. Pick the kind of work you\'re applying for — logistics and supply chain, health care and hospital systems, commercial trades and electrical, culinary and facilities, or general operations — and the resume is built for that field, formatted so employer screening software can read it, with your strongest experience first.',
     inputsAccepted: [
       'The job title or kind of work you are applying for',
       'Your contact details (name, city and state, phone, email)',
