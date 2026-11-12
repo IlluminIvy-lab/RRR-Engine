@@ -125,8 +125,12 @@ export const ResumeBuilderView: React.FC<ResumeBuilderViewProps> = ({
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!targetTitle.trim()) return;
-    await onGeneratePackage(targetTitle, candidateName, location, industry);
+    await onGeneratePackage(
+      targetTitle.trim() || 'Commercial Operations Specialist',
+      candidateName.trim() || 'J. Carter',
+      location.trim() || 'Atlanta, GA',
+      industry
+    );
   };
 
   const handleCopy = (text: string, sectionId: string) => {
@@ -534,7 +538,6 @@ ${candidate.fullName}
               onChange={(e) => setTargetTitle(e.target.value)}
               placeholder="e.g. Commercial Electrical Apprentice"
               className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
-              required
             />
           </div>
 
@@ -546,7 +549,6 @@ ${candidate.fullName}
               onChange={(e) => setCandidateName(e.target.value)}
               placeholder="e.g. J. Carter"
               className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
-              required
             />
           </div>
 
@@ -558,7 +560,6 @@ ${candidate.fullName}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="e.g. Atlanta, GA"
               className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
-              required
             />
           </div>
 

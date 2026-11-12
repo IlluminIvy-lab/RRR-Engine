@@ -137,11 +137,10 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!company.trim() || !role.trim()) return;
 
     onAddItem({
-      company: company.trim(),
-      role: role.trim(),
+      company: company.trim() || 'Unnamed Employer',
+      role: role.trim() || 'Role Not Yet Specified',
       stage,
       corridor,
       notes: notes.trim() || 'Active career pipeline opportunity.',
@@ -296,26 +295,24 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
             <div>
-              <label className="block text-stone-300 font-semibold mb-1">Company / Organization *</label>
+              <label className="block text-stone-300 font-semibold mb-1">Company / Organization</label>
               <input
                 type="text"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
                 placeholder="e.g. Grady Health System"
                 className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                required
               />
             </div>
 
             <div>
-              <label className="block text-stone-300 font-semibold mb-1">Role / Job Title *</label>
+              <label className="block text-stone-300 font-semibold mb-1">Role / Job Title</label>
               <input
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 placeholder="e.g. Facilities Logistics Specialist"
                 className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                required
               />
             </div>
 
@@ -387,7 +384,7 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-stone-300 font-semibold">⚡ NEXT IMMEDIATE ACTION *</label>
+                <label className="block text-stone-300 font-semibold">⚡ NEXT IMMEDIATE ACTION</label>
                 <button
                   type="button"
                   onClick={handleAIAssist}
@@ -404,7 +401,6 @@ export const ApplicationTrackerView: React.FC<ApplicationTrackerViewProps> = ({
                 onChange={(e) => setNextImmediateAction(e.target.value)}
                 placeholder="e.g. Submit tailored resume via Fair-Chance portal and connect with hiring manager on LinkedIn"
                 className="w-full bg-stone-950 border border-amber-500/50 rounded px-3 py-2 text-xs text-amber-200 focus:outline-none focus:ring-1 focus:ring-amber-500"
-                required
               />
             </div>
 
