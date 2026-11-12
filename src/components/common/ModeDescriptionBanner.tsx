@@ -96,7 +96,7 @@ const MODE_DESCRIPTIONS: Record<string, ModeInfoData> = {
     detailedMission:
       'Mode 4 walks you through coming home one question at a time — Day 1–3, Day 3–10, Day 10–30, Day 90, and Month 6 — covering state ID, vital records, rides, housing, banking, and any supervision requirements, without dumping everything on you at once.',
     inputsAccepted: [
-      'One tap per question — pick option A, B, or C',
+      'One tap per question — pick the option that fits',
       'Which stage you are in: Day 1–3, Day 3–10, Day 10–30, Day 90, or Month 6',
       'Where you stand right now on ID, housing, and rides',
     ],
