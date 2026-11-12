@@ -170,7 +170,7 @@ ${history.map((h) => `
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Mode Description Banner (Change 3) */}
-      <ModeDescriptionBanner mode="tree" />
+      <ModeDescriptionBanner mode="decision_tree" />
 
       {/* Mode 4 Header */}
       <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 shadow-sm">
