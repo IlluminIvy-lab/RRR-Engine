@@ -25,6 +25,13 @@ async function startServer() {
     });
   }
 
+  // Gemini model for all AI paths. Google retires model names for new
+  // users without notice (gemini-2.5-flash began returning 404 NOT_FOUND
+  // for this key on 2026-11-12, silently forcing the template fallback).
+  // GEMINI_MODEL can be set in the host environment to move models
+  // without a code change.
+  const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+
   // Health check endpoint
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', engine: 'RRR Capability Engine' });
@@ -44,7 +51,7 @@ async function startServer() {
     if (ai) {
       try {
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: GEMINI_MODEL,
           contents: `You are the RRR Capability Engine & Career Architect.
 Your task is MODE 1: CAPABILITY TRANSLATOR.
 Convert the provided raw duties, institutional jobs, or life skills into commercial career assets.
@@ -142,7 +149,7 @@ INPUT EXPERIENCE:
             'user_provided = fact stated by the user; ai_inferred = rephrasing/generalization with no new facts; missing = unknown, text MUST be ""',
         };
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: GEMINI_MODEL,
           contents: `You are the RRR Capability Engine & Career Architect.
 Your task is MODE 2: COMPLETE RESUME & COVER LETTER BUILDER.
 
@@ -372,7 +379,7 @@ Generate a complete ATS-ready Application Package:
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: GEMINI_MODEL,
         contents: `You are the RRR Reentry Career Advisor & Output Explainer.
 Your task is to answer the user's question about their resume output, job search, interview strategy, or Georgia reentry process, in plain, direct language.
 
@@ -426,7 +433,7 @@ USER QUESTION:
     if (ai) {
       try {
         const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
+          model: GEMINI_MODEL,
           contents: `You are the RRR Capability Engine.
 Translate the following duties or experience into MODE 1 Output format:
 "${message}"`,
