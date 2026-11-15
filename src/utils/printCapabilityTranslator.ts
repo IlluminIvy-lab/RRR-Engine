@@ -18,12 +18,13 @@ export function printCapabilityTranslator(
 ): void {
   if (!result) return;
 
-  const candidateName = options.candidateName?.trim() || 'Professional Candidate';
+  const candidateName = options.candidateName?.trim() || '';
   const rawTitle = result.commercialTitle.trim();
   const originalTitle = document.title;
 
   // Set browser title temporarily so default "Save to PDF" filename is clean and professional
-  const safeFilename = `RRR_Capability_Dossier_${candidateName.replace(/[^a-zA-Z0-9]/g, '_')}_${rawTitle.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const nameSegment = candidateName ? `${candidateName.replace(/[^a-zA-Z0-9]/g, '_')}_` : '';
+  const safeFilename = `RRR_Capability_Dossier_${nameSegment}${rawTitle.replace(/[^a-zA-Z0-9]/g, '_')}`;
   document.title = safeFilename;
 
   // Add print indicator class to root for any specialized print styling

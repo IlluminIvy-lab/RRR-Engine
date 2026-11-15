@@ -25,7 +25,7 @@ export async function generateResumeDocx(
   data: TranslationResult,
   options: ResumeDocxOptions = {}
 ): Promise<void> {
-  const candidateName = options.candidateName?.trim() || 'PROFESSIONAL CANDIDATE';
+  const candidateName = options.candidateName?.trim() || '';
   const location = options.location?.trim() || 'Georgia Logistics & Trade Corridor (Atlanta / Macon)';
   const phone = options.phone?.trim() || 'Direct Phone: Available upon interview';
   const email = options.email?.trim() || 'Email: Available upon direct contact';

@@ -85,6 +85,7 @@ export const ConversationalIntakeCoach: React.FC<ConversationalIntakeCoachProps>
 }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>(['', '', '', '']);
+  const [showEmptyNotice, setShowEmptyNotice] = useState(false);
 
   const currentStep = COACH_STEPS[currentStepIndex];
   const currentAnswer = answers[currentStepIndex];
@@ -149,9 +150,14 @@ export const ConversationalIntakeCoach: React.FC<ConversationalIntakeCoachProps>
     if (currentStepIndex < COACH_STEPS.length - 1) {
       setCurrentStepIndex((prev) => prev + 1);
     } else {
-      // Final submission
+      // Final submission. The submit button stays live even when the profile
+      // is still empty: respond in-product with a prompt for the missing
+      // input instead of doing nothing.
       if (compiledText.trim()) {
+        setShowEmptyNotice(false);
         onComplete(compiledText);
+      } else {
+        setShowEmptyNotice(true);
       }
     }
   };
@@ -292,6 +298,16 @@ export const ConversationalIntakeCoach: React.FC<ConversationalIntakeCoachProps>
           </div>
         )}
 
+        {showEmptyNotice && !compiledText.trim() && (
+          <div
+            role="alert"
+            className="rounded-lg border border-[#C99A44]/40 bg-[#C99A44]/10 px-3.5 py-2.5 text-xs leading-relaxed text-[#F4EDE1]/85"
+          >
+            <span className="font-semibold text-[#F4EDE1]">Nothing to translate yet.</span>{' '}
+            Answer at least one step above — even a few words about your role or daily tasks — then press Translate Complete Profile Now again.
+          </div>
+        )}
+
         {/* Action Navigation */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
           <div>
@@ -325,7 +341,7 @@ export const ConversationalIntakeCoach: React.FC<ConversationalIntakeCoachProps>
               <button
                 type="button"
                 onClick={handleNextOrSubmit}
-                disabled={!compiledText.trim() || isLoading}
+                disabled={isLoading}
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-xs sm:text-sm shadow-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isLoading ? (

@@ -22,7 +22,7 @@ export function generateResumePdf(
   const margin = 45;
   const contentWidth = pageWidth - (margin * 2);
 
-  const candidateName = options.candidateName?.trim() || 'PROFESSIONAL CANDIDATE';
+  const candidateName = options.candidateName?.trim() || '';
   const location = options.location?.trim() || 'Georgia Logistics & Trade Corridor (Atlanta / Macon)';
   const contactInfo = [
     location,

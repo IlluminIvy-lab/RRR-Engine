@@ -7,6 +7,7 @@ interface PromptTextareaProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit?: () => void;
+  allowEmptySubmit?: boolean;
   placeholder?: string;
   disabled?: boolean;
   isLoading?: boolean;
@@ -36,6 +37,7 @@ export const PromptTextarea: React.FC<PromptTextareaProps> = ({
   value,
   onChange,
   onSubmit,
+  allowEmptySubmit = false,
   placeholder = 'Type or speak your input...',
   disabled = false,
   isLoading = false,
@@ -112,7 +114,7 @@ export const PromptTextarea: React.FC<PromptTextareaProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (value.trim() && onSubmit && !isLoading && !disabled) {
+      if ((value.trim() || allowEmptySubmit) && onSubmit && !isLoading && !disabled) {
         if (isListening) stopListening();
         onSubmit();
       }
@@ -210,7 +212,7 @@ export const PromptTextarea: React.FC<PromptTextareaProps> = ({
                 if (isListening) stopListening();
                 onSubmit();
               }}
-              disabled={!value.trim() || isLoading || disabled}
+              disabled={(!value.trim() && !allowEmptySubmit) || isLoading || disabled}
               className="px-4 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-xs shadow-md transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 shrink-0"
             >
               <span>{submitButtonText}</span>

@@ -436,13 +436,13 @@ export function translateCapabilityOffline(experience: string): TranslationResul
  */
 export function generateFullPackageOffline(
   targetTitle: string,
-  candidateName = "J. Carter",
+  candidateName = "",
   location = "Atlanta, GA",
   industry = "Logistics & Supply Chain",
   translation?: TranslationResult | null
 ): FullApplicationPackage {
   const cleanTitle = targetTitle?.trim() || "Commercial Operations Specialist";
-  const name = candidateName?.trim() || "J. Carter";
+  const name = candidateName?.trim() || "";
   const loc = location?.trim() || "Atlanta, GA";
 
   // Map industry to allowed union types

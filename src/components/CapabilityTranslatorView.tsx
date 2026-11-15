@@ -67,6 +67,7 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
 
   // Action states
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+  const [emptySubmitNotice, setEmptySubmitNotice] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [exportFormat, setExportFormat] = useState<'pdf' | 'docx' | 'print'>('print');
   const [candidateName, setCandidateName] = useState('');
@@ -137,11 +138,19 @@ export const CapabilityTranslatorView: React.FC<CapabilityTranslatorViewProps> =
     if (isLoading) return;
 
     if (entryMode === 'freeform') {
-      if (!inputText.trim()) return;
+      if (!inputText.trim()) {
+        setEmptySubmitNotice(true);
+        return;
+      }
+      setEmptySubmitNotice(false);
       await onTranslate(inputText);
     } else {
       const combined = compileGuidedAnswers();
-      if (!combined.trim()) return;
+      if (!combined.trim()) {
+        setEmptySubmitNotice(true);
+        return;
+      }
+      setEmptySubmitNotice(false);
       await onTranslate(combined);
     }
   };
@@ -206,7 +215,7 @@ ${secondarySection}
 
   const handleDownloadPdf = (res: TranslationResult) => {
     generateResumePdf(res, {
-      candidateName: candidateName.trim() || 'Professional Candidate',
+      candidateName: candidateName.trim() || undefined,
       phone: candidatePhone.trim() || undefined,
       email: candidateEmail.trim() || undefined,
       location: candidateLocation.trim() || undefined,
@@ -216,7 +225,7 @@ ${secondarySection}
 
   const handleDownloadDocx = async (res: TranslationResult) => {
     await generateResumeDocx(res, {
-      candidateName: candidateName.trim() || 'Professional Candidate',
+      candidateName: candidateName.trim() || undefined,
       phone: candidatePhone.trim() || undefined,
       email: candidateEmail.trim() || undefined,
       location: candidateLocation.trim() || undefined,
@@ -344,8 +353,14 @@ ${secondarySection}
                 id="institutional-experience-input"
                 value={inputText}
                 onChange={setInputText}
+                allowEmptySubmit
                 onSubmit={() => {
-                  if (inputText.trim()) onTranslate(inputText);
+                  if (inputText.trim()) {
+                    setEmptySubmitNotice(false);
+                    onTranslate(inputText);
+                  } else {
+                    setEmptySubmitNotice(true);
+                  }
                 }}
                 placeholder="Share institutional experience, past facility duties, shop repairs, or trade work (Type or click mic to speak)..."
                 isLoading={isLoading}
@@ -370,7 +385,7 @@ ${secondarySection}
                   <button
                     id="translate-capability-submit-btn"
                     type="submit"
-                    disabled={!inputText.trim() || isLoading}
+                    disabled={isLoading}
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
@@ -510,7 +525,7 @@ ${secondarySection}
                   <button
                     id="translate-capability-guided-submit-btn"
                     type="submit"
-                    disabled={isGuidedEmpty || isLoading}
+                    disabled={isLoading}
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#C99A44] hover:bg-[#b88c3a] text-[#0B0F0E] font-bold text-sm shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
@@ -527,6 +542,15 @@ ${secondarySection}
                   </button>
                 </div>
               </div>
+            </div>
+          )}
+          {emptySubmitNotice && !currentInputText.trim() && (
+            <div
+              role="alert"
+              className="rounded-lg border border-[#C99A44]/40 bg-[#C99A44]/10 px-3.5 py-2.5 text-xs leading-relaxed text-[#F4EDE1]/85"
+            >
+              <span className="font-semibold text-[#F4EDE1]">Nothing to translate yet.</span>{' '}
+              Add a few words about your duties or experience above — or switch to Guided Mode — then press Translate again.
             </div>
           )}
         </form>
@@ -1135,7 +1159,7 @@ ${secondarySection}
           {/* Document Header */}
           <div className="print-dossier-header">
             <div className="print-dossier-title">
-              {candidateName.trim() ? candidateName.trim().toUpperCase() : 'PROFESSIONAL CANDIDATE'}
+              {candidateName.trim().toUpperCase()}
             </div>
             <div className="print-dossier-subtitle">
               {activeResult.commercialTitle.toUpperCase()}

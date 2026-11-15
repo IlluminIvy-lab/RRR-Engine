@@ -86,7 +86,7 @@ export const ResumeBuilderView: React.FC<ResumeBuilderViewProps> = ({
     currentPackage?.targetJobTitle || currentTranslation?.commercialTitle || 'Commercial Operations Specialist'
   );
   const [candidateName, setCandidateName] = useState(
-    currentPackage?.candidate.fullName || 'J. Carter'
+    currentPackage?.candidate.fullName || ''
   );
   const [location, setLocation] = useState(
     currentPackage?.candidate.cityStateZip.split(' ')[0] || 'Atlanta, GA'
@@ -127,7 +127,7 @@ export const ResumeBuilderView: React.FC<ResumeBuilderViewProps> = ({
     e.preventDefault();
     await onGeneratePackage(
       targetTitle.trim() || 'Commercial Operations Specialist',
-      candidateName.trim() || 'J. Carter',
+      candidateName.trim(),
       location.trim() || 'Atlanta, GA',
       industry
     );
@@ -557,7 +557,7 @@ ${candidate.fullName}
               type="text"
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
-              placeholder="e.g. J. Carter"
+              placeholder="Your full name"
               className="w-full bg-stone-950 border border-stone-700 rounded px-3 py-2 text-xs text-stone-100 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>

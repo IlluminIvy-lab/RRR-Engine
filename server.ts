@@ -132,7 +132,7 @@ INPUT EXPERIENCE:
   app.post('/api/generate-full-package', async (req, res) => {
     const {
       targetJobTitle = 'Commercial Operations Specialist',
-      candidateName = 'J. Carter',
+      candidateName = '',
       cityStateZip = 'Atlanta, GA',
       industrySector = 'Logistics & Supply Chain',
       translatedData,
@@ -425,7 +425,7 @@ USER QUESTION:
 
     if (lower.includes('generate full package') || lower.includes('build resume') || lower.startsWith('resume for')) {
       const roleTarget = message.replace(/(generate full package|build resume|create cover letter|resume for)/gi, '').trim() || 'Logistics Operations Supervisor';
-      const pkg = generateFullPackageOffline(roleTarget, 'J. Carter', 'Atlanta, GA', 'Logistics & Supply Chain');
+      const pkg = generateFullPackageOffline(roleTarget, '', 'Atlanta, GA', 'Logistics & Supply Chain');
       return res.json({ mode: 'MODE 2', payload: pkg });
     }
 

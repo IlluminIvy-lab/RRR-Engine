@@ -218,7 +218,7 @@ export default function App() {
   // Mode 2: Generate Full Application Package
   const handleGeneratePackage = async (
     targetTitle: string,
-    candidateName: string = 'J. Carter',
+    candidateName: string = '',
     location: string = 'Atlanta, GA',
     industry: string = 'Logistics & Supply Chain'
   ): Promise<FullApplicationPackage | null> => {
