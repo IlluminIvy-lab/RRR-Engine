@@ -629,7 +629,7 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
                     <button
                       onClick={() => handleCopy(
-                        `${msg.translationData?.commercialTitle}\n\nPathway: ${msg.translationData?.gaPathway}\n\nBullets:\n${msg.translationData?.resumeBullets.map(b => `• ${b}`).join('\n')}`,
+                        `${msg.translationData?.commercialTitle}\n\nPathway: ${msg.translationData?.gaPathway}\n\nAI-DRAFTED RESUME BULLETS — VERIFY BEFORE USE\nThese are AI starting drafts, not verified accomplishments. Replace every [bracketed placeholder] with your real facts before sending to an employer.\n\nBullets:\n${msg.translationData?.resumeBullets.map(b => `• ${b}`).join('\n')}`,
                         msg.id
                       )}
                       className="inline-flex items-center gap-1 text-xs text-[#2B2B2B] hover:text-[#0B0F0E] px-2 py-1 rounded bg-[#F4EDE1] border border-[#2B2B2B]/30 transition-colors"
@@ -688,8 +688,11 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
                 {/* 3. Resume Bullets */}
                 <div className="space-y-2">
                   <div className="text-[11px] font-mono font-bold text-[#2F4A3E] uppercase tracking-wider">
-                    3. High-Impact Quantified Resume Bullets
+                    3. AI-Drafted Resume Bullets — Verify Before Use
                   </div>
+                  <p className="text-[11px] font-sans text-amber-800 bg-amber-100/70 border border-amber-600/30 rounded-lg px-3 py-2">
+                    These are AI starting drafts, not verified accomplishments. Replace every [bracketed placeholder] with your real facts before sending to an employer.
+                  </p>
                   <div className="space-y-2 bg-white/90 p-4 rounded-xl border border-[#2B2B2B]/15">
                     {msg.translationData.resumeBullets.map((b, i) => (
                       <div key={i} className="flex items-start gap-2.5 text-xs text-[#2B2B2B] leading-relaxed">
