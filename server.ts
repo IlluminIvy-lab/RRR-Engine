@@ -334,6 +334,29 @@ Generate a complete ATS-ready Application Package:
         });
 
         const parsed = JSON.parse(response.text || '{}');
+        // Provenance guard: every resume line in this response was written
+        // by the AI, so a line can never arrive pre-verified. The model
+        // sometimes labels its own rephrasings "user_provided" (observed
+        // live 2026-11-19: all bullets in two consecutive AI packages),
+        // which silently bypassed the review checkpoint, the [AI DRAFT]
+        // export tags, and the export gate. Per this endpoint's own
+        // definitions a rephrasing is "ai_inferred"; "user_provided" is
+        // earned only through the checkpoint (edit/confirm), never by the
+        // model's self-label.
+        const downgradeAiLines = (lines: any) => {
+          if (!Array.isArray(lines)) return;
+          for (const line of lines) {
+            if (line && typeof line === 'object' && line.provenance === 'user_provided') {
+              line.provenance = 'ai_inferred';
+            }
+          }
+        };
+        const parsedRoles = parsed?.resume?.professionalExperience;
+        if (Array.isArray(parsedRoles)) {
+          for (const role of parsedRoles) downgradeAiLines(role?.bullets);
+        }
+        downgradeAiLines(parsed?.resume?.certificationsAndTraining);
+        downgradeAiLines(parsed?.resume?.educationAndHopeGrants);
         // Normalize: guarantees id/createdAt and provenance fields even if the
         // model omits them; blanks become "missing", unlabeled lines default
         // to "ai_inferred" so nothing silently ships as user-verified.
