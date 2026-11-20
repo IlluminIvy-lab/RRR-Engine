@@ -611,7 +611,7 @@ export default function App() {
       {/* Print Stylesheet Clean Header for Direct Printing */}
       <footer className="border-t border-[#F4EDE1]/15 bg-[#0B0F0E] py-4 text-center text-xs font-mono text-[#F4EDE1]/60 print:hidden">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>RealReentryRegister™ — Reentry Tools, All in One Place • Georgia / Atlanta / Macon</span>
+          <span><a href="https://rrr-landing.onrender.com" className="underline decoration-[#C99A44]/50 underline-offset-4 hover:text-[#F4EDE1] transition-colors">RealReentryRegister™</a> — Reentry Tools, All in One Place • Georgia / Atlanta / Macon</span>
           <span className="text-[#C99A44]">Make the system visible. Make the path clearer.</span>
         </div>
       </footer>
