@@ -56,6 +56,7 @@ interface ConsoleMessage {
 
 interface UnifiedConsoleProps {
   onTranslate: (text: string) => Promise<TranslationResult | null>;
+  onTranslationReceived?: (data: TranslationResult, rawText: string) => void;
   onGeneratePackage: (targetTitle: string, candidateName?: string, location?: string, industry?: string) => Promise<FullApplicationPackage | null>;
   onAddItemToTracker: (item: Omit<TrackerItem, 'id' | 'dateAdded' | 'dateUpdated'>) => void;
   isLoading: boolean;
@@ -87,6 +88,7 @@ const ROLE_PRESETS = [
 
 export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
   onTranslate,
+  onTranslationReceived,
   onGeneratePackage,
   isLoading,
   onNavigateMode,
@@ -198,6 +200,7 @@ export const UnifiedConsole: React.FC<UnifiedConsoleProps> = ({
 
       if (data.mode === 'MODE 1' && data.payload) {
         const trans = data.payload as TranslationResult;
+        onTranslationReceived?.(trans, textToSend);
         setMessages((prev) => [
           ...prev,
           {

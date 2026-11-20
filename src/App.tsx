@@ -215,6 +215,20 @@ export default function App() {
     }
   };
 
+  // Console Mode 1 results arrive via /api/unified-chat inside
+  // UnifiedConsole; lift them into App state so package generation uses
+  // the same history the Translator path sets. Without this, a package
+  // built console-first silently lost the person's experience
+  // (Playwright trial finding, 2026-11-19).
+  const handleTranslationReceived = (data: TranslationResult, rawText: string) => {
+    const stamped: TranslationResult = {
+      ...data,
+      rawExperience: data.rawExperience ?? rawText,
+      timestamp: data.timestamp ?? new Date().toISOString(),
+    };
+    setCurrentTranslation(stamped);
+  };
+
   // Mode 2: Generate Full Application Package
   const handleGeneratePackage = async (
     targetTitle: string,
@@ -445,6 +459,7 @@ export default function App() {
           <>
             <UnifiedConsole
               onTranslate={handleTranslate}
+              onTranslationReceived={handleTranslationReceived}
               onGeneratePackage={handleGeneratePackage}
               onAddItemToTracker={handleAddTrackerItem}
               isLoading={isLoading}
