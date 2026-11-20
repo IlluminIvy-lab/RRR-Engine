@@ -80,7 +80,7 @@ export const GeorgiaResourceVault: React.FC = () => {
                 RESOURCE DIRECTORY
               </span>
               <h2 className="text-lg font-bold text-stone-100">
-                Georgia / Atlanta / Macon Resource Vault
+                Georgia Resource Vault
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-stone-400 max-w-3xl">
